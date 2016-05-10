@@ -17,11 +17,12 @@
     ],
     "globals": {
       "describe": true,
-      "it": true
+      "it": true,
+      "fetch": true
     },
     "rules": {
     "indent": [2, 2],
-    "quotes": [2, "single"],
+    "quotes": [2, "single", {"avoidEscape": true}],
     "linebreak-style": [2, "unix"],
     "semi": [2, "always"],
     "constructor-super": 2,
@@ -60,6 +61,11 @@
     "react/self-closing-comp": 1,
     "react/wrap-multilines": 1,
     "no-console": 1,
-    "no-trailing-spaces": 2
+    "no-trailing-spaces": 2,
+    "sort-imports": [1, {
+        "ignoreCase": false,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
+    }]
   }
 }

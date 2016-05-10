@@ -1,4 +1,5 @@
-import React, { Text, TouchableHighlight } from 'react-native';
+import { Text, TouchableHighlight } from 'react-native';
+import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 

@@ -1,12 +1,15 @@
-import React from 'react';
 import {
-  Text,
-  View,
-  TextInput,
+  Alert,
+  AsyncStorage,
   Image,
+  StyleSheet,
+  Text,
+  TextInput,
   TouchableHighlight,
-  StyleSheet
+  View
 } from 'react-native';
+import Api from './utils/Api';
+import React from 'react';
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -47,7 +50,9 @@ module.exports = React.createClass({
           />
         </View>
         <View style={styles.signinContainer}>
-          <TouchableHighlight>
+          <TouchableHighlight
+              onPress={this.handlePressSignin}
+          >
             <Text style={styles.signinText}>Sign in</Text>
           </TouchableHighlight>
         </View>
@@ -63,9 +68,28 @@ module.exports = React.createClass({
     this.setState({
       password: text
     });
+  },
+  handlePressSignin: function() {
+    Api.signin(this.state.email, this.state.password, fetch)
+      .then(function(response) {
+        AsyncStorage.setItem('userCode', response)
+          .then(function() {
+            Alert.alert('Success', "You've successfully signed in!", [{text: 'Yay!'}]);
+          })
+          .catch(function() {
+            throw new Error('Could not save userCode');
+          });
+      })
+      .catch(function(error) {
+        var alertMessage = 'There was a problem connecting to Polldaddy.com.';
+        if(error.message === 'Could not log in') {
+          alertMessage = 'That was not the right username or password. Try again.';
+        }
+        Alert.alert('Error', alertMessage, [{text: 'OK'}]);
+      })
+      .done();
   }
 });
-
 
 var styles = StyleSheet.create({
   container: {
