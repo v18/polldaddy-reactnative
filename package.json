@@ -3,10 +3,25 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "mocha",
+    "lint": "eslint src test index.android.js index.ios.js mocha-helper.js ; exit 0"
   },
   "dependencies": {
-    "react": "^0.14.8",
-    "react-native": "^0.25.1"
+    "react": "0.14.8",
+    "react-native": "0.25.1"
+  },
+  "devDependencies": {
+    "babel-core": "6.7.7",
+    "babel-preset-react-native": "1.6.0",
+    "chai": "3.5.0",
+    "enzyme": "2.2.0",
+    "eslint": "2.9.0",
+    "eslint-plugin-react": "5.0.1",
+    "eslint-plugin-react-native": "1.0.2",
+    "mocha": "2.4.5",
+    "react-addons-test-utils": "0.14.8",
+    "react-dom": "0.14.8",
+    "react-native-mock": "0.0.7"
   }
 }
