@@ -1,6 +1,6 @@
 import { Text, TouchableHighlight } from 'react-native';
-import React from 'react';
 import { expect } from 'chai';
+import React from 'react';
 import { shallow } from 'enzyme';
 
 describe('Sign in page', () => {

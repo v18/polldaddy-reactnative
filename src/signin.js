@@ -50,9 +50,7 @@ module.exports = React.createClass({
           />
         </View>
         <View style={styles.signinContainer}>
-          <TouchableHighlight
-              onPress={this.handlePressSignin}
-          >
+          <TouchableHighlight onPress={this.handlePressSignin}>
             <Text style={styles.signinText}>Sign in</Text>
           </TouchableHighlight>
         </View>
@@ -72,14 +70,11 @@ module.exports = React.createClass({
   handlePressSignin: function() {
     Api.signin(this.state.email, this.state.password, fetch)
       .then(function(response) {
-        AsyncStorage.setItem('userCode', response)
-          .then(function() {
-            Alert.alert('Success', "You've successfully signed in!", [{text: 'Yay!'}]);
-          })
-          .catch(function() {
-            throw new Error('Could not save userCode');
-          });
+        return AsyncStorage.setItem('userCode', response);
       })
+      .then(function() {
+        this.props.navigator.immediatelyResetRouteStack([{name: 'localSurveyList'}]);
+      }.bind(this))
       .catch(function(error) {
         var alertMessage = 'There was a problem connecting to Polldaddy.com.';
         if(error.message === 'Could not log in') {

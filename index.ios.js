@@ -1,6 +1,6 @@
 import {
   AppRegistry
 } from 'react-native';
-var Signin = require('./src/signin');
+var Main = require('./src/main');
 
-AppRegistry.registerComponent('polldaddy', () => Signin);
+AppRegistry.registerComponent('polldaddy', () => Main);
