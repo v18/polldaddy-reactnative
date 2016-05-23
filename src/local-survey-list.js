@@ -12,6 +12,7 @@ module.exports = React.createClass({
       <View style={styles.container}>
         <ToolbarAndroid
             actions={toolbarActions}
+            onActionSelected={this.onActionSelected}
             style={styles.toolbar}
             title='My Surveys'
             titleColor='#FFF'
@@ -26,6 +27,11 @@ module.exports = React.createClass({
         </View>
       </View>
     );
+  },
+  onActionSelected: function(position) {
+    if(position === 0) {
+      this.props.navigator.push({name: 'remoteSurveyList'});
+    }
   }
 });
 

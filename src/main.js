@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import LocalSurveyList from './local-survey-list';
 import React from 'react';
+import RemoteSurveyList from './remote-survey-list';
 import Signin from './signin';
 import Splash from './splash';
 
@@ -11,7 +12,8 @@ import Splash from './splash';
 var ROUTES = {
   splash: Splash,
   signin: Signin,
-  localSurveyList: LocalSurveyList
+  localSurveyList: LocalSurveyList,
+  remoteSurveyList: RemoteSurveyList
 };
 
 module.exports = React.createClass({
