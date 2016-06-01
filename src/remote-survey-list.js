@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
+import _ from './utils/lodash';
 import Api from './utils/Api';
 import React from 'react';
 
@@ -26,19 +27,33 @@ module.exports = React.createClass({
     };
   },
   componentWillMount: function() {
-    AsyncStorage.getItem('userCode')
+    // save the selected items from localSurveyList
+    new Promise(function(resolve) {
+      if(this.props && this.props.route && this.props.route.selectedItems) {
+        var newSelectedItems = this.props.route.selectedItems.map(
+          function (item) {
+            var newItem = _.assign(item, {selected: true});
+            return newItem;
+          });
+        this.setState({
+          selectedItems: newSelectedItems
+        }, function () {
+          resolve(AsyncStorage.getItem('userCode'));
+        });
+      }
+    }.bind(this))
       .then(function(userCode) {
         return Promise.all(['survey','quiz'].map(function(type) {
           return Api.getRemoteListOf(type, userCode);
         }));
       })
-      .then(function(values) {
+      .then((values) => {
         var data = this.formatSurveyAndQuizData(values, this.state.selectedItems);
         this.setState({
           data: data,
           dataSource: this.state.dataSource.cloneWithRowsAndSections(data)
         });
-      }.bind(this))
+      })
       .catch(function(error) {
         switch (error.message) {
         case 'No surveys or quizzes found':
@@ -66,6 +81,7 @@ module.exports = React.createClass({
       <ToolbarAndroid
           actions={toolbarActions}
           navIcon={require('./img/close/ic_close_white.png')}
+          onActionSelected={this.onActionSelected}
           onIconClicked={() => this.props.navigator.pop()} // eslint-disable-line react/jsx-no-bind
           style={styles.toolbar}
           title='Select Surveys and Quizzes'
@@ -105,24 +121,29 @@ module.exports = React.createClass({
     </View>);
   },
   handleRowClick: function(sectionId, rowId) {
-    var itemId = this.state.data[sectionId][rowId].id;
-    var newSelectedItems = this.toggleSelectedItem(itemId, this.state.selectedItems);
+    var item = {
+      id: this.state.data[sectionId][rowId].id,
+      title: this.state.data[sectionId][rowId].title,
+      selected: this.state.data[sectionId][rowId].selected
+    };
+    var newSelectedItems = _.toggleSelectedItem(item, this.state.selectedItems);
 
     this.setState({
       selectedItems: newSelectedItems
     });
-    var newData = this.formatSurveyAndQuizData(this.state.data, this.state.selectedItems);
+    var newData = this.formatSurveyAndQuizData(this.state.data, newSelectedItems);
 
     this.setState({
       data: newData,
       dataSource: this.state.dataSource.cloneWithRowsAndSections(newData)
     });
   },
-  formatSurveyAndQuizData:function(originalDataArray, selectedItemsArray) {
-    var formattedDataArray = originalDataArray.map(function(contentItems) {
-      return contentItems.map(function(contentItem) {
+  formatSurveyAndQuizData: function (originalDataArray, selectedItemsArray) {
+    var formattedDataArray = originalDataArray.map((contentItems) => {
+      return contentItems.map((contentItem) => {
+        var isSelected = (_.indexOfItem(selectedItemsArray, contentItem.id) !== -1) ? true : false;
         return {
-          selected: (selectedItemsArray.indexOf(contentItem.id) === -1 ? false : true),
+          selected: isSelected,
           title: contentItem.title,
           id: contentItem.id
         };
@@ -133,15 +154,15 @@ module.exports = React.createClass({
     }
     return formattedDataArray;
   },
-  toggleSelectedItem: function(itemId, array) {
-    var newArray = array.slice();
-    var index = newArray.indexOf(itemId);
-    if(index === -1) {
-      newArray.push(itemId);
-    } else {
-      newArray.splice(index, 1);
+  onActionSelected: function(index) {
+    if(index === 0) { // save button
+      // hack: use immediatelyResetRouteStack to send props on route
+      var selectedItemsToSend = this.state.selectedItems.map(function(item) {
+        delete item.selected;
+        return item;
+      });
+      this.props.navigator.immediatelyResetRouteStack([{name: 'localSurveyList', selectedItems: selectedItemsToSend}]);
     }
-    return newArray;
   }
 });
 

@@ -8,8 +8,10 @@
     "lint": "eslint src test index.android.js index.ios.js mocha-helper.js ; exit 0"
   },
   "dependencies": {
+    "lodash": "4.13.1",
     "react": "0.14.8",
-    "react-native": "0.25.1"
+    "react-native": "0.25.1",
+    "react-native-sqlite-storage": "2.1.6"
   },
   "devDependencies": {
     "babel-core": "6.7.7",

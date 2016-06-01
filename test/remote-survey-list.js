@@ -140,7 +140,11 @@ describe('Remote surveys page', () => {
     });
 
     it('returns an object with quiz data and an survey data array with the correct selected status when given a non-empty selected surveys array',  () => {
-      var selectedItems = [1,3];
+      var selectedItems = [
+        {id: 1, title:'Survey 1 Title', offline:0},
+        {id: 3, title:'Quiz 1 Title', offline:2},
+        {id: 4, title:'Different survey', offline:0}
+      ];
       var surveys = [
         {
           closed:0,

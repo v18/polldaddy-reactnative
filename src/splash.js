@@ -9,9 +9,13 @@ import React from 'react';
 module.exports = React.createClass({
   componentDidMount: function() {
     var route = {name: 'signin'};
-    AsyncStorage.getItem('userCode')
-      .then(function(userCode) {
-        if(userCode) {
+
+    // make sure both userId and userCode exist
+
+    Promise.all([AsyncStorage.getItem('userCode'),
+    AsyncStorage.getItem('userId')])
+      .then(function ([userCode, userId]) {
+        if(userCode && userId) {
           route = {name: 'localSurveyList'};
         }
       })

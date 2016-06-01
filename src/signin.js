@@ -70,7 +70,10 @@ module.exports = React.createClass({
   handlePressSignin: function() {
     Api.signin(this.state.email, this.state.password, fetch)
       .then(function(response) {
-        return AsyncStorage.setItem('userCode', response);
+        return Promise.all([
+          AsyncStorage.setItem('userId', response.userId.toString()),
+          AsyncStorage.setItem('userCode', response.userCode)
+        ]);
       })
       .then(function() {
         this.props.navigator.immediatelyResetRouteStack([{name: 'localSurveyList'}]);
