@@ -16,7 +16,7 @@ module.exports = React.createClass({
     AsyncStorage.getItem('userId')])
       .then(function ([userCode, userId]) {
         if(userCode && userId) {
-          route = {name: 'localSurveyList'};
+          route = {name: 'savedSurveysList'};
         }
       })
       .finally(function() {

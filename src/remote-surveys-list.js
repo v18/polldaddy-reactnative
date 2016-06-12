@@ -10,13 +10,13 @@ import {
   View
 } from 'react-native';
 import _ from './utils/lodash';
-import Api from './utils/Api';
+import Api from './utils/api';
 import React from 'react';
 
 module.exports = React.createClass({
   getInitialState: function() {
     var ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
+      rowHasChanged: (r1, r2) => r1.selected !== r2.selected,
       sectionHeaderHasChanged: (s1, s2) => s1 !== s2
     });
     return {
@@ -27,7 +27,7 @@ module.exports = React.createClass({
     };
   },
   componentWillMount: function() {
-    // save the selected items from localSurveyList
+    // save the selected items from savedSurveysList
     new Promise(function(resolve) {
       if(this.props && this.props.route && this.props.route.selectedItems) {
         var newSelectedItems = this.props.route.selectedItems.map(
@@ -56,23 +56,23 @@ module.exports = React.createClass({
       })
       .catch(function(error) {
         switch (error.message) {
-        case 'No surveys or quizzes found':
-          Alert.alert(
-            'Whoops',
-            'Your account does not have any surveys or quizzes yet. Try adding some at Polldaddy.com first.');
-          break;
-        case 'User Not Found, 4366':
-          Alert.alert('Whoops',
-            "You're not logged in, please go back and log in.",
-            [{text: 'Ok, take me to the login page',
-              onPress: () => {
-                this.props.navigator.immediatelyResetRouteStack([{name: 'signin'}]);
-              }
-          }]);
-          break;
-        default:
-          Alert.alert('Error',
-            "Sorry, we couldn't get the surveys and quizzes from Polldaddy.com just now. Please try again later.");
+          case 'No surveys or quizzes found':
+            Alert.alert(
+              'Whoops',
+              'Your account does not have any surveys or quizzes yet. Try adding some at Polldaddy.com first.');
+            break;
+          case 'User Not Found, 4366':
+            Alert.alert('Whoops',
+              "You're not logged in, please go back and log in.",
+              [{text: 'Ok, take me to the login page',
+                onPress: () => {
+                  this.props.navigator.immediatelyResetRouteStack([{name: 'signin'}]);
+                }
+            }]);
+            break;
+          default:
+            Alert.alert('Error',
+              "Sorry, we couldn't get the surveys and quizzes from Polldaddy.com just now. Please try again later.");
         }
       }.bind(this));
   },
@@ -131,12 +131,14 @@ module.exports = React.createClass({
     this.setState({
       selectedItems: newSelectedItems
     });
+
     var newData = this.formatSurveyAndQuizData(this.state.data, newSelectedItems);
 
     this.setState({
       data: newData,
       dataSource: this.state.dataSource.cloneWithRowsAndSections(newData)
     });
+
   },
   formatSurveyAndQuizData: function (originalDataArray, selectedItemsArray) {
     var formattedDataArray = originalDataArray.map((contentItems) => {
@@ -161,7 +163,10 @@ module.exports = React.createClass({
         delete item.selected;
         return item;
       });
-      this.props.navigator.immediatelyResetRouteStack([{name: 'localSurveyList', selectedItems: selectedItemsToSend}]);
+      this.props.navigator.immediatelyResetRouteStack([{
+        name: 'savedSurveysList',
+        selectedItems: selectedItemsToSend
+      }]);
     }
   }
 });

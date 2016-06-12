@@ -4,12 +4,12 @@ import { shallow } from 'enzyme';
 import { ToolbarAndroid } from 'react-native';
 
 describe('Remote surveys page', () => {
-  var RemoteSurveyList = require('../src/remote-survey-list');
+  var RemoteSurveysList = require('../src/remote-surveys-list');
   it('exists', () => {
-    expect(RemoteSurveyList).not.to.be.undefined;
+    expect(RemoteSurveysList).not.to.be.undefined;
   });
 
-  var wrapper = shallow(<RemoteSurveyList />);
+  var wrapper = shallow(<RemoteSurveysList />);
 
   it('has one <ToolbarAndroid>', () => {
     expect(wrapper.find(ToolbarAndroid)).to.have.length(1);
@@ -68,7 +68,7 @@ describe('Remote surveys page', () => {
           selected: false
         }]
       ];
-      var result = RemoteSurveyList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
+      var result = RemoteSurveysList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
       expect(result).to.eql(expected);
     });
 
@@ -110,7 +110,7 @@ describe('Remote surveys page', () => {
           }],
         []
       ];
-      var result = RemoteSurveyList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
+      var result = RemoteSurveysList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
       expect(result).to.eql(expected);
     });
 
@@ -135,7 +135,7 @@ describe('Remote surveys page', () => {
           selected: false
         }]
       ];
-      var result = RemoteSurveyList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
+      var result = RemoteSurveysList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
       expect(result).to.eql(expected);
     });
 
@@ -194,7 +194,7 @@ describe('Remote surveys page', () => {
             selected: true
           }]
       ];
-      var result = RemoteSurveyList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
+      var result = RemoteSurveysList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
       expect(result).to.eql(expected);
     });
   });

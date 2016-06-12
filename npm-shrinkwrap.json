@@ -4636,6 +4636,16 @@
           "version": "3.10.1",
           "from": "lodash@>=3.10.1 <4.0.0",
           "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz"
+        },
+        "sax": {
+          "version": "1.1.6",
+          "from": "sax@~1.1.1",
+          "resolved": "https://registry.npmjs.org/sax/-/sax-1.1.6.tgz"
+        },
+        "xmldoc": {
+          "version": "0.4.0",
+          "from": "xmldoc@>=0.4.0 <0.5.0",
+          "resolved": "https://registry.npmjs.org/xmldoc/-/xmldoc-0.4.0.tgz"
         }
       }
     },
@@ -5591,9 +5601,9 @@
       }
     },
     "xmldoc": {
-      "version": "0.4.0",
-      "from": "xmldoc@>=0.4.0 <0.5.0",
-      "resolved": "https://registry.npmjs.org/xmldoc/-/xmldoc-0.4.0.tgz",
+      "version": "0.5.1",
+      "from": "xmldoc@latest",
+      "resolved": "https://registry.npmjs.org/xmldoc/-/xmldoc-0.5.1.tgz",
       "dependencies": {
         "sax": {
           "version": "1.1.6",

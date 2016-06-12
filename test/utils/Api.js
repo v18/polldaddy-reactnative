@@ -14,7 +14,7 @@ if (typeof Promise.prototype.done !== 'function') {
 }
 
 describe('Api', () => {
-  var Api = require('../../src/utils/Api');
+  var Api = require('../../src/utils/api');
 
   it('exists', () => {
     expect(Api).not.to.be.undefined;

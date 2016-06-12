@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
-import Api from './utils/Api';
+import Api from './utils/api';
 import React from 'react';
 
 module.exports = React.createClass({
@@ -76,7 +76,9 @@ module.exports = React.createClass({
         ]);
       })
       .then(function() {
-        this.props.navigator.immediatelyResetRouteStack([{name: 'localSurveyList'}]);
+        this.props.navigator.immediatelyResetRouteStack([{
+          name: 'savedSurveysList'
+        }]);
       }.bind(this))
       .catch(function(error) {
         var alertMessage = 'There was a problem connecting to Polldaddy.com.';

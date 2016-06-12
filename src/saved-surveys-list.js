@@ -8,8 +8,8 @@ import {
   View
 } from 'react-native';
 import _ from './utils/lodash';
-import Api from './utils/Api';
-import Database from './utils/Database';
+import Api from './utils/api';
+import Database from './utils/database';
 import React from 'react';
 
 module.exports = React.createClass({
@@ -24,7 +24,7 @@ module.exports = React.createClass({
       userId: 0
     };
   },
-  componentDidMount: function() {
+  componentWillMount: function() {
     // save and/or delete items in database
     Promise.all([
       AsyncStorage.getItem('userId'),
@@ -99,7 +99,10 @@ module.exports = React.createClass({
   },
   renderRow: function(rowData) {
     return (
-      <TouchableHighlight>
+      <TouchableHighlight
+          onPress={() => {this.handleRowClick(rowData);}} // eslint-disable-line react/jsx-no-bind
+          underlayColor='#e0e0e0'
+      >
         <View style={styles.rowContainer}>
           <Text style={styles.title}>{rowData.title}</Text>
           <Text style={styles.responses}>{rowData.responses} offline responses</Text>
@@ -115,10 +118,18 @@ module.exports = React.createClass({
         return item;
       });
       this.props.navigator.push({
-        name: 'remoteSurveyList',
+        name: 'remoteSurveysList',
         selectedItems: selectedItems
       });
     }
+  },
+  handleRowClick: function (rowData) {
+    this.props.navigator.push({
+      name: 'surveyLauncher',
+      surveyId: rowData.id,
+      surveyTitle: rowData.title,
+      responses: rowData.responses
+    });
   },
   saveItemsToDatabase: function(itemsToSave) {
     // save to database

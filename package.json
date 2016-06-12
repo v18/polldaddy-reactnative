@@ -11,13 +11,14 @@
     "lodash": "4.13.1",
     "react": "0.14.8",
     "react-native": "0.25.1",
-    "react-native-sqlite-storage": "2.1.6"
+    "react-native-sqlite-storage": "2.1.6",
+    "xmldoc": "0.5.1"
   },
   "devDependencies": {
     "babel-core": "6.7.7",
     "babel-preset-react-native": "1.6.0",
     "chai": "3.5.0",
-    "enzyme": "2.2.0",
+    "enzyme": "2.3.0",
     "eslint": "2.9.0",
     "eslint-plugin-react": "5.0.1",
     "eslint-plugin-react-native": "1.0.2",

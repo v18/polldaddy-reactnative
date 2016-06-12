@@ -21,7 +21,7 @@
       "fetch": true
     },
     "rules": {
-    "indent": [2, 2],
+    "indent": [2, 2, { "SwitchCase": 1 }],
     "quotes": [2, "single", {"avoidEscape": true}],
     "linebreak-style": [2, "unix"],
     "semi": [2, "always"],
@@ -45,7 +45,9 @@
     "react/jsx-no-duplicate-props": 1,
     "react/jsx-no-undef": 1,
     "react/sort-prop-types": 1,
-    "react/jsx-sort-props": 1,
+    "react/jsx-sort-props": [1, {
+        "ignoreCase": true
+    }],
     "react/jsx-uses-react": 1,
     "react/jsx-uses-vars": 1,
     "react/no-danger": 1,

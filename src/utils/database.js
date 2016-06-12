@@ -84,11 +84,10 @@ module.exports = {
   getItem: function(surveyId, userId) {
     return new Promise(function(resolve) {
       db.transaction(function(txn) {
-        txn.executeSql('SELECT * FROM Surveys'
-          + 'WHERE userId=(?)'
-          + 'AND surveyId=(?);', [userId, surveyId])
+        txn.executeSql('SELECT * FROM Surveys '
+          + 'WHERE surveyId=(?); ', [surveyId])
           .then(function([txn, results]) { //eslint-disable-line no-unused-vars
-            var item = results.rows.raw();
+            var item = results.rows.raw()[0];
             item.id = item.surveyId;
             delete item.surveyId;
             resolve(item);

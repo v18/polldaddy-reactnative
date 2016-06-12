@@ -2,27 +2,27 @@ import {
   Navigator,
   StyleSheet
 } from 'react-native';
-import LocalSurveyList from './local-survey-list';
 import React from 'react';
-import RemoteSurveyList from './remote-survey-list';
+import RemoteSurveysList from './remote-surveys-list';
+import SavedSurveysList from './saved-surveys-list';
 import Signin from './signin';
 import Splash from './splash';
-
+import SurveyLauncher from './survey-launcher';
+import SurveyPage from './survey-page';
 
 var ROUTES = {
   splash: Splash,
   signin: Signin,
-  localSurveyList: LocalSurveyList,
-  remoteSurveyList: RemoteSurveyList
+  savedSurveysList: SavedSurveysList,
+  remoteSurveysList: RemoteSurveysList,
+  surveyPage: SurveyPage,
+  surveyLauncher: SurveyLauncher
 };
 
 module.exports = React.createClass({
   render: function() {
     return (
       <Navigator
-          configureScene={function() {
-            return Navigator.SceneConfigs.FloatFromRight;
-          }}
           initialRoute={{name: 'splash'}}
           renderScene={this.renderScene}
           style={styles.container}

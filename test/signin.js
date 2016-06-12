@@ -31,6 +31,6 @@ describe('Sign in page', () => {
   it('has one signin button', () => {
     var signinWrapper = wrapper.find(TouchableHighlight);
     expect(signinWrapper).to.have.length(1);
-    expect(signinWrapper.contains(Text)).to.equal(true);
+    expect(signinWrapper.containsMatchingElement(Text)).to.equal(true);
   });
 });
