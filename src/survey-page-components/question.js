@@ -3,6 +3,7 @@ import {
   Text,
   View
 } from 'react-native';
+import Actions from '../actions/current-question';
 import Address from './questions/address';
 import DateTime from './questions/date-time';
 import Email from './questions/email';
@@ -19,6 +20,7 @@ import Rank from './questions/rank';
 import React from 'react';
 import Url from './questions/url';
 
+
 module.exports = React.createClass({
   render: function () {
     return (
@@ -31,9 +33,13 @@ module.exports = React.createClass({
     );
   },
   renderMandatoryIndicator: function () {
-    var mandChild = this.props.question.childNamed('mand');
-    if(mandChild && mandChild.val === 'true') {
+    var isMand = this.props.question.childNamed('mand');
+    if(isMand && isMand.val === 'true') {
+      // make sure that initial state for error is true
+      Actions.saveError('This is a mandatory question.');
       return <Text>*</Text>;
+    } else {
+      Actions.saveAnswers({});
     }
   },
   renderTitle: function () {
@@ -58,10 +64,13 @@ module.exports = React.createClass({
   },
   renderQuestion: function(question) {
     var questionType = Number(question.attr.qType);
-    // return <Text>{questionType}</Text>;
+    var props = {
+      question: this.props.question,
+      navigator: this.props.navigator
+    };
     switch(questionType) {
       case 900: // address
-        return <Address question={this.props.question} />;
+        return <Address {...props} />;
       case 1000: // date/time
         return <DateTime question={this.props.question} />;
       case 1400: // email

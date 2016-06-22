@@ -23,11 +23,18 @@ module.exports = React.createClass({
   render: function() {
     return (
       <Navigator
+          configureScene={this.configureScene}
           initialRoute={{name: 'splash'}}
           renderScene={this.renderScene}
           style={styles.container}
       />
     );
+  },
+  configureScene: function () {
+    return {
+      ...Navigator.SceneConfigs.PushFromRight,
+      gestures: {}
+    };
   },
   renderScene: function(route, navigator) {
     var Component = ROUTES[route.name];

@@ -18,7 +18,10 @@ module.exports = React.createClass({
           titleColor='#FFF'
       />
       <ScrollView style={styles.content}>
-        <Question question={this.props.route.question} />
+        <Question
+            navigator={this.props.navigator}
+            question={this.props.route.question}
+        />
       </ScrollView>
       <NavBar
           navigator={this.props.navigator}
