@@ -66,7 +66,7 @@ describe('<Address />', () => {
     });
   });
 
-  describe('validate()', () => {
+  describe('getError()', () => {
     describe('mandatory', () => {
       describe('all 5 fields are used', () => {
         it('returns an error message when user did not add all fields', () => {

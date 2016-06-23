@@ -4,7 +4,7 @@ import React from 'react';
 import SingleLineField from '../elements/single-line-field';
 import { View } from 'react-native';
 
-var errorsMessages = {
+var errorMessages = {
   mandatory: 'This is a mandatory question.'
 };
 
@@ -30,8 +30,7 @@ module.exports = React.createClass({
         country: '',
         zip: ''
       },
-      answers: {},
-      errorMessage: ''
+      answers: {}
     };
   },
   onInputsChange: function (inputs) {
@@ -49,6 +48,9 @@ module.exports = React.createClass({
       Actions.saveAnswers(this.state.answers);
     } else {
       // if not validated, remove answer & save error instead
+      this.setState({
+        answers: ''
+      });
       Actions.saveError(error);
     }
   },
@@ -78,10 +80,12 @@ module.exports = React.createClass({
     });
   },
   getError: function (question = this.props.question,
-    inputs = this.state.inputs, errors = errorsMessages) {
+    inputs = this.state.inputs, errors = errorMessages) {
+
     var error;
     var isValid = true;
     var isMand = question.childNamed('mand');
+
     if(isMand && isMand.val === 'true') {
       // get possible props
       var fieldsRequired = [];

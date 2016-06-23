@@ -74,7 +74,7 @@ module.exports = React.createClass({
       case 1000: // date/time
         return <DateTime question={this.props.question} />;
       case 1400: // email
-        return <Email question={this.props.question} />;
+        return <Email {...props} />;
       case 1600: // file upload
         return <FileUpload question={this.props.question} />;
       case 200: // free text
