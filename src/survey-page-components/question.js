@@ -86,7 +86,7 @@ module.exports = React.createClass({
       case 400: // multiple choice
         return <MultipleChoice question={this.props.question} />;
       case 800: // name
-        return <Name question={this.props.question} />;
+        return <Name {...props} />;
       case 1100: // number
         return <NumberQuestion question={this.props.question} />;
       case 1900: // page header
