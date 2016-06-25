@@ -9,12 +9,14 @@ import React from 'react';
 module.exports = React.createClass({
   getInitialState: function () {
     return {
-      value: ''
+      value: (this.props.default || '')
     };
   },
   render: function() {
     return (<View style={styles.formElement}>
       <TextInput
+          autoFocus={this.props.autoFocus}
+          keyboardType={this.props.keyboardType}
           onChangeText={this.handleOnChangeText}
           placeholder={this.props.placeholder}
           placeholderTextColor='#C7C7CD'
@@ -24,10 +26,16 @@ module.exports = React.createClass({
     </View>);
   },
   handleOnChangeText: function (text) {
+    // sanitize the text
+    var sanitizedText = text;
+    if(this.props.sanitizeText) {
+      sanitizedText = this.props.sanitizeText(text);
+    }
+
     this.setState({
-      value: text
+      value: sanitizedText
     });
-    Actions.saveInputs(this.props.name, text);
+    Actions.saveInputs(this.props.name, sanitizedText);
   }
 });
 

@@ -88,7 +88,9 @@ module.exports = React.createClass({
       case 800: // name
         return <Name {...props} />;
       case 1100: // number
-        return <NumberQuestion question={this.props.question} />;
+        var props2 = this.getNumberProps();
+        props2.navigator = props.navigator;
+        return <NumberQuestion {...props2} />;
       case 1900: // page header
         return <PageHeader question={this.props.question} />;
       case 950: // phone number
@@ -98,6 +100,57 @@ module.exports = React.createClass({
       case 1500: // URL
         return <Url question={this.props.question} />;
     }
+  },
+  getNumberProps: function (question = this.props.question) {
+    var min = Number(question.childNamed('min_value').val);
+    var max =  Number(question.childNamed('max_value').val);
+    var decimalPlaces = Number(
+      question.childNamed('decimal_places').val);
+    var isSlider = question.childNamed('slider').val === 'true' ? true : false;
+    var labelValue = question.childNamed('label').val;
+
+    var defaultValue = Number(question.childNamed('default_value').val);
+
+    if(isSlider) {
+      defaultValue = defaultValue || min;
+      min = min || 0;
+      max = max || 1;
+    } else {
+      defaultValue = defaultValue || '';
+      min = min || '';
+      max = max || '';
+    }
+
+    var labelPositionNum = Number(question.childNamed('label_position').val);
+    var labelPosition;
+    switch (labelPositionNum) {
+      case 0:
+        labelPosition = 'none';
+        break;
+      case 1:
+        labelPosition = 'before';
+        break;
+      case 2:
+        labelPosition = 'after';
+        break;
+    }
+
+    var isMandatory = false;
+    var isMand = question.childNamed('mand');
+    if(isMand && isMand.val === 'true') {
+      isMandatory = true;
+    }
+
+    return {
+      min,
+      max,
+      defaultValue,
+      isSlider,
+      decimalPlaces,
+      labelPosition,
+      labelValue,
+      isMandatory
+    };
   }
 });
 

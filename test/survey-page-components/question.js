@@ -9,6 +9,7 @@ import Matrix from '../../src/survey-page-components/questions/matrix';
 import MultipleChoice from '../../src/survey-page-components/questions/multiple-choice';
 import Name from '../../src/survey-page-components/questions/name';
 import NumberQuestion from '../../src/survey-page-components/questions/number';
+import numberQuestions from '../../test-data/number-question-xml';
 import PageHeader from '../../src/survey-page-components/questions/page-header';
 import PhoneNumber from '../../src/survey-page-components/questions/phone-number';
 import questions from '../../test-data/questions-xml';
@@ -244,6 +245,186 @@ describe('<Question />', () => {
         expect(wrapper.containsMatchingElement(
           <Url />
         )).to.equal(true);
+      });
+    });
+  });
+
+  describe('getNumberProps', () => {
+    describe('decimalPlaces', () => {
+      var result = Question.prototype.getNumberProps(
+        numberQuestions.decimalPlaces).decimalPlaces;
+
+      it('returns num decimal places entered by user', () => {
+        expect(result).to.equal(1);
+      });
+
+      it('has type number', () => {
+        expect(typeof result).to.equal('number');
+      });
+    });
+
+    describe('labelValue', () => {
+      it('returns the label value as sent', () => {
+        var result = Question.prototype.getNumberProps(
+          numberQuestions.withLabel).labelValue;
+        expect(result).to.equal('$');
+      });
+    });
+
+    describe('labelPosition', () => {
+      it('returns "none" if value 0 was received', () => {
+        var result = Question.prototype.getNumberProps(
+          numberQuestions.labelPositionNone).labelPosition;
+        expect(result).to.equal('none');
+      });
+
+      it('returns "before" if value 1 was received', () => {
+        var result = Question.prototype.getNumberProps(
+          numberQuestions.labelPositionBefore).labelPosition;
+        expect(result).to.equal('before');
+      });
+
+      it('returns "after" if value 2 was received', () => {
+        var result = Question.prototype.getNumberProps(
+          numberQuestions.labelPositionAfter).labelPosition;
+        expect(result).to.equal('after');
+      });
+    });
+
+    describe('for slider type', () => {
+      describe('defaultValue', () => {
+        it('is set to the user-entered default if entered', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderDefaultValueSet).defaultValue;
+          expect(result).to.equal(2);
+        });
+
+        it('is set to the minimum value if not entered by user', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderDefaultValueNotSet).defaultValue;
+          expect(result).to.equal(10);
+        });
+
+        it('has type number', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderDefaultValueSet).defaultValue;
+          expect(typeof result).to.equal('number');
+        });
+      });
+
+      describe('min', () => {
+        it('is set to the minimum set by ther user', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderMinSet).min;
+          expect(result).to.equal(10);
+        });
+
+        it('is set to 0 if not entered by user', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderMinNotSet).min;
+          expect(result).to.equal(0);
+        });
+
+        it('has type number', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderMinSet).min;
+          expect(typeof result).to.equal('number');
+        });
+      });
+
+      describe('max', () => {
+        it('is set to the minimum set by ther user', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderMaxSet).max;
+          expect(result).to.equal(30);
+        });
+
+        it('is set to 0 if not entered by user', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderMaxNotSet).max;
+          expect(result).to.equal(1);
+        });
+
+        it('has type number', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.sliderMaxSet).max;
+          expect(typeof result).to.equal('number');
+        });
+      });
+
+      describe('isSlider', () => {
+        var result = Question.prototype.getNumberProps(
+          numberQuestions.sliderMaxSet).isSlider;
+
+        it('is set to true', () => {
+          expect(result).to.equal(true);
+        });
+
+        it('has type boolean', () => {
+          expect(typeof result).to.equal('boolean');
+        });
+      });
+    });
+
+    describe('for input/not-slider type', () => {
+      describe('defaultValue', () => {
+        it('is set to the user-entered default if entered', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.inputDefaultValueSet).defaultValue;
+          expect(result).to.equal(2);
+          expect(typeof result).to.equal('number');
+        });
+
+        it('is set to empty string if no default is entered by user', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.inputDefaultValueNotSet).defaultValue;
+          expect(result).to.equal('');
+        });
+      });
+
+      describe('min', () => {
+        it('is set to the user-entered default if entered', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.inputMinSet).min;
+          expect(result).to.equal(10);
+          expect(typeof result).to.equal('number');
+        });
+
+        it('is set to empty string if no default is entered by user', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.inputMinNotSet).min;
+          expect(result).to.equal('');
+          expect(typeof result).to.equal('string');
+        });
+      });
+
+      describe('max', () => {
+        it('is set to the user-entered default if entered', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.inputMaxSet).max;
+          expect(result).to.equal(30);
+          expect(typeof result).to.equal('number');
+        });
+
+        it('is set to empty string if no default is entered by user', () => {
+          var result = Question.prototype.getNumberProps(
+            numberQuestions.inputMaxNotSet).max;
+          expect(result).to.equal('');
+          expect(typeof result).to.equal('string');
+        });
+      });
+
+      describe('isSlider', () => {
+        var result = Question.prototype.getNumberProps(
+          numberQuestions.inputMaxSet).isSlider;
+
+        it('is set to false', () => {
+          expect(result).to.equal(false);
+        });
+
+        it('has type boolean', () => {
+          expect(typeof result).to.equal('boolean');
+        });
       });
     });
   });
