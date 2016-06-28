@@ -13,7 +13,10 @@ module.exports = React.createClass({
     };
   },
   render: function() {
-    return (<View style={styles.formElement}>
+    return (<View
+        style={[styles.container,
+          this.props.multiline ? styles.multiline : styles.singleline]}
+      >
       <TextInput
           autoFocus={this.props.autoFocus}
           keyboardType={this.props.keyboardType}
@@ -22,6 +25,10 @@ module.exports = React.createClass({
           placeholderTextColor='#C7C7CD'
           underlineColorAndroid='#FFF'
           value={this.state.value}
+          multiline={this.props.multiline}
+          secureTextEntry={this.props.secureTextEntry}
+          style={this.props.multiline ? styles.multilineText : '' }
+          maxLength={this.props.maxLength}
       />
     </View>);
   },
@@ -40,9 +47,18 @@ module.exports = React.createClass({
 });
 
 var styles = StyleSheet.create({
-  formElement: {
+  container: {
     borderBottomColor: '#e0e0e0',
-    borderBottomWidth: 1,
+    borderBottomWidth: 1
+  },
+  singleline: {
     height: 48
+  },
+  multiline: {
+    borderTopColor: '#e0e0e0',
+    borderTopWidth: 1
+  },
+  multilineText: {
+    height: 130
   }
 });

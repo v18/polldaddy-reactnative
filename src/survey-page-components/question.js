@@ -78,7 +78,9 @@ module.exports = React.createClass({
       case 1600: // file upload
         return <FileUpload question={this.props.question} />;
       case 200: // free text
-        return <FreeText question={this.props.question} />;
+        return <FreeText {...props} />;
+      case 100:
+        return <FreeText {...props} />;
       case 2000: // html snippet
         return <HtmlSnippet question={this.props.question} />;
       case 1200: // matrix / likert
