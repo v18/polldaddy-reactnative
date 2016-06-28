@@ -98,7 +98,7 @@ module.exports = React.createClass({
       case 1300: // rank
         return <Rank question={this.props.question} />;
       case 1500: // URL
-        return <Url question={this.props.question} />;
+        return <Url {...props} />;
     }
   },
   getNumberProps: function (question = this.props.question) {
