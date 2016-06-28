@@ -94,7 +94,7 @@ module.exports = React.createClass({
       case 1900: // page header
         return <PageHeader question={this.props.question} />;
       case 950: // phone number
-        return <PhoneNumber question={this.props.question} />;
+        return <PhoneNumber {...props} />;
       case 1300: // rank
         return <Rank question={this.props.question} />;
       case 1500: // URL
