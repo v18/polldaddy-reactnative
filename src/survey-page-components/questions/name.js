@@ -1,7 +1,7 @@
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
-import SingleLineField from '../elements/single-line-field';
+import TextField from '../elements/text-field';
 import { View } from 'react-native';
 
 var errorMessages = {
@@ -75,7 +75,7 @@ module.exports = React.createClass({
 
     return fields.map(function (field) {
       return (
-        <SingleLineField
+        <TextField
             key={field}
             name={field}
             placeholder={question.childNamed(field).val}

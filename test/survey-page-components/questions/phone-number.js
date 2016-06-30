@@ -4,7 +4,7 @@ import { Picker } from 'react-native';
 import questions from '../../../test-data/phone-number-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
-import SingleLineInput from '../../../src/survey-page-components/elements/single-line-field';
+import TextField from '../../../src/survey-page-components/elements/text-field';
 
 var errors = {
   mandatory: 'This is a mandatory question.'
@@ -32,9 +32,9 @@ describe('<PhoneNumber />', () => {
     });
 
     it('displays the single line field with placeholder if given', () => {
-      var withPlaceholderResult = wrapperWithPlaceholder.find(SingleLineInput).prop('placeholder');
+      var withPlaceholderResult = wrapperWithPlaceholder.find(TextField).prop('placeholder');
 
-      var withoutPlaceholderResult = wrapperWithoutPlaceholder.find(SingleLineInput).prop('placeholder');
+      var withoutPlaceholderResult = wrapperWithoutPlaceholder.find(TextField).prop('placeholder');
 
       expect(withPlaceholderResult).to.equal('Placeholder');
       expect(withoutPlaceholderResult).to.equal('');

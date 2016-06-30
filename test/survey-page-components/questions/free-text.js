@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import questions from '../../../test-data/free-text-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
-import SingleFieldInput from '../../../src/survey-page-components/elements/single-line-field';
+import TextField from '../../../src/survey-page-components/elements/text-field';
 
 var errors = {
   mandatory: 'This is a mandatory question.'
@@ -19,17 +19,17 @@ describe('<FreeText />', () => {
 
       var wrapperSingleLineLarge = shallow(<FreeText question={questions.mandatorySingleLineSmall} />);
 
-      expect(wrapperSingleLineSmall.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperSingleLineSmall.find(SingleFieldInput)
+      expect(wrapperSingleLineSmall.find(TextField)).to.have.length(1);
+      expect(wrapperSingleLineSmall.find(TextField)
           .prop('name')).to.equal('freeText');
 
 
-      expect(wrapperSingleLineMedium.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperSingleLineMedium.find(SingleFieldInput)
+      expect(wrapperSingleLineMedium.find(TextField)).to.have.length(1);
+      expect(wrapperSingleLineMedium.find(TextField)
           .prop('name')).to.equal('freeText');
 
-      expect(wrapperSingleLineLarge.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperSingleLineLarge.find(SingleFieldInput)
+      expect(wrapperSingleLineLarge.find(TextField)).to.have.length(1);
+      expect(wrapperSingleLineLarge.find(TextField)
           .prop('name')).to.equal('freeText');
     });
 
@@ -40,22 +40,22 @@ describe('<FreeText />', () => {
 
       var wrapperPasswordLarge = shallow(<FreeText question={questions.mandatoryPasswordLarge} />);
 
-      expect(wrapperPasswordSmall.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperPasswordSmall.find(SingleFieldInput)
+      expect(wrapperPasswordSmall.find(TextField)).to.have.length(1);
+      expect(wrapperPasswordSmall.find(TextField)
         .prop('secureTextEntry')).to.equal(true);
-      expect(wrapperPasswordSmall.find(SingleFieldInput)
+      expect(wrapperPasswordSmall.find(TextField)
         .prop('name')).to.equal('freeText');
 
-      expect(wrapperPasswordMedium.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperPasswordMedium.find(SingleFieldInput)
+      expect(wrapperPasswordMedium.find(TextField)).to.have.length(1);
+      expect(wrapperPasswordMedium.find(TextField)
         .prop('secureTextEntry')).to.equal(true);
-      expect(wrapperPasswordMedium.find(SingleFieldInput)
+      expect(wrapperPasswordMedium.find(TextField)
           .prop('name')).to.equal('freeText');
 
-      expect(wrapperPasswordLarge.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperPasswordLarge.find(SingleFieldInput)
+      expect(wrapperPasswordLarge.find(TextField)).to.have.length(1);
+      expect(wrapperPasswordLarge.find(TextField)
         .prop('secureTextEntry')).to.equal(true);
-      expect(wrapperPasswordLarge.find(SingleFieldInput)
+      expect(wrapperPasswordLarge.find(TextField)
           .prop('name')).to.equal('freeText');
     });
 
@@ -66,22 +66,22 @@ describe('<FreeText />', () => {
 
       var wrapperMultiLineMedium = shallow(<FreeText question={questions.mandatoryMultiLineLarge} />);
 
-      expect(wrapperMultiLineSmall.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperMultiLineSmall.find(SingleFieldInput)
+      expect(wrapperMultiLineSmall.find(TextField)).to.have.length(1);
+      expect(wrapperMultiLineSmall.find(TextField)
         .prop('multiline')).to.equal(true);
-      expect(wrapperMultiLineSmall.find(SingleFieldInput)
+      expect(wrapperMultiLineSmall.find(TextField)
         .prop('name')).to.equal('freeText');
 
-      expect(wrapperMultiLineMedium.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperMultiLineMedium.find(SingleFieldInput)
+      expect(wrapperMultiLineMedium.find(TextField)).to.have.length(1);
+      expect(wrapperMultiLineMedium.find(TextField)
         .prop('multiline')).to.equal(true);
-      expect(wrapperMultiLineMedium.find(SingleFieldInput)
+      expect(wrapperMultiLineMedium.find(TextField)
           .prop('name')).to.equal('freeText');
 
-      expect(wrapperMultiLineMedium.find(SingleFieldInput)).to.have.length(1);
-      expect(wrapperMultiLineMedium.find(SingleFieldInput)
+      expect(wrapperMultiLineMedium.find(TextField)).to.have.length(1);
+      expect(wrapperMultiLineMedium.find(TextField)
         .prop('multiline')).to.equal(true);
-      expect(wrapperMultiLineMedium.find(SingleFieldInput)
+      expect(wrapperMultiLineMedium.find(TextField)
           .prop('name')).to.equal('freeText');
     });
   });

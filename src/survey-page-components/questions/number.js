@@ -7,7 +7,7 @@ import {
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
-import SingleLineField from '../elements/single-line-field';
+import TextField from '../elements/text-field';
 
 var errorsMessages = {
   mandatory: 'This is a mandatory question.',
@@ -137,7 +137,7 @@ module.exports = React.createClass({
       <View style={styles.textInputContainer}>
       {this.renderLabelBefore(this.props.labelPosition, this.props.labelValue)}
       <View style={styles.default}>
-        <SingleLineField
+        <TextField
             autoFocus={true}
             default={this.state.inputs.number.toString()}
             keyboardType='numeric'

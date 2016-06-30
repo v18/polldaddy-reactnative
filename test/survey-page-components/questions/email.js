@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import questions from '../../../test-data/email-question-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
-import SingleFieldInput from '../../../src/survey-page-components/elements/single-line-field';
+import TextField from '../../../src/survey-page-components/elements/text-field';
 var errors = {
   mandatory: 'This is a mandatory question.',
   invalid: 'You must enter a valid email address here.'
@@ -15,7 +15,7 @@ describe('<Email />', () => {
   describe('correctly displays', () => {
     it('placeholder', () => {
       var wrapper = shallow(<Email question={questions.mandatoryExample} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(1);
+      expect(wrapper.find(TextField)).to.have.length(1);
 
       var placeholder = wrapper.find({placeholder: 'person@place.com'});
       expect(placeholder).to.have.length(1);
@@ -23,7 +23,7 @@ describe('<Email />', () => {
 
     it('no placeholder', () => {
       var wrapper = shallow(<Email question={questions.mandatoryNoExample} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(1);
+      expect(wrapper.find(TextField)).to.have.length(1);
 
       var placeholder = wrapper.find({placeholder: ''});
       expect(placeholder).to.have.length(1);

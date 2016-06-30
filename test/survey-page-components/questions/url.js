@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import questions from '../../../test-data/url-question-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
-import SingleLineInput from '../../../src/survey-page-components/elements/single-line-field';
+import TextField from '../../../src/survey-page-components/elements/text-field';
 import Url from '../../../src/survey-page-components/questions/url';
 
 var errors = {
@@ -17,9 +17,9 @@ describe('<Url />', () => {
     var wrapperWithoutPlaceholder = shallow(<Url question={questions.mandatoryNoPlaceholder} />);
 
     it('displays the input field with placeholder if given', () => {
-      var placeholderResult = wrapperWithPlaceholder.find(SingleLineInput).prop('placeholder');
+      var placeholderResult = wrapperWithPlaceholder.find(TextField).prop('placeholder');
 
-      var noPlaceholderResult = wrapperWithoutPlaceholder.find(SingleLineInput).prop('placeholder');
+      var noPlaceholderResult = wrapperWithoutPlaceholder.find(TextField).prop('placeholder');
 
       expect(placeholderResult).to.equal('http://www.example.com');
       expect(noPlaceholderResult).to.equal('');

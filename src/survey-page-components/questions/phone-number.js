@@ -6,7 +6,7 @@ import Actions from '../../actions/current-question';
 import countriesList from '../../utils/country-code-list.js';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
-import SingleLineInput from '../elements/single-line-field';
+import TextField from '../elements/text-field';
 
 var errorMessages = {
   mandatory: 'This is a mandatory question.'
@@ -60,7 +60,7 @@ module.exports = React.createClass({
   },
   render: function () {
     return (<View>
-      <SingleLineInput
+      <TextField
           autoFocus={true}
           name='phoneNumber'
           placeholder={this.props.question.childNamed('example').val}

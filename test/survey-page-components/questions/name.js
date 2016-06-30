@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import questions from '../../../test-data/name-question-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
-import SingleFieldInput from '../../../src/survey-page-components/elements/single-line-field';
+import TextField from '../../../src/survey-page-components/elements/text-field';
 var errors = {
   mandatory: 'This is a mandatory question.'
 };
@@ -13,7 +13,7 @@ describe('<Name />', () => {
   describe('correctly displays', () => {
     it('case 0: title, first, last, suffix', () => {
       var wrapper = shallow(<Name question={questions.mandatoryFullName} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(4);
+      expect(wrapper.find(TextField)).to.have.length(4);
 
       var title = wrapper.find({placeholder: 'Title'});
       expect(title).to.have.length(1);
@@ -30,7 +30,7 @@ describe('<Name />', () => {
 
     it('case 1: title, first, and last', () => {
       var wrapper = shallow(<Name question={questions.mandatoryTitleFirstAndLast} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(3);
+      expect(wrapper.find(TextField)).to.have.length(3);
 
       var title = wrapper.find({placeholder: 'Title'});
       expect(title).to.have.length(1);
@@ -44,7 +44,7 @@ describe('<Name />', () => {
 
     it('case 2: first and last', () => {
       var wrapper = shallow(<Name question={questions.mandatoryFirstAndLast} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(2);
+      expect(wrapper.find(TextField)).to.have.length(2);
 
       var first = wrapper.find({placeholder: 'First Name'});
       expect(first).to.have.length(1);

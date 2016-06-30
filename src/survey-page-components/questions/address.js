@@ -1,7 +1,7 @@
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
-import SingleLineField from '../elements/single-line-field';
+import TextField from '../elements/text-field';
 import { View } from 'react-native';
 
 var errorMessages = {
@@ -71,7 +71,7 @@ module.exports = React.createClass({
     return possibleFields.map(function (field) {
       if(question.childNamed(field.check).val === 'true') {
         return (
-          <SingleLineField
+          <TextField
               key={field.name}
               name={field.name}
               placeholder={question.childNamed(field.name).val}

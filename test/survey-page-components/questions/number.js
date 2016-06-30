@@ -3,7 +3,7 @@ import getErrorProps from '../../../test-data/number-question-getError-props';
 import props from '../../../test-data/number-question-props';
 import React from 'react';
 import { shallow } from 'enzyme';
-import SingleFieldInput from '../../../src/survey-page-components/elements/single-line-field';
+import TextField from '../../../src/survey-page-components/elements/text-field';
 import { Text } from 'react-native';
 
 var errors = {
@@ -19,14 +19,14 @@ describe('<NumberQuestion />', () => {
     it('displays correctly'); // pending test: <Slider /> not working with mocha
     it('shows number without label', () => {
       var wrapper = shallow(<NumberQuestion {...props.sliderNoLabel} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(0);
+      expect(wrapper.find(TextField)).to.have.length(0);
       expect(wrapper.find(Text)).to.have.length(1);
       expect(wrapper.containsMatchingElement(<Text>0</Text>)).to.equal(true);
     });
 
     it('shows number and label', () => {
       var wrapper = shallow(<NumberQuestion {...props.sliderWithLabel} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(0);
+      expect(wrapper.find(TextField)).to.have.length(0);
       expect(wrapper.find(Text)).to.have.length(2);
       expect(wrapper.containsMatchingElement(<Text>1</Text>)).to.equal(true);
       expect(wrapper.containsMatchingElement(<Text>$</Text>)).to.equal(true);
@@ -36,9 +36,9 @@ describe('<NumberQuestion />', () => {
   describe('input field', () => {
     describe('with label', () => {
       var wrapper = shallow(<NumberQuestion {...props.inputWithLabel} />);
-      it('has <SingleFieldInput /> with the correct default value', () => {
-        expect(wrapper.find(SingleFieldInput)).to.have.length(1);
-        expect(wrapper.find(SingleFieldInput).props().default).to.equal('3');
+      it('has <TextField /> with the correct default value', () => {
+        expect(wrapper.find(TextField)).to.have.length(1);
+        expect(wrapper.find(TextField).props().default).to.equal('3');
       });
       it('displays correct label', () => {
         expect(wrapper.find(Text)).to.have.length(1);

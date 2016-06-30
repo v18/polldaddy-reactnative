@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import questions from '../../../test-data/address-questions-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
-import SingleFieldInput from '../../../src/survey-page-components/elements/single-line-field';
+import TextField from '../../../src/survey-page-components/elements/text-field';
 var errors = {
   mandatory: 'This is a mandatory question.'
 };
@@ -17,7 +17,7 @@ describe('<Address />', () => {
   describe('correctly displays', () => {
     it('add1 and add2', () => {
       var wrapper = shallow(<Address question={questions.mandatoryPlace} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(2);
+      expect(wrapper.find(TextField)).to.have.length(2);
 
       var add1 = wrapper.find({placeholder: 'Address Line 1'});
       expect(add1).to.have.length(1);
@@ -27,14 +27,14 @@ describe('<Address />', () => {
     });
     it('state field', () => {
       var wrapper = shallow(<Address question={questions.mandatoryState} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(1);
+      expect(wrapper.find(TextField)).to.have.length(1);
 
       var state = wrapper.find({placeholder: 'State'});
       expect(state).to.have.length(1);
     });
     it('all fields', () => {
       var wrapper = shallow(<Address question={questions.mandatoryAll} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(6);
+      expect(wrapper.find(TextField)).to.have.length(6);
 
       var add1 = wrapper.find({placeholder: 'Address Line 1'});
       expect(add1).to.have.length(1);
@@ -56,7 +56,7 @@ describe('<Address />', () => {
     });
     it('city and country', () => {
       var wrapper = shallow(<Address question={questions.mandatoryTwoNonPlace} />);
-      expect(wrapper.find(SingleFieldInput)).to.have.length(2);
+      expect(wrapper.find(TextField)).to.have.length(2);
 
       var city = wrapper.find({placeholder: 'City'});
       expect(city).to.have.length(1);

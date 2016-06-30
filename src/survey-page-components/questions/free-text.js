@@ -6,7 +6,7 @@ import {
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
-import SingleLineInput from '../elements/single-line-field';
+import TextField from '../elements/text-field';
 
 var errorMessages = {
   mandatory: 'This is a mandatory question.'
@@ -62,7 +62,7 @@ module.exports = React.createClass({
     var type = Number(question.childNamed('type').val);
     switch(type) {
       case 0: // single-line
-        return <SingleLineInput
+        return <TextField
             autoFocus={true}
             name='freeText'
             placeholder=''
@@ -70,7 +70,7 @@ module.exports = React.createClass({
           />;
         break;
       case 1: // multi-line
-        return <SingleLineInput
+        return <TextField
             autoCapitalize='sentences'
             autoFocus={true}
             name='freeText'
@@ -79,7 +79,7 @@ module.exports = React.createClass({
           />;
         break;
       case 2: // password
-        return <SingleLineInput
+        return <TextField
             autoFocus={true}
             name='freeText'
             placeholder=''
