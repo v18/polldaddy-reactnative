@@ -44,7 +44,12 @@ module.exports = {
 
         // create and add start question to the beginning
         // API response is sent with default
-        var finishXml = createHTMLQuestionXml(survey.title, xmlDocument.childNamed('endMessage').val);
+        var endMessage = xmlDocument.childNamed('startMessage');
+        var endHtml = '';
+        if(endMessage) {
+          endHtml = endMessage.val;
+        }
+        var finishXml = createHTMLQuestionXml(survey.title, endHtml);
         var finishQ = new xmlParser.XmlDocument(finishXml);
         finishQ.pageType = 'finish';
         questions.push(finishQ);
