@@ -19,8 +19,12 @@ module.exports = React.createClass({
     });
   },
   componentWillUnmount: function () {
-    this.focusListener.remove();
-    this.unsubscribeFromAnswers();
+    if(this.focusListener) {
+      this.focusListener.remove();
+    }
+    if(this.unsubscribeFromAnswers) {
+      this.unsubscribeFromAnswers();
+    }
   },
   render: function() {
     var nav = this.props.navigator;

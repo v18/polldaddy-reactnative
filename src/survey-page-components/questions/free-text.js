@@ -1,12 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 import TextField from '../elements/text-field';
+import { View } from 'react-native';
 
 var errorMessages = {
   mandatory: 'This is a mandatory question.'
@@ -14,9 +10,10 @@ var errorMessages = {
 
 module.exports = React.createClass({
   render: function () {
-    return <View>
-      {this.renderCorrectSize()}
-    </View>;
+    return (
+      <View>
+        {this.renderCorrectSize()}
+      </View>);
   },
   componentDidMount: function () {
     this.unsubscribeFromInputs = InputsStore.listen(this.onInputsChange);
@@ -26,8 +23,12 @@ module.exports = React.createClass({
     });
   },
   componentWillUnmount: function () {
-    this.focusListener.remove();
-    this.unsubscribeFromInputs();
+    if(this.focusListener) {
+      this.focusListener.remove();
+    }
+    if(this.unsubscribeFromAnswers) {
+      this.unsubscribeFromAnswers();
+    }
   },
   getInitialState: function () {
     return {
@@ -62,31 +63,31 @@ module.exports = React.createClass({
     var type = Number(question.childNamed('type').val);
     switch(type) {
       case 0: // single-line
-        return <TextField
-            autoFocus={true}
-            name='freeText'
-            placeholder=''
-            maxLength={500}
-          />;
-        break;
+        return (
+          <TextField
+              autoFocus={true}
+              maxLength={500}
+              name='freeText'
+              placeholder=''
+          />);
       case 1: // multi-line
-        return <TextField
-            autoCapitalize='sentences'
-            autoFocus={true}
-            name='freeText'
-            multiline={true}
-            placeholder=''
-          />;
-        break;
+        return (
+          <TextField
+              autoCapitalize='sentences'
+              autoFocus={true}
+              multiline={true}
+              name='freeText'
+              placeholder=''
+          />);
       case 2: // password
-        return <TextField
-            autoFocus={true}
-            name='freeText'
-            placeholder=''
-            secureTextEntry={true}
-            maxLength={500}
-          />;
-        break;
+        return (
+          <TextField
+              autoFocus={true}
+              maxLength={500}
+              name='freeText'
+              placeholder=''
+              secureTextEntry={true}
+          />);
     }
   },
   getError: function (question = this.props.question,

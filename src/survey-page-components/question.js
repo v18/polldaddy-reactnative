@@ -82,7 +82,7 @@ module.exports = React.createClass({
       case 100:
         return <FreeText {...props} />;
       case 2000: // html snippet
-        return <HtmlSnippet question={this.props.question} />;
+        return <HtmlSnippet {...props} />;
       case 1200: // matrix / likert
         return <Matrix question={this.props.question} />;
       case 400: // multiple choice

@@ -1,12 +1,20 @@
 import {
-  StyleSheet,
   Text,
   View
 } from 'react-native';
+import Html from '../elements/html';
 import React from 'react';
 
 module.exports = React.createClass({
   render: function () {
-    return <Text>html snippet question</Text>;
+    var htmlString = '';
+    var chunk = this.props.question.childNamed('chunk');
+    if(chunk.val) {
+      htmlString = chunk.val;
+    }
+    return (<View>
+      <Text>HI!</Text>
+      <Html htmlString={htmlString} />
+    </View>);
   }
 });

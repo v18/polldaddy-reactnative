@@ -32,8 +32,12 @@ module.exports = React.createClass({
     });
   },
   componentWillUnmount: function () {
-    this.focusListener.remove();
-    this.unsubscribeFromInputs();
+    if(this.focusListener) {
+      this.focusListener.remove();
+    }
+    if(this.unsubscribeFromAnswers) {
+      this.unsubscribeFromAnswers();
+    }
   },
   truncateNumber: function (text, decimalPlaces = this.props.decimalPlaces) {
     if (text.indexOf('..') > -1) { // don't let users type ".."

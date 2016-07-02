@@ -28,7 +28,6 @@ module.exports = {
 
         // create and add start question to the beginning
         // provide '' as default in case API doesn't send default
-
         var startMessage = xmlDocument.childNamed('startMessage');
         var startHtml = '';
         if(startMessage) {
@@ -53,7 +52,6 @@ module.exports = {
         var finishQ = new xmlParser.XmlDocument(finishXml);
         finishQ.pageType = 'finish';
         questions.push(finishQ);
-
         return Promise.resolve(true);
       })
       .catch(function (error) {

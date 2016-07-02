@@ -1,4 +1,7 @@
+import imagesApi from './local-image-api';
 import SQLite from 'react-native-sqlite-storage';
+import imageUtils from './image-utils';
+
 SQLite.enablePromise(true);
 
 var db_name = 'polldaddy.sql';
@@ -46,23 +49,37 @@ SQLite.openDatabase({name: db_name, version: db_version})
 
 module.exports = {
   insertItem: function(values) {
-    return new Promise(function(resolve ) {
-      db.transaction(function(txn) {
-        txn.executeSql('INSERT INTO Surveys ('
-          + 'surveyId, name, title, formXML, '
-          + 'responses, lastSyncd, created, userId) VALUES '
-          + '(?, ?, ?, ?, ?, ?, ?, ?);', [values.surveyId,
-            values.name, values.title, values.formXML,
-            values.responses, values.lastSyncd,
-            values.created, values.userId]);
-      })
-      .then(function () {
-        resolve(values.surveyId);
-      })
-      .catch(function (error) {
-        throw error;
-      })
-      .done();
+    return new Promise(function(resolve, reject) {
+      imagesApi.makeSurveyDirectory(values.surveyId)
+        .then(function () {
+          return imagesApi.downloadAllImagesForSurvey(values.surveyId, values.formXML);
+        })
+        .then(function (images) {
+          images.map(function(image) {
+            if(image.original !== image.local) { // if we have a local image
+              values.formXML = imageUtils.replaceAllInSurveyXml(values.formXML, image.original, image.local);
+            }
+          });
+          return Promise.resolve();
+        })
+        .then(function () {
+          return db.transaction(function(txn) {
+            txn.executeSql('INSERT INTO Surveys ('
+              + 'surveyId, name, title, formXML, '
+              + 'responses, lastSyncd, created, userId) VALUES '
+              + '(?, ?, ?, ?, ?, ?, ?, ?);', [values.surveyId,
+                values.name, values.title, values.formXML,
+                values.responses, values.lastSyncd,
+                values.created, values.userId]);
+          })
+        })
+        .then(function () {
+          resolve(values.surveyId);
+        })
+        .catch(function (error) {
+          throw error;
+        })
+        .done();
     });
   },
   removeItems: function(itemArray) {
@@ -70,6 +87,10 @@ module.exports = {
       db.transaction(function(txn) {
         itemArray.map(function (itemId) {
           txn.executeSql('DELETE FROM Surveys WHERE surveyId=(?);', [itemId])
+          .then(function () {
+            // remove survey folder
+            return imagesApi.deleteSurveyDirectory(itemId);
+          })
           .then(function() {
             resolve(true);
           })

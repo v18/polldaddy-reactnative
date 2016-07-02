@@ -64,7 +64,7 @@ describe('<FreeText />', () => {
 
       var wrapperMultiLineMedium = shallow(<FreeText question={questions.mandatoryMultiLineMedium} />);
 
-      var wrapperMultiLineMedium = shallow(<FreeText question={questions.mandatoryMultiLineLarge} />);
+      var wrapperMultiLineLarge = shallow(<FreeText question={questions.mandatoryMultiLineLarge} />);
 
       expect(wrapperMultiLineSmall.find(TextField)).to.have.length(1);
       expect(wrapperMultiLineSmall.find(TextField)
@@ -78,10 +78,10 @@ describe('<FreeText />', () => {
       expect(wrapperMultiLineMedium.find(TextField)
           .prop('name')).to.equal('freeText');
 
-      expect(wrapperMultiLineMedium.find(TextField)).to.have.length(1);
-      expect(wrapperMultiLineMedium.find(TextField)
+      expect(wrapperMultiLineLarge.find(TextField)).to.have.length(1);
+      expect(wrapperMultiLineLarge.find(TextField)
         .prop('multiline')).to.equal(true);
-      expect(wrapperMultiLineMedium.find(TextField)
+      expect(wrapperMultiLineLarge.find(TextField)
           .prop('name')).to.equal('freeText');
     });
   });
@@ -114,5 +114,5 @@ describe('<FreeText />', () => {
         expect(result).to.equal(errors.mandatory);
       });
     });
-  })
+  });
 });

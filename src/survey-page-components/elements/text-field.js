@@ -13,23 +13,24 @@ module.exports = React.createClass({
     };
   },
   render: function() {
-    return (<View
-        style={[styles.container,
-          this.props.multiline ? styles.multiline : styles.singleline]}
+    return (
+      <View
+          style={[styles.container,
+            this.props.multiline ? styles.multiline : styles.singleline]}
       >
-      <TextInput
-          autoFocus={this.props.autoFocus}
-          keyboardType={this.props.keyboardType}
-          onChangeText={this.handleOnChangeText}
-          placeholder={this.props.placeholder}
-          placeholderTextColor='#C7C7CD'
-          underlineColorAndroid='#FFF'
-          value={this.state.value}
-          multiline={this.props.multiline}
-          secureTextEntry={this.props.secureTextEntry}
-          style={this.props.multiline ? styles.multilineText : '' }
-          maxLength={this.props.maxLength}
-      />
+        <TextInput
+            autoFocus={this.props.autoFocus}
+            keyboardType={this.props.keyboardType}
+            maxLength={this.props.maxLength}
+            multiline={this.props.multiline}
+            onChangeText={this.handleOnChangeText}
+            placeholder={this.props.placeholder}
+            placeholderTextColor='#C7C7CD'
+            secureTextEntry={this.props.secureTextEntry}
+            style={this.props.multiline ? styles.multilineText : ''}
+            underlineColorAndroid='#FFF'
+            value={this.state.value}
+        />
     </View>);
   },
   handleOnChangeText: function (text) {

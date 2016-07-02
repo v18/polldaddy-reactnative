@@ -3,8 +3,8 @@ import getErrorProps from '../../../test-data/number-question-getError-props';
 import props from '../../../test-data/number-question-props';
 import React from 'react';
 import { shallow } from 'enzyme';
-import TextField from '../../../src/survey-page-components/elements/text-field';
 import { Text } from 'react-native';
+import TextField from '../../../src/survey-page-components/elements/text-field';
 
 var errors = {
   mandatory: 'This is a mandatory question.',

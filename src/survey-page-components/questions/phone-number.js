@@ -21,8 +21,12 @@ module.exports = React.createClass({
     });
   },
   componentWillUnmount: function () {
-    this.focusListener.remove();
-    this.unsubscribeFromInputs();
+    if(this.focusListener) {
+      this.focusListener.remove();
+    }
+    if(this.unsubscribeFromAnswers) {
+      this.unsubscribeFromAnswers();
+    }
   },
   getInitialState: function () {
     var defaultCountry = this.props.question.childNamed('default_country').val;

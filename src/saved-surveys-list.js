@@ -4,13 +4,13 @@ import {
   StyleSheet,
   Text,
   ToolbarAndroid,
-  TouchableHighlight,
   View
 } from 'react-native';
 import _ from './utils/lodash';
 import Api from './utils/api';
 import Database from './utils/database';
 import React from 'react';
+import SavedSurveyRow from './saved-survey-row';
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -29,8 +29,7 @@ module.exports = React.createClass({
     Promise.all([
       AsyncStorage.getItem('userId'),
       AsyncStorage.getItem('userCode')
-    ]).then((userValues) => {
-      var userId = userValues[0], userCode = userValues[1];
+    ]).then(([userId, userCode]) => {
       if(!userCode || !userId) {
         throw new Error('no user saved');
       }
@@ -38,7 +37,7 @@ module.exports = React.createClass({
         userCode: userCode,
         userId: userId
       });
-      return userId;
+      return Promise.resolve(userId);
     })
     .then(function(userId) {
       return Database.getItems(parseInt(userId));
@@ -48,14 +47,20 @@ module.exports = React.createClass({
       if(_.has(this,'props.route.selectedItems')) {
         items = _.combineItemLists(databaseItems, this.props.route.selectedItems);
       }
-
-      this.setState({
-        items: items.toDisplay,
-        dataSource: this.state.dataSource.cloneWithRows(items.toDisplay)
+      return new Promise((resolve) => {
+        this.setState({
+          items: items.toDisplay,
+          dataSource: this.state.dataSource.cloneWithRows(items.toDisplay)
+        }, function () {
+          resolve([items.toDelete, items.toSave]);
+        });
       });
-
-      Database.removeItems(items.toDelete);
-      this.saveItemsToDatabase(items.toSave);
+    })
+    .then(([itemsToDelete, itemsToSave]) => {
+      return Promise.all([
+        Database.removeItems(itemsToDelete),
+        this.saveItemsToDatabase(itemsToSave)
+      ]);
     })
     .catch(function (error) {
       throw error;
@@ -97,23 +102,16 @@ module.exports = React.createClass({
       );
     }
   },
-  renderRow: function(rowData) {
+  renderRow: function (rowData) {
     return (
-      <TouchableHighlight
-          onPress={() => {this.handleRowClick(rowData);}} // eslint-disable-line react/jsx-no-bind
-          underlayColor='#e0e0e0'
-      >
-        <View style={styles.rowContainer}>
-          <Text style={styles.title}>{rowData.title}</Text>
-          <Text style={styles.responses}>{rowData.responses} offline responses</Text>
-        </View>
-      </TouchableHighlight>
-    );
+      <SavedSurveyRow
+          handleRowClick={this.handleRowClick}
+          rowData={rowData}
+      />);
   },
   onActionSelected: function(position) {
     if(position === 0) {
       var selectedItems = this.state.items.map(function (item) {
-        delete item.saved;
         delete item.responses;
         return item;
       });
@@ -124,12 +122,14 @@ module.exports = React.createClass({
     }
   },
   handleRowClick: function (rowData) {
-    this.props.navigator.push({
-      name: 'surveyLauncher',
-      surveyId: rowData.id,
-      surveyTitle: rowData.title,
-      responses: rowData.responses
-    });
+    if(rowData.saved) {
+      this.props.navigator.push({
+        name: 'surveyLauncher',
+        surveyId: rowData.id,
+        surveyTitle: rowData.title,
+        responses: rowData.responses
+      });
+    }
   },
   saveItemsToDatabase: function(itemsToSave) {
     // save to database
@@ -148,17 +148,25 @@ module.exports = React.createClass({
           });
         })
         .then((itemId) => {
-          // when saved, change status to saved in state
-          var itemIndex = _.indexOfItem(this.state.items, itemId);
-          var newItems = this.state.items.slice();
+          var newItems = _.cloneDeep(this.state.items);
+          var itemIndex = _.indexOfItem(newItems, itemId);
           newItems[itemIndex].saved = true;
           this.setState({
             items: newItems,
             dataSource: this.state.dataSource.cloneWithRows(newItems)
           });
         })
-        .catch(function (error) {
-          throw error;
+        .catch(() => {
+          // could not download or save item
+          // remove item saved surveys list
+          var newItems = _.cloneDeep(this.state.items);
+          newItems = _.remove(newItems, function (item) {
+            return item.id !== itemId;
+          });
+          this.setState({
+            items: newItems,
+            dataSource: this.state.dataSource.cloneWithRows(newItems)
+          });
         })
         .done();
     });
@@ -188,23 +196,5 @@ var styles = StyleSheet.create({
   },
   link: {
     color: '#B72422'
-  },
-  rowContainer: {
-    borderBottomColor: '#e0e0e0',
-    borderBottomWidth: 1,
-    height: 72,
-    paddingLeft: 16,
-    paddingRight: 16,
-    justifyContent: 'center'
-  },
-  title: {
-    color: 'black',
-    fontSize: 16,
-    marginTop: 20
-  },
-  responses: {
-    marginTop: 2,
-    marginBottom: 20,
-    fontSize: 14
   }
 });
