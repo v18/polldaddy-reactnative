@@ -72,7 +72,16 @@ module.exports = React.createClass({
             break;
           default:
             Alert.alert('Error',
-              "Sorry, we couldn't get the surveys and quizzes from Polldaddy.com just now. Please try again later.");
+              "Sorry, we couldn't get the surveys and quizzes from Polldaddy.com just now. Please try again later.",
+            [{
+              text: 'Ok',
+              onPress: () => {
+                this.props.navigator.immediatelyResetRouteStack([{
+                  name: 'savedSurveysList',
+                  selectedItems: []
+                }]);
+              }
+            }]);
         }
       }.bind(this));
   },
