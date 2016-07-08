@@ -13,7 +13,6 @@ module.exports = React.createClass({
       htmlString = chunk.val;
     }
     return (<View>
-      <Text>HI!</Text>
       <Html htmlString={htmlString} />
     </View>);
   }
