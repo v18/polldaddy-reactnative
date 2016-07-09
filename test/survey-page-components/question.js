@@ -4,13 +4,13 @@ import Email from '../../src/survey-page-components/questions/email';
 import { expect } from 'chai';
 import FileUpload from '../../src/survey-page-components/questions/file-upload';
 import FreeText from '../../src/survey-page-components/questions/free-text';
+import Html from '../../src/survey-page-components/elements/html';
 import HtmlSnippet from '../../src/survey-page-components/questions/html-snippet';
 import Matrix from '../../src/survey-page-components/questions/matrix';
 import MultipleChoice from '../../src/survey-page-components/questions/multiple-choice';
 import Name from '../../src/survey-page-components/questions/name';
 import NumberQuestion from '../../src/survey-page-components/questions/number';
 import numberQuestions from '../../test-data/number-question-xml';
-import PageHeader from '../../src/survey-page-components/questions/page-header';
 import PhoneNumber from '../../src/survey-page-components/questions/phone-number';
 import questions from '../../test-data/questions-xml';
 import Rank from '../../src/survey-page-components/questions/rank';
@@ -29,11 +29,9 @@ describe('<Question />', () => {
     it('is displayed when question has note', () => {
       var wrapper = shallow(<Question question={questions.withNote} />);
       expect(wrapper.containsMatchingElement(
-        <Text>This is a note</Text>
+        <Html />
       )).to.equal(true);
     });
-    // pending - wait until the note is displayed using an HTML component
-    it('is not displayed when question does not have note');
   });
 
   describe('mandatory * indicator', () => {
@@ -197,11 +195,6 @@ describe('<Question />', () => {
       it('does display the title', () => {
         expect(wrapper.containsMatchingElement(
           <Text>Page Header</Text>
-        )).to.equal(true);
-      });
-      it('with <PageHeader />', () => {
-        expect(wrapper.containsMatchingElement(
-          <PageHeader />
         )).to.equal(true);
       });
     });

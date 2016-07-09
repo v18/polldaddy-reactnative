@@ -1,9 +1,6 @@
-import {
-  Text,
-  View
-} from 'react-native';
 import Html from '../elements/html';
 import React from 'react';
+import { View } from 'react-native';
 
 module.exports = React.createClass({
   render: function () {

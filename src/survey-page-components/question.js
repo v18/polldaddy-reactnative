@@ -9,17 +9,16 @@ import DateTime from './questions/date-time';
 import Email from './questions/email';
 import FileUpload from './questions/file-upload';
 import FreeText from './questions/free-text';
+import Html from './elements/html';
 import HtmlSnippet from './questions/html-snippet';
 import Matrix from './questions/matrix';
 import MultipleChoice from './questions/multiple-choice';
 import Name from './questions/name';
 import NumberQuestion from './questions/number';
-import PageHeader from './questions/page-header';
 import PhoneNumber from './questions/phone-number';
 import Rank from './questions/rank';
 import React from 'react';
 import Url from './questions/url';
-
 
 module.exports = React.createClass({
   render: function () {
@@ -59,7 +58,8 @@ module.exports = React.createClass({
   },
   renderNote: function() {
     if(this.props.question.childNamed('note').val) {
-      return <Text>{this.props.question.childNamed('nText').val}</Text>;
+      var htmlString = this.props.question.childNamed('nText').val;
+      return <Html htmlString={htmlString} />;
     }
   },
   renderQuestion: function(question) {
@@ -90,11 +90,11 @@ module.exports = React.createClass({
       case 800: // name
         return <Name {...props} />;
       case 1100: // number
-        var props2 = this.getNumberProps();
-        props2.navigator = props.navigator;
-        return <NumberQuestion {...props2} />;
+        var numberProps = this.getNumberProps();
+        numberProps.navigator = props.navigator;
+        return <NumberQuestion {...numberProps} />;
       case 1900: // page header
-        return <PageHeader question={this.props.question} />;
+        break; // do nothing, page headers do not have question content
       case 950: // phone number
         return <PhoneNumber {...props} />;
       case 1300: // rank
