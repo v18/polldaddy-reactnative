@@ -38,6 +38,9 @@ module.exports = React.createClass({
           return (
             <Html
                 key={index}
+                onLinkPress={() => { // eslint-disable-line react/jsx-no-bind
+                  // do nothing with links
+                }}
                 stylesheet={htmlStyles}
                 value={element.source}
             />);
@@ -68,11 +71,22 @@ var styles = StyleSheet.create({
 });
 
 var htmlStyles = StyleSheet.create({
+  a: {
+    color: '#7A7A7A'
+  },
   big: {
     fontSize: 20
   },
-  li: {
-    marginTop: 0,
-    marginBottom: 0
+  blockquote: {
+    backgroundColor: '#eee'
+  },
+  code: {
+    fontFamily: 'monospace'
+  },
+  del: {
+    textDecorationLine: 'line-through'
+  },
+  small: {
+    fontSize: 10
   }
 });
