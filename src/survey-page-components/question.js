@@ -72,7 +72,7 @@ module.exports = React.createClass({
       case 900: // address
         return <Address {...props} />;
       case 1000: // date/time
-        return <DateTime question={this.props.question} />;
+        return <DateTime {...props} />;
       case 1400: // email
         return <Email {...props} />;
       case 1600: // file upload
