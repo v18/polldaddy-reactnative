@@ -7,6 +7,7 @@ import FreeText from '../../src/survey-page-components/questions/free-text';
 import Html from '../../src/survey-page-components/elements/html';
 import HtmlSnippet from '../../src/survey-page-components/questions/html-snippet';
 import Matrix from '../../src/survey-page-components/questions/matrix';
+import mcQuestions from '../../test-data/multiple-choice-xml';
 import MultipleChoice from '../../src/survey-page-components/questions/multiple-choice';
 import Name from '../../src/survey-page-components/questions/name';
 import NumberQuestion from '../../src/survey-page-components/questions/number';
@@ -418,6 +419,323 @@ describe('<Question />', () => {
         it('has type boolean', () => {
           expect(typeof result).to.equal('boolean');
         });
+      });
+    });
+  });
+
+  describe('getMultipleChoiceProps()', () => {
+    describe('max', () => {
+      it('returns max = 1 when users allowed to choose one', () => {
+        var questions = [mcQuestions.oneChoiceAllowedRadio,
+          mcQuestions.oneChoiceAllowedList];
+
+        questions.map(function (question) {
+          var result = Question.prototype.getMultipleChoiceProps(question);
+          expect(result.max).to.equal(1);
+        });
+      });
+
+      it('returns the max set in limits', () => {
+        var scenarios = [
+          {
+            q: mcQuestions.threeChoicesAllowedCheck,
+            a: 3
+          },
+          {
+            q: mcQuestions.threeChoicesAllowedList,
+            a: 3
+          },
+          {
+            q: mcQuestions.twoToFourChoicesAllowed,
+            a: 4
+          }
+        ];
+
+        scenarios.map(function (scenario) {
+          var result = Question.prototype.getMultipleChoiceProps(scenario.q);
+          expect(result.max).to.equal(scenario.a);
+        });
+      });
+    });
+
+    describe('min', () => {
+      it('returns 0 if there is no limits tag sent', () => {
+        var questions = [mcQuestions.oneChoiceAllowedRadio,
+          mcQuestions.oneChoiceAllowedList];
+
+        questions.map(function (question) {
+          var result = Question.prototype.getMultipleChoiceProps(question);
+          expect(result.min).to.equal(0);
+        });
+      });
+      it('returns the min defined in the limits tag', () => {
+        var scenarios = [
+          {
+            q: mcQuestions.threeChoicesAllowedCheck,
+            a: 3
+          },
+          {
+            q: mcQuestions.threeChoicesAllowedList,
+            a: 3
+          },
+          {
+            q: mcQuestions.twoToFourChoicesAllowed,
+            a: 2
+          },
+          {
+            q: mcQuestions.minSetToZero,
+            a: 0
+          }
+        ];
+
+        scenarios.map(function (scenario) {
+          var result = Question.prototype.getMultipleChoiceProps(scenario.q);
+          expect(result.min).to.equal(scenario.a);
+        });
+      });
+    });
+
+    describe('comments', () => {
+      it('returns comment question text if user comments are allowed', () => {
+        var result = Question.prototype
+          .getMultipleChoiceProps(mcQuestions.withComment);
+        expect(result.comments).to.equal('Please enter a comment here');
+      });
+
+      it('returns false for comments if comments are not allowed', () => {
+        var result = Question.prototype
+          .getMultipleChoiceProps(mcQuestions.withoutComment);
+        expect(result.comments).to.equal(false);
+      });
+    });
+
+    describe('correctAnswerId', () => {
+      it('returns the answer Id set', () => {
+        var result = Question.prototype
+          .getMultipleChoiceProps(mcQuestions.asEntered);
+        expect(result.correctAnswerId).to.equal(15961155);
+      });
+    });
+
+    describe('answers', () => {
+      it('returns the answers using getMultipleChoiceAnswerArray', () => {
+        var result = Question.prototype
+          .getMultipleChoiceProps(mcQuestions.asEntered);
+        var answers = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.asEntered);
+        expect(result.answers).to.eql(answers);
+      });
+    });
+
+    describe('isMandatory', () => {
+      it('returns true when the mandatory tag value is true', () => {
+        var result = Question.prototype
+          .getMultipleChoiceProps(mcQuestions.mandatory);
+        expect(result.isMandatory).to.eql(true);
+      });
+      it('returns false when the mandatory tag value is false', () => {
+        var result = Question.prototype
+          .getMultipleChoiceProps(mcQuestions.notMandatory);
+        expect(result.isMandatory).to.eql(false);
+      });
+    });
+  });
+
+  describe('getMultipleChoiceAnswerArray', () => {
+    describe('with other option enabled', () => {
+      it('will return an array with other option with id -1', () => {
+        var actual = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.withOtherChoice);
+        var expected = [
+          {
+            id: 15961226,
+            text: '1',
+            selected: false
+          },
+          {
+            id: 15961227,
+            text: '2',
+            selected: false
+          },
+          {
+            id: -1,
+            text: 'Other',
+            selected: false
+          }
+        ];
+        expect(actual).to.eql(expected);
+      });
+    });
+
+    describe('answer order correct for', () => {
+      it('as entered', () => {
+        var actual = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.asEntered);
+        var expected = [
+          {
+            id: 15961155,
+            text: 'zebra',
+            selected: false
+          },
+          {
+            id: 15961156,
+            text: 'dragon',
+            selected: false
+          },
+          {
+            id: 15961157,
+            text: 'elephant',
+            selected: false
+          }
+        ];
+        expect(actual).to.eql(expected);
+      });
+
+      it('A to Z', () => {
+        var actual = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.AtoZ);
+        var expected = [
+          {
+            id: 15961156,
+            text: 'dragon',
+            selected: false
+          },
+          {
+            id: 15961157,
+            text: 'elephant',
+            selected: false
+          },
+          {
+            id: 15961155,
+            text: 'zebra',
+            selected: false
+          }
+        ];
+        expect(actual).to.eql(expected);
+      });
+
+      it('Z to A', () => {
+        var actual = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.ZtoA);
+        var expected = [
+          {
+            id: 15961155,
+            text: 'zebra',
+            selected: false
+          },
+          {
+            id: 15961157,
+            text: 'elephant',
+            selected: false
+          },
+          {
+            id: 15961156,
+            text: 'dragon',
+            selected: false
+          }
+        ];
+        expect(actual).to.eql(expected);
+      });
+
+      it('random', () => {
+        var randomFn = (function () {
+          var start = 0;
+          return function () {
+            start--;
+            return start;
+          };
+        })();
+        var actual = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.random, randomFn);
+
+        // expect the answers to appear in reverse order
+        // due to our custom random function
+        var expected = [
+          {
+            id: 15961157,
+            text: 'elephant',
+            selected: false
+          },
+          {
+            id: 15961156,
+            text: 'dragon',
+            selected: false
+          },
+          {
+            id: 15961155,
+            text: 'zebra',
+            selected: false
+          }
+        ];
+        expect(actual).to.eql(expected);
+      });
+    });
+
+    describe('images correctly set', () => {
+      it('if not image sent, returns an answer without image prop', () => {
+        var actual = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.withoutImages);
+        var expected = [
+          {
+            id: 15961155,
+            text: 'zebra',
+            selected: false
+          },
+          {
+            id: 15961156,
+            text: 'dragon',
+            selected: false
+          },
+          {
+            id: 15961157,
+            text: 'elephant',
+            selected: false
+          }
+        ];
+        expect(actual).to.eql(expected);
+      });
+
+      it('if library images sent, sets the image source as the prop', () => {
+        var actual = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.withImages);
+        var expected = [
+          {
+            id: 15961218,
+            text: 'with image',
+            image: 'http://i1.wp.com/files.polldaddy.com/d3e86d5c1cb2a31aa01c83df946592ee-577c40e0e7ceb.jpg',
+            selected: false
+          },
+          {
+            id: 15961219,
+            text: 'with image 2',
+            image: 'http://i1.wp.com/files.polldaddy.com/d505868e0c297cc78ed917af90d0c521-577c4118eaae0.jpg',
+            selected: false
+          },
+          {
+            id: 15961220,
+            text: 'no image',
+            selected: false
+          }
+        ];
+        expect(actual).to.eql(expected);
+      });
+
+      it('if non-library image sent, returns an answer without image prop', () => {
+        var actual = Question.prototype
+          .getMultipleChoiceAnswerArray(mcQuestions.withNonImageMedia);
+        var expected = [
+          {
+            id: 15961212,
+            text: 'embedded media',
+            selected: false
+          },
+          {
+            id: 15961213,
+            text: 'no media',
+            selected: false
+          }
+        ];
+        expect(actual).to.eql(expected);
       });
     });
   });

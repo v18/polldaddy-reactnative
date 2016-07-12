@@ -5,12 +5,6 @@ var currentQuestionIndex = -1; // have not begun survey yet
 var questions = [];
 var surveyId;
 
-/*
-this.surveyId = 0;
-this.questions = [];
-this.currentIndex = -1;
-*/
-
 module.exports = {
   set: function (id, database) {
     if(!database) {

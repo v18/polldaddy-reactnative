@@ -3,6 +3,7 @@ import {
   Text,
   View
 } from 'react-native';
+import _ from 'lodash';
 import Actions from '../actions/current-question';
 import Address from './questions/address';
 import DateTime from './questions/date-time';
@@ -86,7 +87,9 @@ module.exports = React.createClass({
       case 1200: // matrix / likert
         return <Matrix question={this.props.question} />;
       case 400: // multiple choice
-        return <MultipleChoice question={this.props.question} />;
+        var multipleChoiceProps = this.getMultipleChoiceProps();
+        multipleChoiceProps.navigator = props.navigator;
+        return <MultipleChoice {...multipleChoiceProps} />;
       case 800: // name
         return <Name {...props} />;
       case 1100: // number
@@ -94,7 +97,8 @@ module.exports = React.createClass({
         numberProps.navigator = props.navigator;
         return <NumberQuestion {...numberProps} />;
       case 1900: // page header
-        break; // do nothing, page headers do not have question content
+        // do nothing, page headers do not have question content
+        break;
       case 950: // phone number
         return <PhoneNumber {...props} />;
       case 1300: // rank
@@ -137,11 +141,8 @@ module.exports = React.createClass({
         break;
     }
 
-    var isMandatory = false;
-    var isMand = question.childNamed('mand');
-    if(isMand && isMand.val === 'true') {
-      isMandatory = true;
-    }
+    var mandatoryField = question.childNamed('mand');
+    var isMandatory = mandatoryField && mandatoryField.val === 'true';
 
     return {
       min,
@@ -153,6 +154,109 @@ module.exports = React.createClass({
       labelValue,
       isMandatory
     };
+  },
+  getMultipleChoiceProps: function (question = this.props.question) {
+    var other = question.childNamed('other').val === 'true';
+    var max = 1;
+    var min = 0;
+    var type = Number(question.childNamed('elmType').val);
+    var multipleChoicesAllowed = type === 2 || type === 3;
+    if(multipleChoicesAllowed) { // multiple selections allowed
+      var limits = question.childNamed('limits');
+      if(limits) {
+        min = Number(limits.attr.min);
+        max = Number(limits.attr.max);
+      }
+    }
+
+    var comments = question.childNamed('comments').attr.enabled === 'true';
+    if(comments) {
+      comments = question.childNamed('comments').val;
+    }
+
+    var correctAnswerId = Number(question.childNamed('answer').val);
+
+    var answers = this.getMultipleChoiceAnswerArray(question);
+
+    var mandatoryField = question.childNamed('mand');
+    var isMandatory = mandatoryField && mandatoryField.val === 'true';
+
+    return {
+      other,
+      max,
+      min,
+      comments,
+      correctAnswerId,
+      answers,
+      isMandatory
+    };
+  },
+  getMultipleChoiceAnswerArray: function (question = this.props.question,
+    rand = _.random) {
+    var options = question.childNamed('options').childrenNamed('option');
+    var orderType = Number(question.childNamed('rand').val);
+
+    // create answers array
+    var answers = [];
+    options.map(function (option) {
+      var id = Number(option.attr.oID);
+      var text = _.trim(option.val);
+      var selected = false;
+      answers.push({
+        id,
+        text,
+        selected
+      });
+    });
+
+    // order by specified ordering
+    switch(orderType) {
+      case 1: // A to Z
+        answers = _.orderBy(answers, 'text', 'asc');
+        break;
+      case 2: // Z to A
+        answers = _.orderBy(answers, 'text', 'desc');
+        break;
+      case 3: // random
+        answers.map(function (answer) {
+          answer.rand = rand(0,1);
+        });
+        answers = _.orderBy(answers, 'rand');
+        answers.map(function (answer) {
+          delete answer.rand;
+        });
+        break;
+    }
+
+    // add in any images
+    var media = question.childNamed('media');
+    if(media) {
+      var mediaList = media.childrenNamed('mediaItem');
+
+      mediaList.map(function (item) {
+        if(item.attr.type === 'library') {
+          var id = Number(item.attr.oID);
+          var matchingAnswer = _.find(answers, function (answer) {
+            return answer.id === id;
+          });
+          if(matchingAnswer) {
+            matchingAnswer.image = item.val;
+          }
+        }
+      });
+    }
+
+    // add in other choice
+    var other = question.childNamed('other').val === 'true';
+    if(other) {
+      answers.push({
+        id: -1,
+        text: 'Other',
+        selected: false
+      });
+    }
+
+    return answers;
   }
 });
 

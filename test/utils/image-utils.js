@@ -56,53 +56,157 @@ describe('imageUtils', () => {
   });
 
   describe('getImageListFromSurvey()', function () {
-    it('should return an empty array if no image tags are found', () => {
-      var xml1 = '';
-      var xml2 = '<question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk></chunk></question>';
-      expect(imageUtils.getImageListFromSurvey(xml1)).to.eql([]);
-      expect(imageUtils.getImageListFromSurvey(xml2)).to.eql([]);
-    });
+    describe('for <img src=', () => {
+      it('should return an empty array if no image tags are found', () => {
+        var xml1 = '';
+        var xml2 = '<question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk></chunk></question>';
+        expect(imageUtils.getImageListFromSurvey(xml1)).to.eql([]);
+        expect(imageUtils.getImageListFromSurvey(xml2)).to.eql([]);
+      });
 
-    it('should return an array with img tag info if img tag is found', () => {
-      var xml = '<question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question>';
+      it('should return an array with img tag info if img tag is found', () => {
+        var xml = '<question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question>';
 
-      var expected = [{
-        url: 'https://example.com/image.png?w=445',
-        uniqueName: 'image.png'
-      }];
-
-      expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
-    });
-
-    it('should return an array with multiple images listed per url if image source appears more than twice', () => {
-      var xml = '<question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question><question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question>';
-
-      var expected = [{
-        url: 'https://example.com/image.png?w=445',
-        uniqueName: 'image.png'
-      }];
-
-      expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
-    });
-
-    it('should return an array with multiple urls if more than one image tag is found with different urls', () => {
-      var xml = '<question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=125" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question><question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/anotherimage.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question><question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question><question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=125" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question>';
-
-      var expected = [
-        {
-          url: 'https://example.com/image.png?w=125',
-          uniqueName: 'image.png'
-        },
-        {
-          url: 'https://example.com/anotherimage.png?w=445',
-          uniqueName: 'anotherimage.png'
-        },
-        {
+        var expected = [{
           url: 'https://example.com/image.png?w=445',
-          uniqueName: 'image-1.png'
-        }
-      ];
-      expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
+          uniqueName: 'image.png'
+        }];
+
+        expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
+      });
+
+      it('should return an array just one image listed per url if image source appears more than twice', () => {
+        var xml = '<question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question><question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question>';
+
+        var expected = [{
+          url: 'https://example.com/image.png?w=445',
+          uniqueName: 'image.png'
+        }];
+
+        expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
+      });
+
+      it('should return an array with multiple urls if more than one image tag is found with different urls', () => {
+        var xml = '<question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=125" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question><question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/anotherimage.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question><question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question><question qType="2000" qID="7318320" trueQ="0"><qText>Please enter your question here.</qText><nText></nText><note>false</note><chunk>\n\n&lt;img src="https://example.com/image.png?w=125" alt="figs" width="445" height="655" title="figs" /&gt;</chunk></question>';
+
+        var expected = [
+          {
+            url: 'https://example.com/image.png?w=125',
+            uniqueName: 'image.png'
+          },
+          {
+            url: 'https://example.com/anotherimage.png?w=445',
+            uniqueName: 'anotherimage.png'
+          },
+          {
+            url: 'https://example.com/image.png?w=445',
+            uniqueName: 'image-1.png'
+          }
+        ];
+        expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
+      });
+    });
+
+    describe('for <mediaItem>', () => {
+      it('should return an array with media item info if media item is found', () => {
+        var xml = `<media>
+          <mediaItem type="library" oID="15961218">https://example.com/anotherimage.png?w=445</mediaItem>
+        </media>`;
+
+        var expected = [
+          {
+            url: 'https://example.com/anotherimage.png?w=445',
+            uniqueName: 'anotherimage.png'
+          }
+        ];
+
+        expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
+      });
+
+      it('should return an array with media items info if more than one media item is found', () => {
+        var xml = `<comments enabled="false">Please help us understand why you selected this answer</comments><media><mediaItem type="library" oID="15965401">http://i1.wp.com/files.polldaddy.com/1.png</mediaItem><mediaItem type="library" oID="15965402">http://i2.wp.com/files.polldaddy.com/2.png</mediaItem><mediaItem type="library" oID="15965403">http://i0.wp.com/files.polldaddy.com/3.jpg</mediaItem><mediaItem type="library" oID="15965404">http://i0.wp.com/files.polldaddy.com/4.jpg</mediaItem><mediaItem type="library" oID="15965405">http://i0.wp.com/files.polldaddy.com/5.jpg</mediaItem></media><answer>15965401</answer><mand>false</mand></question></page>\n<rules ruleCount="0"/>\n</formData>`;
+
+        var expected = [
+          {
+            url: 'http://i1.wp.com/files.polldaddy.com/1.png',
+            uniqueName: '1.png'
+          },
+          {
+            url: 'http://i2.wp.com/files.polldaddy.com/2.png',
+            uniqueName: '2.png'
+          },
+          {
+            url: 'http://i0.wp.com/files.polldaddy.com/3.jpg',
+            uniqueName: '3.jpg'
+          },
+          {
+            url: 'http://i0.wp.com/files.polldaddy.com/4.jpg',
+            uniqueName: '4.jpg'
+          },
+          {
+            url: 'http://i0.wp.com/files.polldaddy.com/5.jpg',
+            uniqueName: '5.jpg'
+          }
+        ];
+        expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
+      });
+    });
+
+    describe('both <img and <mediaItem>', () => {
+      it('should return an array with one entry per unique url when img and mediaItems are found', () => {
+        var xml = `
+        <question qType="2000" qID="7318320" trueQ="0">
+            <qText>Please enter your question here.</qText>
+            <nText></nText>
+            <note>false</note>
+            <chunk>\n\n&lt;img src="https://example.com/image1.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk>
+        </question>
+        <question qType="2000" qID="7318320" trueQ="0">
+            <qText>Please enter your question here.</qText>
+            <nText></nText>
+            <note>false</note>
+            <chunk>\n\n&lt;img src="https://example.com/image1.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk>
+        </question>
+        <question qType="2000" qID="7318320" trueQ="0">
+            <qText>Please enter your question here.</qText>
+            <nText></nText>
+            <note>false</note>
+            <chunk>\n\n&lt;img src="https://example.com/image2.png?w=445" alt="figs" width="445" height="655" title="figs" /&gt;</chunk>
+        </question>
+        <question qType="2000" qID="7318320" trueQ="0">
+            <qText>Please enter your question here.</qText>
+            <nText></nText>
+            <note>false</note>
+            <chunk>\n\n&lt;img src="https://example.com/image3.png" alt="figs" width="445" height="655" title="figs" /&gt;</chunk>
+        </question>
+        <media>
+          <mediaItem type="library" oID="15961218">https://example.com/image2.png?w=445</mediaItem>
+          <mediaItem type="library" oID="15961218">https://example.com/image2.png?w=445</mediaItem>
+          <mediaItem type="library" oID="15961219">https://example.com/image1.png?w=445</mediaItem>
+          <mediaItem type="library" oID="15961219">https://example.com/image4.png</mediaItem>
+        </media>`;
+
+        var expected = [
+          {
+            url: 'https://example.com/image1.png?w=445',
+            uniqueName: 'image1.png'
+          },
+          {
+            url: 'https://example.com/image2.png?w=445',
+            uniqueName: 'image2.png'
+          },
+          {
+            url: 'https://example.com/image3.png',
+            uniqueName: 'image3.png'
+          },
+          {
+            url: 'https://example.com/image4.png',
+            uniqueName: 'image4.png'
+          }
+        ];
+
+        expect(imageUtils.getImageListFromSurvey(xml)).to.eql(expected);
+      });
     });
   });
 

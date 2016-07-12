@@ -39,33 +39,72 @@ module.exports = {
     surveyXml = this.replaceAllInSurveyXml(surveyXml, '&lt;img', '<img');
     surveyXml = this.replaceAllInSurveyXml(surveyXml, '/&gt;', '/>');
 
-    var imagesList = [];
-    var startIndex = 0;
-    var done = false;
+    var imagesList = [],
+      startImgIndex = 0,
+      startMediaIndex = 0,
+      doneImg = false,
+      doneMediaItem = false,
+      uniqueName,
+      listOfNames,
+      name,
+      indexOfCurrentUrl,
+      url,
+      tagStart,
+      tagEnd,
+      srcStart,
+      srcEnd;
 
-    while(!done) {
-      var tagStart = surveyXml.indexOf('<img', startIndex);
+
+    // find all images inside notes, etc using <img src=
+    while(!doneImg) {
+      tagStart = surveyXml.indexOf('<img', startImgIndex);
       if(tagStart > -1) { // found an image
-        var tagEnd = surveyXml.indexOf('/>', tagStart) + '/>'.length;
-        var srcStart = surveyXml.indexOf('src="', tagStart) + 'src="'.length;
-        var srcEnd = surveyXml.indexOf('"', srcStart);
-        var url = surveyXml.slice(srcStart, srcEnd);
-        startIndex = tagEnd + 1;
+        tagEnd = surveyXml.indexOf('/>', tagStart) + '/>'.length;
+        srcStart = surveyXml.indexOf('src="', tagStart) + 'src="'.length;
+        srcEnd = surveyXml.indexOf('"', srcStart);
+        url = surveyXml.slice(srcStart, srcEnd);
+        startImgIndex = tagEnd;
 
-        var indexOfCurrentUrl = _.map(imagesList, 'url').indexOf(url);
+        indexOfCurrentUrl = _.map(imagesList, 'url').indexOf(url);
         if(indexOfCurrentUrl === -1) { // url not in list yet
-          var name = parseUri(url).file;
-          var listOfNames = _.map(imagesList, 'uniqueName');
-          var uniqueName = this.getUniqueImageFileName(name, listOfNames);
+          name = parseUri(url).file;
+          listOfNames = _.map(imagesList, 'uniqueName');
+          uniqueName = this.getUniqueImageFileName(name, listOfNames);
           imagesList.push({
             url,
             uniqueName
           });
         }
       } else { // no more images found
-        done = true;
+        doneImg = true;
       }
     }
+
+    // find all images inside
+    while(!doneMediaItem) {
+      tagStart = surveyXml.indexOf('<mediaItem', startMediaIndex);
+      if(tagStart > 1) { // found an image
+        tagEnd = surveyXml.indexOf('</mediaItem>', tagStart) + '</mediaItem>'.length;
+        srcStart = surveyXml.indexOf('">', tagStart) + '">'.length;
+        srcEnd = surveyXml.indexOf('</mediaItem>', srcStart);
+        url = surveyXml.slice(srcStart, srcEnd);
+        startMediaIndex = tagEnd;
+
+        indexOfCurrentUrl = _.map(imagesList, 'url').indexOf(url);
+        if(indexOfCurrentUrl === -1) { // url not in list yet
+          name = parseUri(url).file;
+          listOfNames = _.map(imagesList, 'uniqueName');
+          uniqueName = this.getUniqueImageFileName(name, listOfNames);
+          imagesList.push({
+            url,
+            uniqueName
+          });
+        }
+      } else {
+        doneMediaItem = true;
+      }
+    }
+
     return imagesList;
   },
   replaceAllInSurveyXml: function (xml, originalSrc, localSrc) {

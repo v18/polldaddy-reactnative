@@ -45,18 +45,22 @@ module.exports = {
     });
   },
   makeSurveyDirectory: function (surveyId, fs = rnfs) {
-    return fs.mkdir(`${surveysDirPath}'/'${surveyId}`);
+    return fs.mkdir(`${surveysDirPath}/${surveyId}`);
   },
   deleteSurveyDirectory: function (surveyId, fs = rnfs) {
-    return fs.unlink(`${surveysDirPath}'/'${surveyId}`);
+    return fs.unlink(`${surveysDirPath}/${surveyId}`);
   },
   downloadAllImagesForSurvey: function(surveyId, surveyXml) {
     var imageList = utils.getImageListFromSurvey(surveyXml);
-    return Promise.all(imageList.map((image) => {
-      return this.downloadImageForSurvey(image.url, surveyId);
-    }))
-    .catch(function (error) {
-      throw error;
-    });
+
+    return this.makeSurveyDirectory(surveyId)
+      .then(() => {
+        return Promise.all(imageList.map((image) => {
+          return this.downloadImageForSurvey(image.url, surveyId);
+        }));
+      })
+      .catch(function (error) {
+        throw error;
+      });
   }
 };

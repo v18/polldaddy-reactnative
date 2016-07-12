@@ -1,6 +1,6 @@
 import imagesApi from './local-image-api';
-import SQLite from 'react-native-sqlite-storage';
 import imageUtils from './image-utils';
+import SQLite from 'react-native-sqlite-storage';
 
 SQLite.enablePromise(true);
 
@@ -49,11 +49,8 @@ SQLite.openDatabase({name: db_name, version: db_version})
 
 module.exports = {
   insertItem: function(values) {
-    return new Promise(function(resolve, reject) {
-      imagesApi.makeSurveyDirectory(values.surveyId)
-        .then(function () {
-          return imagesApi.downloadAllImagesForSurvey(values.surveyId, values.formXML);
-        })
+    return new Promise(function(resolve) {
+      imagesApi.downloadAllImagesForSurvey(values.surveyId, values.formXML)
         .then(function (images) {
           images.map(function(image) {
             if(image.original !== image.local) { // if we have a local image
@@ -71,7 +68,7 @@ module.exports = {
                 values.name, values.title, values.formXML,
                 values.responses, values.lastSyncd,
                 values.created, values.userId]);
-          })
+          });
         })
         .then(function () {
           resolve(values.surveyId);
