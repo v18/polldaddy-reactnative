@@ -8,8 +8,6 @@ import { shallow } from 'enzyme';
 import TextField from '../../../src/survey-page-components/elements/text-field';
 
 describe('<MultipleChoice />', () => {
-  var MultipleChoice = require('../../../src/survey-page-components/questions/multiple-choice');
-
   describe('Displays', () => {
     it('shows 1 ListView', () => {
       var qProps = Question.prototype.getMultipleChoiceProps(qs.asEntered);

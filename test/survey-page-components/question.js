@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Address from '../../src/survey-page-components/questions/address';
 import DateTime from '../../src/survey-page-components/questions/date-time';
 import Email from '../../src/survey-page-components/questions/email';
@@ -15,6 +16,7 @@ import numberQuestions from '../../test-data/number-question-xml';
 import PhoneNumber from '../../src/survey-page-components/questions/phone-number';
 import questions from '../../test-data/questions-xml';
 import Rank from '../../src/survey-page-components/questions/rank';
+import rankQ from '../../test-data/rank-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Text } from 'react-native';
@@ -638,18 +640,12 @@ describe('<Question />', () => {
       });
 
       it('random', () => {
-        var randomFn = (function () {
-          var start = 0;
-          return function () {
-            start--;
-            return start;
-          };
-        })();
+        var shuffle = _.reverse;
         var actual = Question.prototype
-          .getMultipleChoiceAnswerArray(mcQuestions.random, randomFn);
+          .getMultipleChoiceAnswerArray(mcQuestions.random, shuffle);
 
         // expect the answers to appear in reverse order
-        // due to our custom random function
+        // due to our custom shuffle function
         var expected = [
           {
             id: 15961157,
@@ -736,6 +732,161 @@ describe('<Question />', () => {
           }
         ];
         expect(actual).to.eql(expected);
+      });
+    });
+  });
+
+  describe('getRankProps', () => {
+    describe('answers array', () => {
+      describe('images', () => {
+        it('return media URL when library media is used in question', () => {
+          var actual = Question.prototype.getRankProps(rankQ.withLibraryMedia);
+          var expected = [
+            {
+              id: 521154,
+              text: 'Zebra, with library media',
+              image: 'file:///data/user/0/com.polldaddy/files/surveyImages/2300490/56220b276b87fc4ec430256e633bfe28-577c2a6ee63db.png'
+            },
+            {
+              id: 521155,
+              text: 'Dragon'
+            },
+            {
+              id: 521156,
+              text: 'Elephant'
+            }
+          ];
+          expect(actual.answers).to.eql(expected);
+        });
+
+        it('returns no media URL when none is used in question', () => {
+          var actual = Question.prototype.getRankProps(rankQ.asEntered);
+          var expected = [
+            {
+              id: 521154,
+              text: 'Zebra'
+            },
+            {
+              id: 521155,
+              text: 'Dragon'
+            },
+            {
+              id: 521156,
+              text: 'Elephant'
+            }
+          ];
+          expect(actual.answers).to.eql(expected);
+        });
+
+        it('ignored embed media', () => {
+          var actual = Question.prototype.getRankProps(rankQ.withEmbedMedia);
+          var expected = [
+            {
+              id: 521154,
+              text: 'Zebra'
+            },
+            {
+              id: 521155,
+              text: 'Dragon'
+            },
+            {
+              id: 521156,
+              text: 'Elephant with embed media'
+            }
+          ];
+          expect(actual.answers).to.eql(expected);
+        });
+      });
+
+      describe('answer order', () => {
+        it('as entered', () => {
+          var actual = Question.prototype.getRankProps(rankQ.asEntered);
+          var expected = [
+            {
+              id: 521154,
+              text: 'Zebra'
+            },
+            {
+              id: 521155,
+              text: 'Dragon'
+            },
+            {
+              id: 521156,
+              text: 'Elephant'
+            }
+          ];
+          expect(actual.answers).to.eql(expected);
+        });
+
+        it('A-Z', () => {
+          var actual = Question.prototype.getRankProps(rankQ.az);
+          var expected = [
+            {
+              id: 521155,
+              text: 'Dragon'
+            },
+            {
+              id: 521156,
+              text: 'Elephant'
+            },
+            {
+              id: 521154,
+              text: 'Zebra'
+            }
+          ];
+          expect(actual.answers).to.eql(expected);
+        });
+
+        it('Z-A', () => {
+          var actual = Question.prototype.getRankProps(rankQ.za);
+          var expected = [
+            {
+              id: 521154,
+              text: 'Zebra'
+            },
+            {
+              id: 521156,
+              text: 'Elephant'
+            },
+            {
+              id: 521155,
+              text: 'Dragon'
+            }
+          ];
+          expect(actual.answers).to.eql(expected);
+        });
+
+        it('random', () => {
+          var shuffle = _.reverse;
+          var actual = Question.prototype.getRankProps(rankQ.random, shuffle);
+          var expected = [
+            {
+              id: 521156,
+              text: 'Elephant'
+            },
+            {
+              id: 521155,
+              text: 'Dragon'
+            },
+            {
+              id: 521154,
+              text: 'Zebra'
+            }
+          ];
+          expect(actual.answers).to.eql(expected);
+        });
+      });
+    });
+
+    describe('isMandatory prop', () => {
+      it('true when question is mandatory', () => {
+        var actual = Question.prototype.getRankProps(rankQ.asEntered);
+        expect(actual.isMandatory).to.eql(false);
+      });
+
+      it('false when question is not mandatory', () => {
+        var actual = Question.prototype.getRankProps(rankQ.asEnteredMandatory);
+        expect(actual.isMandatory).to.eql(true);
       });
     });
   });

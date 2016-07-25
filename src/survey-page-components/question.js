@@ -33,8 +33,8 @@ module.exports = React.createClass({
     );
   },
   renderMandatoryIndicator: function () {
-    var isMand = this.props.question.childNamed('mand');
-    if(isMand && isMand.val === 'true') {
+    var isMandatory = this.getIsMandatory();
+    if(isMandatory) {
       // make sure that initial state for error is true
       Actions.saveError('This is a mandatory question.');
       return <Text>*</Text>;
@@ -102,7 +102,9 @@ module.exports = React.createClass({
       case 950: // phone number
         return <PhoneNumber {...props} />;
       case 1300: // rank
-        return <Rank question={this.props.question} />;
+        var rankProps = this.getRankProps();
+        rankProps.navigator = props.navigator;
+        return <Rank {...rankProps} />;
       case 1500: // URL
         return <Url {...props} />;
     }
@@ -141,8 +143,7 @@ module.exports = React.createClass({
         break;
     }
 
-    var mandatoryField = question.childNamed('mand');
-    var isMandatory = mandatoryField && mandatoryField.val === 'true';
+    var isMandatory = this.getIsMandatory(question);
 
     return {
       min,
@@ -154,6 +155,10 @@ module.exports = React.createClass({
       labelValue,
       isMandatory
     };
+  },
+  getIsMandatory: function (question = this.props.question) {
+    var mandatoryField = question.childNamed('mand');
+    return mandatoryField && mandatoryField.val === 'true';
   },
   getMultipleChoiceProps: function (question = this.props.question) {
     var other = question.childNamed('other').val === 'true';
@@ -178,8 +183,7 @@ module.exports = React.createClass({
 
     var answers = this.getMultipleChoiceAnswerArray(question);
 
-    var mandatoryField = question.childNamed('mand');
-    var isMandatory = mandatoryField && mandatoryField.val === 'true';
+    var isMandatory = this.getIsMandatory(question);
 
     return {
       other,
@@ -192,7 +196,7 @@ module.exports = React.createClass({
     };
   },
   getMultipleChoiceAnswerArray: function (question = this.props.question,
-    rand = _.random) {
+    shuffle = _.shuffle) {
     var options = question.childNamed('options').childrenNamed('option');
     var orderType = Number(question.childNamed('rand').val);
 
@@ -218,13 +222,7 @@ module.exports = React.createClass({
         answers = _.orderBy(answers, 'text', 'desc');
         break;
       case 3: // random
-        answers.map(function (answer) {
-          answer.rand = rand(0,1);
-        });
-        answers = _.orderBy(answers, 'rand');
-        answers.map(function (answer) {
-          delete answer.rand;
-        });
+        answers = shuffle(answers);
         break;
     }
 
@@ -257,6 +255,58 @@ module.exports = React.createClass({
     }
 
     return answers;
+  },
+  getRankProps: function (question = this.props.question, shuffle = _.shuffle) {
+    var isMandatory = this.getIsMandatory(question);
+
+    // create answers array
+    var options = question.childNamed('options').childrenNamed('option');
+    var answers = [];
+    options.map(function (option) {
+      var id = Number(option.attr.oID);
+      var text = _.trim(option.val);
+      answers.push({
+        id,
+        text
+      });
+    });
+
+    // order by specified ordering
+    var orderType = Number(question.childNamed('rand').val);
+    switch(orderType) {
+      case 1: // A to Z
+        answers = _.orderBy(answers, 'text', 'asc');
+        break;
+      case 2: // Z to A
+        answers = _.orderBy(answers, 'text', 'desc');
+        break;
+      case 3: // random
+        answers = shuffle(answers);
+        break;
+    }
+
+    // add in any images
+    var media = question.childNamed('media');
+    if(media) {
+      var mediaList = media.childrenNamed('mediaItem');
+
+      mediaList.map(function (item) {
+        if(item.attr.type === 'library') {
+          var id = Number(item.attr.oID);
+          var matchingAnswer = _.find(answers, function (answer) {
+            return answer.id === id;
+          });
+          if(matchingAnswer) {
+            matchingAnswer.image = item.val;
+          }
+        }
+      });
+    }
+
+    return {
+      answers,
+      isMandatory
+    };
   }
 });
 
