@@ -8,6 +8,7 @@ import FreeText from '../../src/survey-page-components/questions/free-text';
 import Html from '../../src/survey-page-components/elements/html';
 import HtmlSnippet from '../../src/survey-page-components/questions/html-snippet';
 import Matrix from '../../src/survey-page-components/questions/matrix';
+import matrixQ from '../../test-data/matrix-xml';
 import mcQuestions from '../../test-data/multiple-choice-xml';
 import MultipleChoice from '../../src/survey-page-components/questions/multiple-choice';
 import Name from '../../src/survey-page-components/questions/name';
@@ -887,6 +888,225 @@ describe('<Question />', () => {
       it('false when question is not mandatory', () => {
         var actual = Question.prototype.getRankProps(rankQ.asEnteredMandatory);
         expect(actual.isMandatory).to.eql(true);
+      });
+    });
+
+    describe('rows and columns', () => {
+      it('returns rows using getMatrixOptions()', () => {
+        var result = Question.prototype
+          .getMatrixProps(matrixQ.standard);
+        var answers = Question.prototype
+          .getMatrixOptions(matrixQ.standard);
+
+        expect(result.rows).to.eql(answers.rows);
+        expect(result.columns).to.eql(answers.columns);
+      });
+    });
+  });
+
+  describe('getMatrixProps()', () => {
+    describe('multipleChoicesAllowed', () => {
+      it('returns false for elmType 0', () => {
+        var actual = Question.prototype
+          .getMatrixProps(matrixQ.elmType0);
+        expect(actual.multipleChoicesAllowed).to.equal(false);
+      });
+
+      it('returns false for elmType 2', () => {
+        var actual = Question.prototype
+          .getMatrixProps(matrixQ.elmType2);
+        expect(actual.multipleChoicesAllowed).to.equal(false);
+      });
+
+      it('returns true for elmType 1', () => {
+        var actual = Question.prototype
+          .getMatrixProps(matrixQ.elmType1);
+        expect(actual.multipleChoicesAllowed).to.equal(true);
+      });
+    });
+
+    it('isMandatory is equal to value of getIsMandatory()', () => {
+      var actual = Question.prototype
+        .getMatrixProps(matrixQ.standard);
+      var isMandatory = Question.prototype
+        .getIsMandatory(matrixQ.standard);
+      expect(actual.isMandatory).to.equal(isMandatory);
+    });
+
+    it('rows and columns equal to value from getMatrixOptions', () => {
+      var actual = Question.prototype
+        .getMatrixProps(matrixQ.standard);
+      var {rows, columns} = Question.prototype
+        .getMatrixOptions(matrixQ.standard);
+      expect(actual.rows).to.eql(rows);
+      expect(actual.columns).to.eql(columns);
+    });
+  });
+
+  describe('getMatrixOptions()', () => {
+    it('returns rows and columns as arrays of objects', () => {
+      var result = Question.prototype
+        .getMatrixOptions(matrixQ.standard);
+
+      var expected = {
+        rows: [
+          {
+            id: 3555584,
+            text: 'What?'
+          },
+          {
+            id: 3555585,
+            text: 'Something?'
+          }
+        ],
+        columns: [
+          {
+            id: 3324137,
+            text: 'This'
+          },
+          {
+            id: 3324138,
+            text: 'That'
+          },
+          {
+            id: 3324139,
+            text: 'Another'
+          }
+        ]
+      };
+      expect(result).to.eql(expected);
+    });
+
+    describe('order', () => {
+      var shuffle = _.reverse;
+      it('as entered: rows and columns', () => {
+        var result = Question.prototype
+          .getMatrixOptions(matrixQ.standard, shuffle);
+
+        var expected = {
+          rows: [
+            {
+              id: 3555584,
+              text: 'What?'
+            },
+            {
+              id: 3555585,
+              text: 'Something?'
+            }
+          ],
+          columns: [
+            {
+              id: 3324137,
+              text: 'This'
+            },
+            {
+              id: 3324138,
+              text: 'That'
+            },
+            {
+              id: 3324139,
+              text: 'Another'
+            }
+          ]
+        };
+        expect(result).to.eql(expected);
+      });
+
+      it('rows: random', () => {
+        var result = Question.prototype
+          .getMatrixOptions(matrixQ.randomRows, shuffle);
+        var expected = {
+          rows: [
+            {
+              id: 3555585,
+              text: 'Something?'
+            },
+            {
+              id: 3555584,
+              text: 'What?'
+            }
+          ],
+          columns: [
+            {
+              id: 3324137,
+              text: 'This'
+            },
+            {
+              id: 3324138,
+              text: 'That'
+            },
+            {
+              id: 3324139,
+              text: 'Another'
+            }
+          ]
+        };
+        expect(result).to.eql(expected);
+      });
+
+      it('columns: random', () => {
+        var result = Question.prototype
+          .getMatrixOptions(matrixQ.randomColumns, shuffle);
+        var expected = {
+          rows: [
+            {
+              id: 3555584,
+              text: 'What?'
+            },
+            {
+              id: 3555585,
+              text: 'Something?'
+            }
+          ],
+          columns: [
+            {
+              id: 3324139,
+              text: 'Another'
+            },
+            {
+              id: 3324138,
+              text: 'That'
+            },
+            {
+              id: 3324137,
+              text: 'This'
+            }
+          ]
+        };
+        expect(result).to.eql(expected);
+      });
+
+      it('both rows and columns random', () => {
+        var shuffle = _.reverse;
+        var result = Question.prototype
+          .getMatrixOptions(matrixQ.bothRandom, shuffle);
+        var expected = {
+          rows: [
+            {
+              id: 3555585,
+              text: 'Something?'
+            },
+            {
+              id: 3555584,
+              text: 'What?'
+            }
+          ],
+          columns: [
+            {
+              id: 3324139,
+              text: 'Another'
+            },
+            {
+              id: 3324138,
+              text: 'That'
+            },
+            {
+              id: 3324137,
+              text: 'This'
+            }
+          ]
+        };
+        expect(result).to.eql(expected);
       });
     });
   });

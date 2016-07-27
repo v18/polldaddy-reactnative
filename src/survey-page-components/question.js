@@ -85,7 +85,9 @@ module.exports = React.createClass({
       case 2000: // html snippet
         return <HtmlSnippet {...props} />;
       case 1200: // matrix / likert
-        return <Matrix question={this.props.question} />;
+        var matrixProps = this.getMatrixProps(this.props.question);
+        matrixProps.navigator = props.navigator;
+        return <Matrix {...matrixProps} />;
       case 400: // multiple choice
         var multipleChoiceProps = this.getMultipleChoiceProps();
         multipleChoiceProps.navigator = props.navigator;
@@ -306,6 +308,57 @@ module.exports = React.createClass({
     return {
       answers,
       isMandatory
+    };
+  },
+  getMatrixProps: function (question = this.props.question) {
+    var isMandatory = this.getIsMandatory(question);
+    var type = Number(question.childNamed('elmType').val);
+    var multipleChoicesAllowed = (type === 1);
+
+    var {rows, columns} = this.getMatrixOptions(question);
+
+    return {
+      isMandatory,
+      multipleChoicesAllowed,
+      rows,
+      columns
+    };
+  },
+  getMatrixOptions: function (question = this.props.question,
+  shuffle = _.shuffle) {
+    var rowOptions = question.childWithAttribute('oType', 'rows').children;
+    var colOptions = question.childWithAttribute('oType', 'cols').children;
+
+    var rows = rowOptions.map(function (row) {
+      return {
+        id: Number(row.attr.oID),
+        text: row.val
+      };
+    });
+
+    var columns = colOptions.map(function (column) {
+      return {
+        id: Number(column.attr.oID),
+        text: column.val
+      };
+    });
+
+    // put them in order
+    var orderType = Number(question.childNamed('orderType').val);
+    var rowsShouldBeRandom = orderType === 2 || orderType === 3;
+    var columnsShouldBeRandom = orderType === 1 || orderType === 3;
+
+    if(rowsShouldBeRandom) {
+      rows = shuffle(rows);
+    }
+
+    if(columnsShouldBeRandom) {
+      columns = shuffle(columns);
+    }
+
+    return {
+      rows,
+      columns
     };
   }
 });
