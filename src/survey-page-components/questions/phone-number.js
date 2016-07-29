@@ -33,7 +33,7 @@ module.exports = React.createClass({
     return {
       inputs: {
         countryCode: defaultCountry,
-        phoneNumber: ''
+        raw: ''
       },
       answers: {},
       errorMessage: ''
@@ -42,31 +42,28 @@ module.exports = React.createClass({
   onInputsChange: function (inputs) {
     this.setState({
       inputs: {
-        phoneNumber: inputs.phoneNumber || this.state.inputs.phoneNumber,
+        raw: inputs.raw,
         countryCode: inputs.countryCode || this.state.inputs.countryCode
       }
-    });
+    }, function () {
+      var questionId = Number(this.props.question.attr.qID);
+      var questionType = Number(this.props.question.attr.qType);
 
-    var error = this.getError();
-    if(!error) {
-      // if validated with no errors, save to answer
-      this.setState({
-        answers: this.state.inputs
-      });
-      Actions.saveAnswers(this.state.answers);
-    } else {
-      // if not validated, remove answer & save error instead
-      this.setState({
-        answers: ''
-      });
-      Actions.saveError(error);
-    }
+      var error = this.getError();
+      if(!error) {
+        // if validated with no errors, save to answer
+        Actions.saveAnswers(questionId, questionType, this.state.inputs);
+      } else {
+        // if not validated, remove answer & save error instead
+        Actions.saveError(error);
+      }
+    });
   },
   render: function () {
     return (<View>
       <TextField
           autoFocus={true}
-          name='phoneNumber'
+          name='raw'
           placeholder={this.props.question.childNamed('example').val}
       />
     {this.renderCountryPicker()}
@@ -94,15 +91,13 @@ module.exports = React.createClass({
     });
   },
   handleOnValueChange: function (countryPicked) {
-    this.setState({
-      inputs: {
-        phoneNumber: this.state.inputs.phoneNumber, //unchanged
-        countryCode: countryPicked
-      }
+    this.onInputsChange({
+      raw: this.state.inputs.raw, //unchanged
+      countryCode: countryPicked
     });
   },
   getError: function (question = this.props.question,
-    phoneNumber=this.state.inputs.phoneNumber, errors = errorMessages) {
+    phoneNumber=this.state.inputs.raw, errors = errorMessages) {
 
     var error = false;
     var isMand = question.childNamed('mand');

@@ -21,16 +21,16 @@ describe('<FreeText />', () => {
 
       expect(wrapperSingleLineSmall.find(TextField)).to.have.length(1);
       expect(wrapperSingleLineSmall.find(TextField)
-          .prop('name')).to.equal('freeText');
+          .prop('name')).to.equal('value');
 
 
       expect(wrapperSingleLineMedium.find(TextField)).to.have.length(1);
       expect(wrapperSingleLineMedium.find(TextField)
-          .prop('name')).to.equal('freeText');
+          .prop('name')).to.equal('value');
 
       expect(wrapperSingleLineLarge.find(TextField)).to.have.length(1);
       expect(wrapperSingleLineLarge.find(TextField)
-          .prop('name')).to.equal('freeText');
+          .prop('name')).to.equal('value');
     });
 
     it('single line password', () => {
@@ -44,19 +44,19 @@ describe('<FreeText />', () => {
       expect(wrapperPasswordSmall.find(TextField)
         .prop('secureTextEntry')).to.equal(true);
       expect(wrapperPasswordSmall.find(TextField)
-        .prop('name')).to.equal('freeText');
+        .prop('name')).to.equal('value');
 
       expect(wrapperPasswordMedium.find(TextField)).to.have.length(1);
       expect(wrapperPasswordMedium.find(TextField)
         .prop('secureTextEntry')).to.equal(true);
       expect(wrapperPasswordMedium.find(TextField)
-          .prop('name')).to.equal('freeText');
+          .prop('name')).to.equal('value');
 
       expect(wrapperPasswordLarge.find(TextField)).to.have.length(1);
       expect(wrapperPasswordLarge.find(TextField)
         .prop('secureTextEntry')).to.equal(true);
       expect(wrapperPasswordLarge.find(TextField)
-          .prop('name')).to.equal('freeText');
+          .prop('name')).to.equal('value');
     });
 
     it('multiline', () => {
@@ -70,19 +70,19 @@ describe('<FreeText />', () => {
       expect(wrapperMultiLineSmall.find(TextField)
         .prop('multiline')).to.equal(true);
       expect(wrapperMultiLineSmall.find(TextField)
-        .prop('name')).to.equal('freeText');
+        .prop('name')).to.equal('value');
 
       expect(wrapperMultiLineMedium.find(TextField)).to.have.length(1);
       expect(wrapperMultiLineMedium.find(TextField)
         .prop('multiline')).to.equal(true);
       expect(wrapperMultiLineMedium.find(TextField)
-          .prop('name')).to.equal('freeText');
+          .prop('name')).to.equal('value');
 
       expect(wrapperMultiLineLarge.find(TextField)).to.have.length(1);
       expect(wrapperMultiLineLarge.find(TextField)
         .prop('multiline')).to.equal(true);
       expect(wrapperMultiLineLarge.find(TextField)
-          .prop('name')).to.equal('freeText');
+          .prop('name')).to.equal('value');
     });
   });
 

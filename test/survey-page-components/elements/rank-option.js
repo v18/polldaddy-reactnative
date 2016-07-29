@@ -30,14 +30,10 @@ describe('<RankOption />', () => {
     it('the drag icon and image', () => {
       // should have one image: the drag image
       expect(withoutImage.find(Image)).to.have.length(1);
-      // var src = ;
-      // shallow rendering of required drag icon
       expect(withoutImage.find(Image).prop('source')).to.eql({});
 
       var imgs = withImage.find(Image);
       expect(imgs).to.have.length(2);
-
-      // #
 
       var dragIconSrc = imgs.get(0).props.source;
       expect(dragIconSrc).to.eql({});

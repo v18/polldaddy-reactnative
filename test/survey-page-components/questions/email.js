@@ -33,26 +33,26 @@ describe('<Email />', () => {
   describe('getError()', () => {
     describe('when an invalid email is entered', () => {
       var tests = [
-        {inputs: { email: 'name'}},
-        {inputs: { email: 'name@'}},
-        {inputs: { email: 'name@domain'}},
-        {inputs: { email: 'name@domain.'}},
-        {inputs: { email: 'name@domain.c'}},
-        {inputs: { email: '@'}},
-        {inputs: { email: '@domain'}},
-        {inputs: { email: '@domain.'}},
-        {inputs: { email: '@domain.c'}},
-        {inputs: { email: '@domain.abcde'}},
-        {inputs: { email: '.'}},
-        {inputs: { email: 'domain.c'}},
-        {inputs: { email: 'domain.abcd'}},
-        {inputs: { email: 'name@domain.1'}}
+        {inputs: { value: 'name'}},
+        {inputs: { value: 'name@'}},
+        {inputs: { value: 'name@domain'}},
+        {inputs: { value: 'name@domain.'}},
+        {inputs: { value: 'name@domain.c'}},
+        {inputs: { value: '@'}},
+        {inputs: { value: '@domain'}},
+        {inputs: { value: '@domain.'}},
+        {inputs: { value: '@domain.c'}},
+        {inputs: { value: '@domain.abcde'}},
+        {inputs: { value: '.'}},
+        {inputs: { value: 'domain.c'}},
+        {inputs: { value: 'domain.abcd'}},
+        {inputs: { value: 'name@domain.1'}}
       ];
 
       describe('returns an invalid error for a mandatory question', () => {
         var question = questions.mandatoryExample;
         tests.map(function (test) {
-          it(test.inputs.email, () => {
+          it(test.inputs.value, () => {
             var result = Email.prototype.getError(question, test.inputs, errors);
             expect(result).to.equal(errors.invalid);
           });
@@ -62,7 +62,7 @@ describe('<Email />', () => {
       describe('returns an invalid error for a non-mandatory question', () => {
         var question = questions.notMandatoryExample;
         tests.map(function (test) {
-          it(test.inputs.email, () => {
+          it(test.inputs.value, () => {
             var result = Email.prototype.getError(question, test.inputs, errors);
             expect(result).to.equal(errors.invalid);
           });
@@ -75,12 +75,12 @@ describe('<Email />', () => {
         var question = questions.mandatoryExample;
 
         var tests = [
-          {inputs: { email: ''}},
+          {inputs: { value: ''}},
           {inputs: { }}
         ];
 
         tests.map(function (test) {
-          it(`email: "${test.inputs.email}"`, () => {
+          it(`value: "${test.inputs.value}"`, () => {
             var result = Email.prototype.getError(question, test.inputs, errors);
             expect(result).to.equal(errors.mandatory);
           });
@@ -91,12 +91,12 @@ describe('<Email />', () => {
         var question = questions.notMandatoryExample;
 
         var tests = [
-          {inputs: { email: ''}},
+          {inputs: { value: ''}},
           {inputs: { }}
         ];
 
         tests.map(function (test) {
-          it(`email: "${test.inputs.email}"`, () => {
+          it(`value: "${test.inputs.value}"`, () => {
             var result = Email.prototype.getError(question, test.inputs, errors);
             expect(result).to.equal(false);
           });
@@ -108,12 +108,12 @@ describe('<Email />', () => {
       describe('returns false for a mandatory question', () => {
         var question = questions.mandatoryExample;
         var tests = [
-          {inputs: { email: 'name@domain.com'}},
-          {inputs: { email: 'name+1@domain.com'}}
+          {inputs: { value: 'name@domain.com'}},
+          {inputs: { value: 'name+1@domain.com'}}
         ];
 
         tests.map(function (test) {
-          it(test.inputs.email, () => {
+          it(test.inputs.value, () => {
             var result = Email.prototype.getError(question, test.inputs, errors);
             expect(result).to.equal(false);
           });
@@ -123,12 +123,12 @@ describe('<Email />', () => {
       describe('returns false for a non-mandatory question', () => {
         var question = questions.notMandatoryExample;
         var tests = [
-          {inputs: { email: 'name@domain.com'}},
-          {inputs: { email: 'name+1@domain.com'}}
+          {inputs: { value: 'name@domain.com'}},
+          {inputs: { value: 'name+1@domain.com'}}
         ];
 
         tests.map(function (test) {
-          it(test.inputs.email, () => {
+          it(test.inputs.value, () => {
             var result = Email.prototype.getError(question, test.inputs, errors);
             expect(result).to.equal(false);
           });

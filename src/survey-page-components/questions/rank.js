@@ -47,7 +47,7 @@ module.exports = React.createClass({
 
       // row order was changed at least once,
       // so can save answer
-      InputsActions.saveAnswers(newRows);
+      InputsActions.saveAnswers(this.props.questionId, this.props.questionType, newRows);
     }
   },
   getInitialState: function () {
@@ -59,7 +59,7 @@ module.exports = React.createClass({
       // if number of answers is less than 2
       // then the order cannot be changed
       answers = this.props.answers;
-      InputsActions.saveAnswers(answers);
+      InputsActions.saveAnswers(this.props.questionId, this.props.questionType, answers);
     }
 
     return {

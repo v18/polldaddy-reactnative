@@ -47,7 +47,7 @@ module.exports = React.createClass({
       this.setState({
         answers: this.state.inputs
       });
-      Actions.saveAnswers(this.state.answers);
+      Actions.saveAnswers(this.props.questionId, this.props.questionType, this.state.answers);
     } else {
       // if not validated, remove answer & save error instead
       this.setState({
@@ -64,8 +64,8 @@ module.exports = React.createClass({
       data: this.props.answers,
       ds: ds.cloneWithRows(this.props.answers),
       inputs: {
-        userComments: '',
-        otherOption: '',
+        commentText: '',
+        otherText: '',
         selectedAnswers: []
       },
       answers: {},
@@ -133,7 +133,7 @@ module.exports = React.createClass({
       return (
         <View style={[styles.textQuestionContainer, styles.otherContainer]}>
           <Text style={styles.textFieldQuestion}>Enter other option:</Text>
-          <TextField name='otherOption' />
+          <TextField name='otherText' />
         </View>
       );
     }
@@ -146,7 +146,7 @@ module.exports = React.createClass({
           <View style={styles.textFieldContainer}>
             <TextField
                 multiline={true}
-                name='userComments'
+                name='commentText'
             />
           </View>
         </View>
@@ -180,8 +180,8 @@ module.exports = React.createClass({
       data: newData,
       ds: this.state.ds.cloneWithRows(newData),
       inputs: {
-        userComments: this.state.inputs.userComments,
-        otherOption: this.state.inputs.otherOption,
+        commentText: this.state.inputs.commentText,
+        otherText: this.state.inputs.otherText,
         selectedAnswers
       }
     });
@@ -222,14 +222,14 @@ module.exports = React.createClass({
       error = errors.toomany;
     } else if(inputs.selectedAnswers
       && inputs.selectedAnswers.indexOf(-1) > -1
-      && (inputs.otherOption === '' || !inputs.otherOption)) {
+      && (inputs.otherText === '' || !inputs.otherText)) {
       // if user selected 'other', make sure we have an answer for it
       return errors.otheroption;
     }
 
     if(props.isMandatory) {
       if(inputs.selectedAnswers.length === 0
-          && (inputs.otherOption === '' || !inputs.otherOption)) {
+          && (inputs.otherText === '' || !inputs.otherText)) {
         // show mandatory error if we don't have any answers
         // or user comment
         error = errors.mandatory;

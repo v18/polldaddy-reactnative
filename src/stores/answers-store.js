@@ -9,7 +9,9 @@ module.exports = Reflux.createStore({
     this.answers = {};
     this.triggerChange();
   },
-  saveAnswers: function (answers) {
+  saveAnswers: function (questionId, questionType, answers) {
+    this.questionId = questionId;
+    this.questionType = questionType;
     this.answers = answers;
     this.hasError = false;
     this.errorMessage = '';
@@ -17,6 +19,8 @@ module.exports = Reflux.createStore({
   },
   triggerChange: function () {
     this.trigger({
+      questionId: this.questionId,
+      questionType: this.questionType,
       answers: this.answers,
       hasError: this.hasError,
       errorMessage: this.errorMessage

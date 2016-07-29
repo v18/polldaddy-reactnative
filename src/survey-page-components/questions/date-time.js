@@ -8,7 +8,7 @@ import {
  } from 'react-native';
 import Actions from '../../actions/current-question';
 import DateFormat from 'dateformat';
-import InputsStore from '../../stores/inputs-store';
+// import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 
 var errorMessages = {
@@ -17,39 +17,40 @@ var errorMessages = {
 
 module.exports = React.createClass({
   componentDidMount: function () {
-    this.unsubscribeFromInputs = InputsStore.listen(this.onInputsChange);
-    this.focusListener = this.props.navigator.navigationContext.addListener('willfocus', () => {
-      this.focusListener.remove();
-      this.unsubscribeFromInputs();
-    });
+    // this.unsubscribeFromInputs = InputsStore.listen(this.onInputsChange);
+    // this.focusListener = this.props.navigator.navigationContext.addListener('willfocus', () => {
+    //   this.focusListener.remove();
+    //   this.unsubscribeFromInputs();
+    // });
   },
   componentWillUnmount: function () {
-    if(this.focusListener) {
-      this.focusListener.remove();
-    }
-    if(this.unsubscribeFromAnswers) {
-      this.unsubscribeFromAnswers();
-    }
+    // if(this.focusListener) {
+    //   this.focusListener.remove();
+    // }
+    // if(this.unsubscribeFromAnswers) {
+    //   this.unsubscribeFromAnswers();
+    // }
   },
   getInitialState: function () {
     return {
       inputs: {
-        date: '',
-        month: '',
-        year: '',
-        hour: '',
-        minute: '',
-        formattedDate: this.getFormattedDateText(),
-        formattedTime: this.getFormattedTimeText()
+        dd: '',
+        mm: '',
+        yyyy: '',
+        h: '',
+        m: ''
       },
+      formattedDate: this.getFormattedDateText(),
+      formattedTime: this.getFormattedTimeText(),
       answers: {},
       errorMessage: ''
     };
   },
-  onInputsChange: function (inputs) {
-    this.setState({
-      inputs: inputs
-    });
+  onInputsChange: function (newState) {
+    this.setState(newState);
+
+    var questionId = Number(this.props.question.attr.qID);
+    var questionType = Number(this.props.question.attr.qType);
 
     var error = this.getError();
     if(!error) {
@@ -57,7 +58,7 @@ module.exports = React.createClass({
       this.setState({
         answers: this.state.inputs
       });
-      Actions.saveAnswers(this.state.answers);
+      Actions.saveAnswers(questionId, questionType, this.state.answers);
     } else {
       // if not validated, remove answer & save error instead
       this.setState({
@@ -81,7 +82,7 @@ module.exports = React.createClass({
           <Text style={styles.label}>Date:</Text>
           <TouchableWithoutFeedback onPress={this.showDatePicker}>
             <View style={styles.value}>
-              <Text>{this.state.inputs.formattedDate}</Text>
+              <Text>{this.state.formattedDate}</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>);
@@ -94,7 +95,7 @@ module.exports = React.createClass({
           <Text style={styles.label}>Time:</Text>
           <TouchableWithoutFeedback onPress={this.showTimePicker}>
             <View style={styles.value}>
-              <Text>{this.state.inputs.formattedTime}</Text>
+              <Text>{this.state.formattedTime}</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>);
@@ -102,9 +103,9 @@ module.exports = React.createClass({
   },
   showDatePicker: function () {
     var now = new Date();
-    var year = this.state.inputs.year || now.getFullYear();
-    var month = this.state.inputs.month || now.getMonth();
-    var date = this.state.inputs.date || now.getDate();
+    var year = this.state.inputs.yyyy || now.getFullYear();
+    var month = this.state.inputs.mm || now.getMonth();
+    var date = this.state.inputs.dd || now.getDate();
     var displayDate = new Date(year, month, date);
 
     DatePickerAndroid.open({
@@ -114,13 +115,15 @@ module.exports = React.createClass({
         if(userInput.action === 'dateSetAction') {
           var formattedDate = this.getFormattedDateText(userInput.year,
             userInput.month, userInput.day);
-          var formattedTime = this.state.inputs.formattedTime;
+          var formattedTime = this.state.formattedTime;
           this.onInputsChange({
-            date: userInput.day,
-            month: userInput.month,
-            year: userInput.year,
-            hour: this.state.inputs.hour,
-            minute: this.state.inputs.minute,
+            inputs: {
+              dd: userInput.day,
+              mm: userInput.month,
+              yyyy: userInput.year,
+              h: this.state.inputs.h,
+              m: this.state.inputs.m
+            },
             formattedDate,
             formattedTime
           });
@@ -132,11 +135,11 @@ module.exports = React.createClass({
     var hour = now.getHours();
     var minute = now.getMinutes();
 
-    if(this.state.inputs.hour !== ''
-      && this.state.inputs.minute !== '') {
+    if(this.state.inputs.h !== ''
+      && this.state.inputs.m !== '') {
         // don't trip up on 0 == false
-      hour = this.state.inputs.hour;
-      minute = this.state.inputs.minute;
+      hour = this.state.inputs.h;
+      minute = this.state.inputs.m;
     }
 
     TimePickerAndroid.open({
@@ -145,15 +148,17 @@ module.exports = React.createClass({
     })
       .then((userInput) => {
         if(userInput.action === 'timeSetAction') {
-          var formattedDate = this.state.inputs.formattedDate;
+          var formattedDate = this.state.formattedDate;
           var formattedTime = this.getFormattedTimeText(userInput.hour,
             userInput.minute);
           this.onInputsChange({
-            date: this.state.inputs.date,
-            month: this.state.inputs.month,
-            year: this.state.inputs.year,
-            hour: userInput.hour,
-            minute: userInput.minute,
+            inputs: {
+              dd: this.state.inputs.dd,
+              mm: this.state.inputs.dd,
+              yyyy: this.state.inputs.yyyy,
+              h: userInput.hour,
+              m: userInput.hour
+            },
             formattedDate,
             formattedTime
           });

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "async": "2.0.0-rc.6",
+    "dateformat": "1.0.12",
     "lodash": "4.13.1",
     "parse-uri": "1.0.0",
     "react": "15.2.0",

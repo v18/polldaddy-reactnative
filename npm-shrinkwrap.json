@@ -1057,7 +1057,7 @@
     },
     "dateformat": {
       "version": "1.0.12",
-      "from": "dateformat@>=1.0.11 <2.0.0",
+      "from": "dateformat@latest",
       "resolved": "https://registry.npmjs.org/dateformat/-/dateformat-1.0.12.tgz"
     },
     "debug": {
@@ -2673,6 +2673,11 @@
       "from": "lodash@4.13.1",
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.13.1.tgz"
     },
+    "lodash-es": {
+      "version": "4.13.1",
+      "from": "lodash-es@>=4.2.1 <5.0.0",
+      "resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.13.1.tgz"
+    },
     "lodash-node": {
       "version": "2.4.1",
       "from": "lodash-node@>=2.4.1 <2.5.0",
@@ -3684,6 +3689,11 @@
       "from": "redent@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/redent/-/redent-1.0.0.tgz"
     },
+    "redux": {
+      "version": "3.5.2",
+      "from": "redux@>=3.2.1 <4.0.0",
+      "resolved": "https://registry.npmjs.org/redux/-/redux-3.5.2.tgz"
+    },
     "reflux": {
       "version": "0.4.1",
       "from": "reflux@0.4.1",
@@ -4171,6 +4181,11 @@
       "version": "2.0.0",
       "from": "supports-color@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-2.0.0.tgz"
+    },
+    "symbol-observable": {
+      "version": "0.2.4",
+      "from": "symbol-observable@>=0.2.3 <0.3.0",
+      "resolved": "https://registry.npmjs.org/symbol-observable/-/symbol-observable-0.2.4.tgz"
     },
     "symbol-tree": {
       "version": "3.1.4",

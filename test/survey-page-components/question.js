@@ -247,6 +247,18 @@ describe('<Question />', () => {
   });
 
   describe('getNumberProps', () => {
+    it('has correct questionId prop', function () {
+      var result =
+        Question.prototype.getNumberProps(numberQuestions.withLabel);
+      expect(result.questionId).to.equal(7257860);
+    });
+
+    it('has correct questionType prop', function () {
+      var result =
+        Question.prototype.getNumberProps(numberQuestions.withLabel);
+      expect(result.questionType).to.equal(1100);
+    });
+
     describe('decimalPlaces', () => {
       var result = Question.prototype.getNumberProps(
         numberQuestions.decimalPlaces).decimalPlaces;
@@ -427,6 +439,18 @@ describe('<Question />', () => {
   });
 
   describe('getMultipleChoiceProps()', () => {
+    it('has correct questionId prop', function () {
+      var result =
+        Question.prototype.getMultipleChoiceProps(mcQuestions.asEntered);
+      expect(result.questionId).to.equal(7343310);
+    });
+
+    it('has correct questionType prop', function () {
+      var result =
+        Question.prototype.getMultipleChoiceProps(mcQuestions.asEntered);
+      expect(result.questionType).to.equal(400);
+    });
+
     describe('max', () => {
       it('returns max = 1 when users allowed to choose one', () => {
         var questions = [mcQuestions.oneChoiceAllowedRadio,
@@ -738,6 +762,18 @@ describe('<Question />', () => {
   });
 
   describe('getRankProps', () => {
+    it('has correct questionId prop', function () {
+      var result =
+        Question.prototype.getRankProps(rankQ.asEntered);
+      expect(result.questionId).to.equal(7361189);
+    });
+
+    it('has correct questionType prop', function () {
+      var result =
+        Question.prototype.getRankProps(rankQ.asEntered);
+      expect(result.questionType).to.equal(1300);
+    });
+
     describe('answers array', () => {
       describe('images', () => {
         it('return media URL when library media is used in question', () => {
@@ -905,6 +941,18 @@ describe('<Question />', () => {
   });
 
   describe('getMatrixProps()', () => {
+    it('has correct questionId prop', function () {
+      var result =
+        Question.prototype.getMatrixProps(matrixQ.standard);
+      expect(result.questionId).to.equal(7257336);
+    });
+
+    it('has correct questionType prop', function () {
+      var result =
+        Question.prototype.getMatrixProps(matrixQ.standard);
+      expect(result.questionType).to.equal(1200);
+    });
+
     describe('multipleChoicesAllowed', () => {
       it('returns false for elmType 0', () => {
         var actual = Question.prototype

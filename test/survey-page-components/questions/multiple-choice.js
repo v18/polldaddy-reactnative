@@ -27,14 +27,14 @@ describe('<MultipleChoice />', () => {
       });
       var textFieldWrapper = wrapper.find(TextField);
       expect(textFieldWrapper).to.have.length(1);
-      expect(textFieldWrapper.prop('name')).to.equal('otherOption');
+      expect(textFieldWrapper.prop('name')).to.equal('otherText');
     });
 
     it('shows a TextField for user comments', () => {
       var qProps = Question.prototype.getMultipleChoiceProps(qs.withComment);
       var wrapper = shallow(<MultipleChoice {...qProps}/>);
       expect(wrapper.find(TextField)).to.have.length(1);
-      expect(wrapper.find(TextField).prop('name')).to.equal('userComments');
+      expect(wrapper.find(TextField).prop('name')).to.equal('commentText');
     });
   });
 
@@ -51,8 +51,8 @@ describe('<MultipleChoice />', () => {
         var qProps = Question.prototype.
           getMultipleChoiceProps(qs.twoToFourChoicesAllowed);
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: [1]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
@@ -63,8 +63,8 @@ describe('<MultipleChoice />', () => {
         var qProps = Question.prototype.
           getMultipleChoiceProps(qs.fakeNotMandatoryMinNumber); // fake: currently, Polldaddy.com always marks questions as mandatory when they have a minimum number set
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: [1]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
@@ -77,8 +77,8 @@ describe('<MultipleChoice />', () => {
         var qProps = Question.prototype.
           getMultipleChoiceProps(qs.twoToFourChoicesAllowed); // fake:  currently, it's not possible to select more than the max number of answers in the UI
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: [1,2,3,4,5]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
@@ -92,8 +92,8 @@ describe('<MultipleChoice />', () => {
         var qProps = Question.prototype.
           getMultipleChoiceProps(qs.fakeNotMandatoryMinNumber);
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: [1,2,3,4,5]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
@@ -107,8 +107,8 @@ describe('<MultipleChoice />', () => {
           getMultipleChoiceProps(qs.withOtherChoiceNotMand);
 
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: [-1]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
@@ -120,8 +120,8 @@ describe('<MultipleChoice />', () => {
           getMultipleChoiceProps(qs.withOtherChoiceMand);
 
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: [-1]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
@@ -135,8 +135,8 @@ describe('<MultipleChoice />', () => {
           getMultipleChoiceProps(qs.withoutCommentMand);
 
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: []
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
@@ -148,8 +148,8 @@ describe('<MultipleChoice />', () => {
           getMultipleChoiceProps(qs.withCommentMand);
 
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: []
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
@@ -162,13 +162,13 @@ describe('<MultipleChoice />', () => {
 
         var inputsArray = [
           {
-            userComments: '',
-            otherOption: '',
+            commentText: '',
+            otherText: '',
             selectedAnswers: []
           },
           {
-            userComments: '',
-            otherOption: '',
+            commentText: '',
+            otherText: '',
             selectedAnswers: undefined
           }
         ];
@@ -183,8 +183,8 @@ describe('<MultipleChoice />', () => {
           getMultipleChoiceProps(qs.withoutComment);
 
         var inputs = {
-          userComments: '',
-          otherOption: '',
+          commentText: '',
+          otherText: '',
           selectedAnswers: []
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);

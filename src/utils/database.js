@@ -89,7 +89,7 @@ module.exports = {
             return imagesApi.deleteSurveyDirectory(itemId);
           })
           .then(function() {
-            resolve(true);
+            resolve();
           })
           .catch(function (error) {
             throw error;
@@ -132,6 +132,43 @@ module.exports = {
               });
             }
             resolve(savedItems);
+          })
+          .catch(function(error) {
+            throw error;
+          })
+          .done();
+      });
+    });
+  },
+  saveAnswers: function (options) {
+    return new Promise(function(resolve, reject) {
+      db.transaction(function(txn) {
+        txn.executeSql('INSERT INTO Responses ('
+          + 'surveyId, responseXML, startDate, endDate, '
+          + 'completed, latitude, longitude, userId) VALUES '
+          + '(?, ?, ?, ?, ?, ?, ?, ?);', [options.surveyId,
+            options.responseXML, options.startDate, options.endDate,
+            options.completed, options.latitude,
+            options.longitude, options.userId])
+          .then(function () {
+            resolve();
+          })
+          .catch(function () {
+          })
+          .done();
+      })
+      .catch(function () {
+        reject(new Error('no saved result'));
+      })
+      .done();
+    });
+  },
+  getAnswers: function (surveyId) {
+    return new Promise(function(resolve) {
+      db.transaction(function(txn) {
+        txn.executeSql('SELECT responseId, surveyId, responseXML, startDate, endDate, completed, latitude, longitude, userId FROM Responses WHERE surveyId=(?);', [surveyId])
+          .then(function([txn, results]) { //eslint-disable-line no-unused-vars
+            resolve(results.rows.raw());
           })
           .catch(function(error) {
             throw error;

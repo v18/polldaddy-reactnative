@@ -33,7 +33,7 @@ module.exports = React.createClass({
   getInitialState: function () {
     return {
       inputs: {
-        freeText: ''
+        value: ''
       },
       answers: {},
       errorMessage: ''
@@ -44,13 +44,16 @@ module.exports = React.createClass({
       inputs: inputs
     });
 
+    var questionId = Number(this.props.question.attr.qID);
+    var questionType = Number(this.props.question.attr.qType);
+
     var error = this.getError();
     if(!error) {
       // if validated with no errors, save to answer
       this.setState({
         answers: this.state.inputs
       });
-      Actions.saveAnswers(this.state.answers);
+      Actions.saveAnswers(questionId, questionType, this.state.answers);
     } else {
       // if not validated, remove answer & save error instead
       this.setState({
@@ -67,7 +70,7 @@ module.exports = React.createClass({
           <TextField
               autoFocus={true}
               maxLength={500}
-              name='freeText'
+              name='value'
               placeholder=''
           />);
       case 1: // multi-line
@@ -76,7 +79,7 @@ module.exports = React.createClass({
               autoCapitalize='sentences'
               autoFocus={true}
               multiline={true}
-              name='freeText'
+              name='value'
               placeholder=''
           />);
       case 2: // password
@@ -84,14 +87,14 @@ module.exports = React.createClass({
           <TextField
               autoFocus={true}
               maxLength={500}
-              name='freeText'
+              name='value'
               placeholder=''
               secureTextEntry={true}
           />);
     }
   },
   getError: function (question = this.props.question,
-    text=this.state.inputs.freeText, errors = errorMessages) {
+    text=this.state.inputs.value, errors = errorMessages) {
 
     var error = false;
     var isMand = question.childNamed('mand');

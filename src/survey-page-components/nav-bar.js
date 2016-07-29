@@ -1,5 +1,6 @@
 import {
   Alert,
+  AsyncStorage,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -46,10 +47,13 @@ module.exports = React.createClass({
       </TouchableHighlight>
     </View>);
   },
-  onAnswersChange: function (data) {
+  onAnswersChange: function ({questionId, questionType, answers, hasError, errorMessage}) {
     this.setState({
-      hasError: data.hasError,
-      errorMessage: data.errorMessage
+      questionId,
+      questionType,
+      answers,
+      hasError,
+      errorMessage
     });
   },
   buttonText: function(buttonType) {
@@ -58,13 +62,19 @@ module.exports = React.createClass({
       case 'next':
         text = 'Next'.toUpperCase();
         break;
-      case 'done':
+      case 'exitWithoutSaving':
         text = 'Done'.toUpperCase();
         break;
       case 'startSurvey':
         text = 'Start Survey'.toUpperCase();
         break;
-      case 'startOver':
+      case 'startOverWithoutSaving':
+        text = 'Start Over'.toUpperCase();
+        break;
+      case 'saveAndExit':
+        text = 'Done'.toUpperCase();
+        break;
+      case 'saveAndStartOver':
         text = 'Start Over'.toUpperCase();
         break;
     }
@@ -77,23 +87,91 @@ module.exports = React.createClass({
         fn = (nav) => {
           // make sure there are no errors on the page we're on
           if(!this.state.hasError) {
+            CurrentSurvey.saveAnswer(this.state.questionId, this.state.questionType, this.state.answers);
             this.goToNextPage(nav);
           } else {
             Alert.alert('Error', this.state.errorMessage, [{text: 'Ok'}]);
           }
         };
         break;
-      case 'done':
+      case 'exitWithoutSaving':
         fn = this.goBackToSurveyLauncherPage;
         break;
       case 'startSurvey':
-        fn = this.goToNextPage;
+        fn = (nav) => {
+          CurrentSurvey.saveStartDate();
+          this.goToNextPage(nav);
+        };
         break;
-      case 'startOver':
+      case 'startOverWithoutSaving':
         fn = this.goBackToStartPage;
         break;
+      case 'saveAndExit':
+        fn = this.saveAndExit;
+        break;
+      case 'saveAndStartOver':
+        fn = this.saveAndStartOver;
     }
     return fn;
+  },
+  saveSurveyAnswers: function () {
+    return AsyncStorage.getItem('userId')
+    .then(function (userId) {
+      if(!userId) {
+        throw new Error('no user saved');
+      }
+      return Promise.resolve(userId);
+    })
+    .then(function (userId) {
+      CurrentSurvey.saveEndDate();
+      return CurrentSurvey.saveAnswersToDatabase({userId});
+    })
+    .then(function () {
+      return Promise.resolve();
+    })
+    .catch((error) => {
+      if(error.message === 'no user saved')  {
+        AsyncStorage.multiRemove(['userCode', 'userId'])
+        .then(() => {
+          Alert.alert('Whoops',
+            "You're not logged in, please go back and log in.",
+            [{text: 'Ok, take me to the login page',
+              onPress: () => {
+                this.props.navigator.immediatelyResetRouteStack([{name: 'signin'}]);
+              }
+          }]);
+        });
+      } else {
+        // case: error.message === 'no saved result'
+        Alert.alert('Error',
+          "Couldn't save the answers for this survey. Please try again.",
+          [{text: 'Ok',
+            onPress: () => {
+              this.goBackToStartPage(this.props.navigator);
+            }
+          }]
+        );
+      }
+      return Promise.resolve('Went through alert error already');
+    });
+  },
+  saveAndExit: function (nav) {
+    return this.saveSurveyAnswers(nav)
+    .then((result) => {
+      if(result !== 'Went through alert error already') {
+        this.goBackToSurveyLauncherPage(nav);
+      }
+    })
+    .done();
+  },
+  saveAndStartOver: function (nav) {
+    return this.saveSurveyAnswers(nav)
+    .then((result) => {
+      if(result !== 'Went through alert error already') {
+        this.goBackToStartPage(nav);
+      }
+    })
+    .done();
   },
   goBackToStartPage: function(nav) {
     // reset the survey to the start page
@@ -157,7 +235,7 @@ module.exports = React.createClass({
 var buttonTypes = {
   start: {
     top: {
-      left: 'done',
+      left: 'exitWithoutSaving',
       right: 'startSurvey'
     },
     bottom: {
@@ -171,18 +249,18 @@ var buttonTypes = {
       right: 'next'
     },
     bottom: {
-      left: 'startOver',
+      left: 'startOverWithoutSaving',
       right: 'next'
     }
   },
   finish: {
     top: {
-      left: 'done',
-      right: 'startOver'
+      left: 'saveAndExit',
+      right: 'saveAndStartOver'
     },
     bottom: {
       left: 'none',
-      right: 'startOver'
+      right: 'saveAndStartOver'
     }
   }
 };

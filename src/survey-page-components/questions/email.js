@@ -27,7 +27,7 @@ module.exports = React.createClass({
   getInitialState: function () {
     return {
       inputs: {
-        email: ''
+        value: ''
       },
       answers: {},
       errorMessage: ''
@@ -38,13 +38,16 @@ module.exports = React.createClass({
       inputs: inputs
     });
 
+    var questionId = Number(this.props.question.attr.qID);
+    var questionType = Number(this.props.question.attr.qType);
+
     var error = this.getError();
     if(!error) {
       // if validated with no errors, save to answer
       this.setState({
         answers: this.state.inputs
       });
-      Actions.saveAnswers(this.state.answers);
+      Actions.saveAnswers(questionId, questionType, this.state.answers);
     } else {
       // if not validated, remove answer & save error instead
       this.setState({
@@ -56,7 +59,7 @@ module.exports = React.createClass({
   render: function () {
     return (
       <TextField
-          name='email'
+          name='value'
           placeholder={this.props.question.childNamed('example').val}
       />);
   },
@@ -73,9 +76,9 @@ module.exports = React.createClass({
       return re.test(email);
     };
 
-    if(inputs.email && inputs.email !== '') {
+    if(inputs.value && inputs.value !== '') {
       // if there's input, make sure it's valid
-      isValid = isEmailValid(inputs.email);
+      isValid = isEmailValid(inputs.value);
     } else {
       // if there's no input, and question is mandatory
       // then the answer is not complete

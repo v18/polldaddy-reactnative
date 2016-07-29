@@ -33,13 +33,16 @@ module.exports = React.createClass({
     );
   },
   renderMandatoryIndicator: function () {
+    var questionId = Number(this.props.question.attr.qID);
+    var questionType = Number(this.props.question.attr.qType);
+
     var isMandatory = this.getIsMandatory();
     if(isMandatory) {
       // make sure that initial state for error is true
       Actions.saveError('This is a mandatory question.');
       return <Text>*</Text>;
     } else {
-      Actions.saveAnswers({});
+      Actions.saveAnswers(questionId, questionType, {});
     }
   },
   renderTitle: function () {
@@ -112,6 +115,8 @@ module.exports = React.createClass({
     }
   },
   getNumberProps: function (question = this.props.question) {
+    var questionId = Number(question.attr.qID);
+    var questionType = Number(question.attr.qType);
     var min = Number(question.childNamed('min_value').val);
     var max =  Number(question.childNamed('max_value').val);
     var decimalPlaces = Number(
@@ -155,7 +160,9 @@ module.exports = React.createClass({
       decimalPlaces,
       labelPosition,
       labelValue,
-      isMandatory
+      isMandatory,
+      questionId,
+      questionType
     };
   },
   getIsMandatory: function (question = this.props.question) {
@@ -163,6 +170,8 @@ module.exports = React.createClass({
     return mandatoryField && mandatoryField.val === 'true';
   },
   getMultipleChoiceProps: function (question = this.props.question) {
+    var questionId = Number(question.attr.qID);
+    var questionType = Number(question.attr.qType);
     var other = question.childNamed('other').val === 'true';
     var max = 1;
     var min = 0;
@@ -194,7 +203,9 @@ module.exports = React.createClass({
       comments,
       correctAnswerId,
       answers,
-      isMandatory
+      isMandatory,
+      questionId,
+      questionType
     };
   },
   getMultipleChoiceAnswerArray: function (question = this.props.question,
@@ -260,6 +271,8 @@ module.exports = React.createClass({
   },
   getRankProps: function (question = this.props.question, shuffle = _.shuffle) {
     var isMandatory = this.getIsMandatory(question);
+    var questionId = Number(question.attr.qID);
+    var questionType = Number(question.attr.qType);
 
     // create answers array
     var options = question.childNamed('options').childrenNamed('option');
@@ -307,10 +320,14 @@ module.exports = React.createClass({
 
     return {
       answers,
-      isMandatory
+      isMandatory,
+      questionId,
+      questionType
     };
   },
   getMatrixProps: function (question = this.props.question) {
+    var questionId = Number(question.attr.qID);
+    var questionType = Number(question.attr.qType);
     var isMandatory = this.getIsMandatory(question);
     var type = Number(question.childNamed('elmType').val);
     var multipleChoicesAllowed = (type === 1);
@@ -321,7 +338,9 @@ module.exports = React.createClass({
       isMandatory,
       multipleChoicesAllowed,
       rows,
-      columns
+      columns,
+      questionId,
+      questionType
     };
   },
   getMatrixOptions: function (question = this.props.question,

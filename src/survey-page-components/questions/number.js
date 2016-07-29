@@ -84,7 +84,7 @@ module.exports = React.createClass({
       this.setState({
         answers: this.state.inputs
       });
-      Actions.saveAnswers(this.state.answers);
+      Actions.saveAnswers(this.props.questionId, this.props.questionType, this.state.answers);
     } else {
       // if not validated, remove answer & save error instead
       this.setState({

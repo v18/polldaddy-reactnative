@@ -38,7 +38,7 @@ module.exports = React.createClass({
 
     var error = this.getError(inputs);
     if(!error) {
-      Actions.saveAnswers(this.state);
+      Actions.saveAnswers(this.props.questionId, this.props.questionType, this.state);
     } else {
       Actions.saveError(error);
     }
