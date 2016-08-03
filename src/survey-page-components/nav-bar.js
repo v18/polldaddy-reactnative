@@ -104,7 +104,17 @@ module.exports = React.createClass({
         };
         break;
       case 'startOverWithoutSaving':
-        fn = this.goBackToStartPage;
+        fn = (nav) => {
+          Alert.alert('Cancel',
+            'Are you sure you want to exit the survey without saving your answers?',
+            [
+              {
+                text: 'Exit without saving',
+                onPress: () => {this.goBackToStartPage(nav);}
+              },
+              {text: 'Cancel'}
+            ]);
+        };
         break;
       case 'saveAndExit':
         fn = this.saveAndExit;
@@ -114,7 +124,7 @@ module.exports = React.createClass({
     }
     return fn;
   },
-  saveSurveyAnswers: function () {
+  saveSurveyAnswers: function (isComplete) {
     return AsyncStorage.getItem('userId')
     .then(function (userId) {
       if(!userId) {
@@ -124,7 +134,7 @@ module.exports = React.createClass({
     })
     .then(function (userId) {
       CurrentSurvey.saveEndDate();
-      return CurrentSurvey.saveAnswersToDatabase({userId});
+      return CurrentSurvey.saveAnswersToDatabase({userId, isComplete});
     })
     .then(function () {
       return Promise.resolve();
@@ -156,7 +166,7 @@ module.exports = React.createClass({
     });
   },
   saveAndExit: function (nav) {
-    return this.saveSurveyAnswers(nav)
+    return this.saveSurveyAnswers('complete')
     .then((result) => {
       if(result !== 'Went through alert error already') {
         this.goBackToSurveyLauncherPage(nav);
@@ -165,7 +175,7 @@ module.exports = React.createClass({
     .done();
   },
   saveAndStartOver: function (nav) {
-    return this.saveSurveyAnswers(nav)
+    return this.saveSurveyAnswers('complete')
     .then((result) => {
       if(result !== 'Went through alert error already') {
         this.goBackToStartPage(nav);
@@ -176,6 +186,7 @@ module.exports = React.createClass({
   goBackToStartPage: function(nav) {
     // reset the survey to the start page
     Actions.reset();
+    CurrentSurvey.resetAnswers();
     CurrentSurvey.setCurrentQuestionIndex(0);
     this.focusListener.remove();
     this.unsubscribeFromAnswers();
@@ -187,6 +198,7 @@ module.exports = React.createClass({
   goBackToSurveyLauncherPage: function(nav) {
     // reset the survey to before the starting point
     Actions.reset();
+    CurrentSurvey.resetAnswers();
     CurrentSurvey.setCurrentQuestionIndex(-1);
     this.focusListener.remove();
     this.unsubscribeFromAnswers();

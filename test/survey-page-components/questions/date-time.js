@@ -106,11 +106,11 @@ describe('<DateTime />', () => {
       describe('and both time and date are asked', () => {
         it('returns false when both fields are filled', () => {
           var inputs = {
-            date: '1',
-            month: '10',
-            year: '2016',
-            hour: '1',
-            minute: '2',
+            dd: '1',
+            mm: '10',
+            yyyy: '2016',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 10, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -122,11 +122,11 @@ describe('<DateTime />', () => {
 
         it('returns a mandatory error when date is not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '1',
-            minute: '2',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -138,11 +138,11 @@ describe('<DateTime />', () => {
 
         it('returns a mandatory error when time is not filled', () => {
           var inputs = {
-            date: '1',
-            month: '10',
-            year: '2016',
-            hour: '',
-            minute: '',
+            dd: '1',
+            mm: '10',
+            yyyy: '2016',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 10, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -154,11 +154,11 @@ describe('<DateTime />', () => {
 
         it('returns a mandatory error when both are not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '',
-            minute: '',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -172,11 +172,11 @@ describe('<DateTime />', () => {
       describe('and only date is asked', () => {
         it('returns mandatory error when date is not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '',
-            minute: '',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -188,11 +188,11 @@ describe('<DateTime />', () => {
 
         it('returns false when date is filled', () => {
           var inputs = {
-            date: '1',
-            month: '10',
-            year: '2016',
-            hour: '',
-            minute: '',
+            dd: '1',
+            mm: '10',
+            yyyy: '2016',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 10, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -206,11 +206,11 @@ describe('<DateTime />', () => {
       describe('and only time is asked', () => {
         it('returns mandatory error when time is not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '',
-            minute: '',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -222,11 +222,11 @@ describe('<DateTime />', () => {
 
         it('returns false when time is filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '1',
-            minute: '2',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -242,11 +242,11 @@ describe('<DateTime />', () => {
       describe('and both time and date are asked', () => {
         it('returns false when both fields are filled', () => {
           var inputs = {
-            date: '1',
-            month: '1',
-            year: '2016',
-            hour: '1',
-            minute: '2',
+            dd: '1',
+            mm: '1',
+            yyyy: '2016',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 1, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -258,11 +258,11 @@ describe('<DateTime />', () => {
 
         it('returns false when time is not filled', () => {
           var inputs = {
-            date: '1',
-            month: '1',
-            year: '2016',
-            hour: '',
-            minute: '',
+            dd: '1',
+            mm: '1',
+            yyyy: '2016',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 1, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -274,11 +274,11 @@ describe('<DateTime />', () => {
 
         it('returns false when date is not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '1',
-            minute: '2',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -290,11 +290,11 @@ describe('<DateTime />', () => {
 
         it('returns false when both fields are not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '',
-            minute: '',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -308,11 +308,11 @@ describe('<DateTime />', () => {
       describe('and only date is asked', () => {
         it('returns false when both fields are filled', () => {
           var inputs = {
-            date: '1',
-            month: '1',
-            year: '2016',
-            hour: '1',
-            minute: '2',
+            dd: '1',
+            mm: '1',
+            yyyy: '2016',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 1, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -324,11 +324,11 @@ describe('<DateTime />', () => {
 
         it('returns false when time is not filled', () => {
           var inputs = {
-            date: '1',
-            month: '1',
-            year: '2016',
-            hour: '',
-            minute: '',
+            dd: '1',
+            mm: '1',
+            yyyy: '2016',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 1, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -340,11 +340,11 @@ describe('<DateTime />', () => {
 
         it('returns false when date is not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '1',
-            minute: '2',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -356,11 +356,11 @@ describe('<DateTime />', () => {
 
         it('returns false when both fields are not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '',
-            minute: '',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -374,11 +374,11 @@ describe('<DateTime />', () => {
       describe('and only time is asked', () => {
         it('returns false when both fields are filled', () => {
           var inputs = {
-            date: '1',
-            month: '1',
-            year: '2016',
-            hour: '1',
-            minute: '2',
+            dd: '1',
+            mm: '1',
+            yyyy: '2016',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 1, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -390,11 +390,11 @@ describe('<DateTime />', () => {
 
         it('returns false when time is not filled', () => {
           var inputs = {
-            date: '1',
-            month: '1',
-            year: '2016',
-            hour: '',
-            minute: '',
+            dd: '1',
+            mm: '1',
+            yyyy: '2016',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(2016, 1, 1),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };
@@ -406,11 +406,11 @@ describe('<DateTime />', () => {
 
         it('returns false when date is not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '1',
-            minute: '2',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '1',
+            m: '2',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText(1, 2)
           };
@@ -422,11 +422,11 @@ describe('<DateTime />', () => {
 
         it('returns false when both fields are not filled', () => {
           var inputs = {
-            date: '',
-            month: '',
-            year: '',
-            hour: '',
-            minute: '',
+            dd: '',
+            mm: '',
+            yyyy: '',
+            h: '',
+            m: '',
             formattedDate: DateTime.prototype.getFormattedDateText(),
             formattedTime: DateTime.prototype.getFormattedTimeText()
           };

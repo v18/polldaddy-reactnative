@@ -10,6 +10,7 @@ import _ from './utils/lodash';
 import Api from './utils/api';
 import Database from './utils/database';
 import React from 'react';
+import ResponsesStore from './stores/responses-store';
 import SavedSurveyRow from './saved-survey-row';
 
 module.exports = React.createClass({
@@ -58,7 +59,7 @@ module.exports = React.createClass({
     })
     .then(([itemsToDelete, itemsToSave]) => {
       return Promise.all([
-        Database.removeItems(itemsToDelete),
+        Database.removeItems(itemsToDelete, this.state.userId),
         this.saveItemsToDatabase(itemsToSave)
       ]);
     })
@@ -66,6 +67,32 @@ module.exports = React.createClass({
       throw error;
     })
     .done();
+  },
+  componentDidMount: function () {
+    this.unsubscribeFromResponses = ResponsesStore.listen(this.onResponsesChange);
+  },
+  componentWillUnmount: function () {
+    if(this.unsubscribeFromResponses) {
+      this.unsubscribeFromResponses();
+    }
+  },
+  onResponsesChange: function (responseNumbers) {
+    var responsesSurveyIds = Object.keys(responseNumbers);
+    var savedSurveyIds = _.map(this.state.items, 'id');
+
+    responsesSurveyIds.map((surveyId) => {
+      var id = Number(surveyId);
+      if(savedSurveyIds.indexOf(id) > -1) {
+        var newItems = _.cloneDeep(this.state.items);
+        var surveyIndex = _.indexOfItem(newItems, id);
+
+        newItems[surveyIndex].responses = responseNumbers[id];
+        this.setState({
+          items: newItems,
+          dataSource: this.state.dataSource.cloneWithRows(newItems)
+        });
+      }
+    });
   },
   render: function() {
     return (
@@ -111,13 +138,9 @@ module.exports = React.createClass({
   },
   onActionSelected: function(position) {
     if(position === 0) {
-      var selectedItems = this.state.items.map(function (item) {
-        delete item.responses;
-        return item;
-      });
       this.props.navigator.push({
         name: 'remoteSurveysList',
-        selectedItems: selectedItems
+        selectedItems: this.state.items
       });
     }
   },
@@ -127,7 +150,9 @@ module.exports = React.createClass({
         name: 'surveyLauncher',
         surveyId: rowData.id,
         surveyTitle: rowData.title,
-        responses: rowData.responses
+        responses: rowData.responses,
+        userId: this.state.userId,
+        userCode: this.state.userCode
       });
     }
   },
@@ -141,7 +166,6 @@ module.exports = React.createClass({
             name: item.name,
             title: item.title,
             formXML: item.surveyXml,
-            responses: 0,
             lastSyncd: _.now(),
             created: _.now(),
             userId: this.state.userId

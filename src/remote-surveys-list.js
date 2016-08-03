@@ -91,7 +91,7 @@ module.exports = React.createClass({
           actions={toolbarActions}
           navIcon={require('./img/close/ic_close_white.png')}
           onActionSelected={this.onActionSelected}
-          onIconClicked={() => this.props.navigator.pop()} // eslint-disable-line react/jsx-no-bind
+          onIconClicked={() => {this.props.navigator.pop();}} // eslint-disable-line react/jsx-no-bind
           style={styles.toolbar}
           title='Select Surveys and Quizzes'
           titleColor='#FFF'

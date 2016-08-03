@@ -1,7 +1,9 @@
 import _ from './lodash';
 import keys from './private-keys';
+import { Platform } from 'react-native';
 
 keys.apiUrl = 'https://api.polldaddy.com/';
+var platformVersion = Platform.Version || 'unknown';
 
 module.exports = {
   signin: function(email, password, fetchApi) {
@@ -228,5 +230,70 @@ module.exports = {
           reject(error);
         });
     });
+  },
+  sendResponse: function (info, fetchApi) {
+    if(!fetchApi) {
+      fetchApi = fetch;
+    }
+
+    var obj = {
+      method: 'POST',
+      body: JSON.stringify({
+        pdRequest: {
+          partnerGUID: keys.partnerGUID,
+          userCode: info.userCode,
+          demands: {
+            demand: {
+              id: 'submitsurveyresponse',
+              survey_response: {
+                survey_id: info.surveyId,
+                end_date: info.endDate,
+                start_date: info.startDate,
+                xml: info.responseXML,
+                completed: info.completed,
+                tags: [
+                  {
+                    value: 'Android',
+                    name: 'source'
+                  },
+                  {
+                    value: 'v1.0',
+                    name: 'version'
+                  },
+                  {
+                    value: platformVersion,
+                    name: 'platform'
+                  }
+                ]
+              }
+            }
+          }
+        }
+      })
+    };
+
+    return new Promise(function(resolve, reject) {
+      fetchApi(keys.apiUrl, obj)
+        .then(function(response) {
+          if(response.ok) {
+            return response.json();
+          } else {
+            throw new Error('HTTP Request Failed');
+          }
+        })
+        .then(function (response) {
+          if(response.pdResponse.errors) {
+            var error = response.pdResponse.errors.error[0].content;
+            throw new Error(error);
+          } else {
+            resolve(response);
+          }
+        })
+        .catch(function (error) {
+          reject(error);
+        })
+        .done();
+    });
+
   }
 };

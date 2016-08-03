@@ -48,7 +48,10 @@ module.exports = {
     return fs.mkdir(`${surveysDirPath}/${surveyId}`);
   },
   deleteSurveyDirectory: function (surveyId, fs = rnfs) {
-    return fs.unlink(`${surveysDirPath}/${surveyId}`);
+    return fs.unlink(`${surveysDirPath}/${surveyId}`)
+      .catch(function () {
+        // ignore any file deletion errors
+      });
   },
   downloadAllImagesForSurvey: function(surveyId, surveyXml) {
     var imageList = utils.getImageListFromSurvey(surveyXml);

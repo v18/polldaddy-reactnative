@@ -31,10 +31,18 @@ module.exports = React.createClass({
           <Text style={[styles.title, (this.props.rowData.saved ? '' : styles.notSaved)]}>
             {this.props.rowData.title}
           </Text>
-          <Text style={styles.responses}>{this.props.rowData.responses} offline responses</Text>
+          {this.renderOfflineResponses()}
         </Animated.View>
       </TouchableHighlight>
     );
+  },
+  renderOfflineResponses: function (responses = this.props.rowData.responses) {
+    if(typeof responses === 'number') {
+      return (
+        <Text style={styles.responses}>
+          {this.props.rowData.responses} offline responses
+        </Text>);
+    }
   }
 });
 

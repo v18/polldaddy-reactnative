@@ -29,10 +29,14 @@ module.exports = React.createClass({
     }
   },
   getInitialState: function () {
-    var defaultCountry = this.props.question.childNamed('default_country').val;
+    var defaultCountry = '';
+    if(this.props.question.childNamed('change_country').val === 'true') {
+      // save country code only if it's possible to change the country
+      defaultCountry = this.props.question.childNamed('default_country').val;
+    }
     return {
       inputs: {
-        countryCode: defaultCountry,
+        country: defaultCountry,
         raw: ''
       },
       answers: {},
@@ -43,7 +47,7 @@ module.exports = React.createClass({
     this.setState({
       inputs: {
         raw: inputs.raw,
-        countryCode: inputs.countryCode || this.state.inputs.countryCode
+        country: inputs.country || this.state.inputs.country
       }
     }, function () {
       var questionId = Number(this.props.question.attr.qID);
@@ -74,7 +78,7 @@ module.exports = React.createClass({
       return (
         <Picker
             onValueChange={this.handleOnValueChange}
-            selectedValue={this.state.inputs.countryCode}
+            selectedValue={this.state.inputs.country}
         >
           {this.renderCountryItems()}
         </Picker>);
@@ -93,7 +97,7 @@ module.exports = React.createClass({
   handleOnValueChange: function (countryPicked) {
     this.onInputsChange({
       raw: this.state.inputs.raw, //unchanged
-      countryCode: countryPicked
+      country: countryPicked
     });
   },
   getError: function (question = this.props.question,

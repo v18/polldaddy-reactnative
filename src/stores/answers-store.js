@@ -27,9 +27,11 @@ module.exports = Reflux.createStore({
     });
   },
   reset: function () {
+    delete this.questionId;
+    delete this.questionType;
+    delete this.answers;
     delete this.hasError;
     delete this.errorMessage;
-    delete this.answers;
     this.triggerChange();
   }
 });

@@ -405,9 +405,46 @@ describe('answer-parser', function () {
   describe('phone number', function () {
     var qType = 950; // eslint-disable-line no-unused-vars
 
-    it('returns empty if no answers given');
+    it('returns empty if no answers given', function () {
+      var possibleAnswers = [
+        {},
+        undefined,
+        {
+          raw: ''
+        },
+        {
+          raw: '',
+          countryCode: ''
+        }
+      ];
 
-    it('returns xml string with question id, type, answers');
+      possibleAnswers.map(function (answers) {
+        var result = answerParser.getAnswerXml(qId, qType, answers);
+        expect(result).to.equal('');
+      });
+    });
+
+    it('returns xml string with question id, type, answers', function () {
+      var possibleAnswers = [
+        {
+          raw: '1234'
+        },
+        {
+          raw: '1234',
+          country: 'US'
+        }
+      ];
+
+      var expected = [
+        `<answer qID='${qId}' qType='${qType}'><raw>1234</raw></answer>`,
+        `<answer qID='${qId}' qType='${qType}'><raw>1234</raw><country>US</country></answer>`
+      ];
+
+      possibleAnswers.map(function (answers, index) {
+        var result = answerParser.getAnswerXml(qId, qType, answers);
+        expect(result).to.equal(expected[index]);
+      });
+    });
   });
 
   describe('rank', function () {

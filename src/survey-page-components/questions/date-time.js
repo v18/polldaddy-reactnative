@@ -6,9 +6,9 @@ import {
   TouchableWithoutFeedback,
   View
  } from 'react-native';
+import _ from 'lodash';
 import Actions from '../../actions/current-question';
 import DateFormat from 'dateformat';
-// import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 
 var errorMessages = {
@@ -16,21 +16,6 @@ var errorMessages = {
 };
 
 module.exports = React.createClass({
-  componentDidMount: function () {
-    // this.unsubscribeFromInputs = InputsStore.listen(this.onInputsChange);
-    // this.focusListener = this.props.navigator.navigationContext.addListener('willfocus', () => {
-    //   this.focusListener.remove();
-    //   this.unsubscribeFromInputs();
-    // });
-  },
-  componentWillUnmount: function () {
-    // if(this.focusListener) {
-    //   this.focusListener.remove();
-    // }
-    // if(this.unsubscribeFromAnswers) {
-    //   this.unsubscribeFromAnswers();
-    // }
-  },
   getInitialState: function () {
     return {
       inputs: {
@@ -58,7 +43,8 @@ module.exports = React.createClass({
       this.setState({
         answers: this.state.inputs
       });
-      Actions.saveAnswers(questionId, questionType, this.state.answers);
+      var answersToSend = this.getAnswersInPhpFormat(this.state.inputs);
+      Actions.saveAnswers(questionId, questionType, answersToSend);
     } else {
       // if not validated, remove answer & save error instead
       this.setState({
@@ -196,7 +182,9 @@ module.exports = React.createClass({
     }
   },
   getFormattedDateText: function (year, month, date) {
-    if(year && month && date) {
+    if(typeof year === 'number'
+      && typeof month === 'number'
+      && typeof date === 'number') {
       var displayDate = new Date(year, month, date);
       var formattedDate = DateFormat(displayDate, 'mmmm d, yyyy');
       return formattedDate;
@@ -225,21 +213,29 @@ module.exports = React.createClass({
     var timeIsMand = this.shouldShowTime(question) && isMand;
 
     if(dateIsMand) {
-      if(inputs.date === ''
-        || inputs.month === ''
-        || inputs.year === '') {
+      if(inputs.dd === ''
+        || inputs.mm === ''
+        || inputs.yyyy === '') {
         error = errors.mandatory;
       }
     }
 
     if(timeIsMand && error === false) {
-      if(inputs.hour === ''
-        || inputs.minute === '') {
+      if(inputs.h === ''
+        || inputs.m === '') {
         error = errors.mandatory;
       }
     }
 
     return error;
+  },
+  getAnswersInPhpFormat: function (inputs = this.state.inputs) {
+    // js months go 0-11, php months go 1-12
+    var newInputs = _.cloneDeep(inputs);
+    if(typeof inputs.mm === 'number') {
+      newInputs.mm = inputs.mm + 1;
+    }
+    return newInputs;
   }
 });
 

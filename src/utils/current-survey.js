@@ -1,6 +1,5 @@
 import answerParser from './answer-parser';
 import Database from './database';
-import DateFormat from 'dateformat';
 import xmlParser from 'xmldoc';
 
 var currentQuestionIndex = -1, // have not begun survey yet
@@ -12,7 +11,13 @@ var currentQuestionIndex = -1, // have not begun survey yet
   numberOfAnswered;
 
 module.exports = {
-  set: function (id, database) {
+  resetAnswers: function () {
+    answersXml = '';
+    startDate = null;
+    endDate = null;
+    numberOfAnswered = 0;
+  },
+  set: function (id, userId, database) {
     if(!database) {
       database = Database;
     }
@@ -26,7 +31,7 @@ module.exports = {
     endDate = null;
     numberOfAnswered = 0;
 
-    return database.getItem(surveyId)
+    return database.getItem(surveyId, userId)
       .then((survey) => {
         var xmlDocument = new xmlParser.XmlDocument(survey.formXML.trim());
 
@@ -77,10 +82,12 @@ module.exports = {
     }
   },
   saveStartDate: function () {
-    startDate = new Date();
+    var now = new Date();
+    startDate = now.toUTCString();
   },
   saveEndDate: function () {
-    endDate = new Date();
+    var now = new Date();
+    endDate = now.toUTCString();
   },
   saveAnswer: function (questionId, questionType, answers) {
     var newXml = answerParser.getAnswerXml(questionId, questionType, answers);
@@ -89,16 +96,18 @@ module.exports = {
     }
     answersXml = answersXml + newXml;
   },
-  saveAnswersToDatabase: function ({userId, isCompleted}) {
-    var responseXml = `<answers pCompleted='${numberOfAnswered}'>${answersXml}</answers>`;
-    return Database.saveAnswers({
+  saveAnswersToDatabase: function ({userId, isComplete}) {
+    var responseXml = `<answers pCompleted='${numberOfAnswered}'>
+        ${answersXml}</answers>`;
+    var completedStatus = (isComplete === 'complete' ? 2 : 1);
+    return Database.saveResponse({
       surveyId: surveyId,
       responseXML: responseXml,
-      startDate: DateFormat(startDate, 'yyyy-mm-dd hh:MM:ss Z'),
-      endDate: DateFormat(endDate, 'yyyy-mm-dd hh:MM:ss Z'),
-      completed: 1,
-      latitude: 0,
-      longitude: 0,
+      startDate: startDate,
+      endDate: endDate,
+      completed: completedStatus,
+      latitude: 0, // Polldaddy.com API does not accept coordinates
+      longitude: 0, // Polldaddy.com API does not accept coordinates
       userId: userId
     })
     .then(function () {
