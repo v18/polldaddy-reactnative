@@ -1,5 +1,5 @@
 var Reflux = require('reflux');
-import Actions from '../actions/current-question.js';
+import Actions from '../actions/current-question';
 
 module.exports = Reflux.createStore({
   listenables: [Actions],

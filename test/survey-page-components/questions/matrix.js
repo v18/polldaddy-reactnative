@@ -21,9 +21,6 @@ describe('<Matrix />', () => {
   });
 
   describe('getError()', () => {
-    var errors = {
-      mandatory: 'This is a mandatory question.'
-    };
     describe('mandatory question', () => {
       var isMandatory = true;
       it('returns mand error when no selections are made', () => {
@@ -37,8 +34,8 @@ describe('<Matrix />', () => {
         var result1 = Matrix.prototype.getError(noInputs, expectedNumberOfAnswers, isMandatory);
         var result2 = Matrix.prototype.getError(emptyInputs, expectedNumberOfAnswers, isMandatory);
 
-        expect(result1).to.equal(errors.mandatory);
-        expect(result2).to.equal(errors.mandatory);
+        expect(result1).to.equal('matrixIncomplete');
+        expect(result2).to.equal('matrixIncomplete');
       });
 
       it('returns mand error when selections are made for some rows', () => {
@@ -54,8 +51,8 @@ describe('<Matrix />', () => {
         var result1 = Matrix.prototype.getError(oneInput, expectedNumberOfAnswers, isMandatory);
         var result2 = Matrix.prototype.getError(secondInputEmpty, expectedNumberOfAnswers, isMandatory);
 
-        expect(result1).to.equal(errors.mandatory);
-        expect(result2).to.equal(errors.mandatory);
+        expect(result1).to.equal('matrixIncomplete');
+        expect(result2).to.equal('matrixIncomplete');
       });
 
       it('returns false when selections are made for all rows', () => {

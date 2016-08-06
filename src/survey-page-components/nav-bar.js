@@ -6,9 +6,11 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
+import _ from 'lodash';
 import Actions from '../actions/current-question';
 import AnswersStore from '../stores/answers-store';
 import CurrentSurvey from '../utils/current-survey';
+import { phrases } from '../utils/current-phrases';
 import React from 'react';
 
 module.exports = React.createClass({
@@ -60,22 +62,22 @@ module.exports = React.createClass({
     var text = '';
     switch(buttonType) {
       case 'next':
-        text = 'Next'.toUpperCase();
+        text = phrases.continue.toUpperCase();
         break;
       case 'exitWithoutSaving':
-        text = 'Done'.toUpperCase();
+        text = phrases.close.toUpperCase();
         break;
       case 'startSurvey':
-        text = 'Start Survey'.toUpperCase();
+        text = phrases.start.toUpperCase();
         break;
       case 'startOverWithoutSaving':
-        text = 'Start Over'.toUpperCase();
+        text = phrases.close.toUpperCase();
         break;
       case 'saveAndExit':
-        text = 'Done'.toUpperCase();
+        text = phrases.finish.toUpperCase();
         break;
       case 'saveAndStartOver':
-        text = 'Start Over'.toUpperCase();
+        text = phrases.start.toUpperCase();
         break;
     }
     return text;
@@ -90,7 +92,11 @@ module.exports = React.createClass({
             CurrentSurvey.saveAnswer(this.state.questionId, this.state.questionType, this.state.answers);
             this.goToNextPage(nav);
           } else {
-            Alert.alert('Error', this.state.errorMessage, [{text: 'Ok'}]);
+            var errorMessage = this.state.errorMessage;
+            if(_.has(phrases, this.state.errorMessage)) {
+              errorMessage = phrases[this.state.errorMessage];
+            }
+            Alert.alert('Error', errorMessage, [{text: 'Ok'}]);
           }
         };
         break;
@@ -105,7 +111,7 @@ module.exports = React.createClass({
         break;
       case 'startOverWithoutSaving':
         fn = (nav) => {
-          Alert.alert('Cancel',
+          Alert.alert(phrases.close,
             'Are you sure you want to exit the survey without saving your answers?',
             [
               {

@@ -5,10 +5,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { TouchableWithoutFeedback } from 'react-native';
 
-var errors = {
-  mandatory: 'This is a mandatory question.'
-};
-
 describe('<DateTime />', () => {
   describe('displays', () => {
     it('only date', () => {
@@ -116,7 +112,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.mandatoryDateAndTimeAsked, inputs, errors))
+            questions.mandatoryDateAndTimeAsked, inputs))
             .to.equal(false);
         });
 
@@ -132,8 +128,8 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.mandatoryDateAndTimeAsked, inputs, errors))
-            .to.equal(errors.mandatory);
+            questions.mandatoryDateAndTimeAsked, inputs))
+            .to.equal('mandatory');
         });
 
         it('returns a mandatory error when time is not filled', () => {
@@ -148,8 +144,8 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.mandatoryDateAndTimeAsked, inputs, errors))
-            .to.equal(errors.mandatory);
+            questions.mandatoryDateAndTimeAsked, inputs))
+            .to.equal('mandatory');
         });
 
         it('returns a mandatory error when both are not filled', () => {
@@ -164,8 +160,8 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.mandatoryDateAndTimeAsked, inputs, errors))
-            .to.equal(errors.mandatory);
+            questions.mandatoryDateAndTimeAsked, inputs))
+            .to.equal('mandatory');
         });
       });
 
@@ -182,8 +178,8 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.mandatoryOnlyDateAsked, inputs, errors))
-            .to.equal(errors.mandatory);
+            questions.mandatoryOnlyDateAsked, inputs))
+            .to.equal('mandatory');
         });
 
         it('returns false when date is filled', () => {
@@ -198,7 +194,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.mandatoryOnlyDateAsked, inputs, errors))
+            questions.mandatoryOnlyDateAsked, inputs))
             .to.equal(false);
         });
       });
@@ -216,8 +212,8 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.mandatoryOnlyTimeAsked, inputs, errors))
-            .to.equal(errors.mandatory);
+            questions.mandatoryOnlyTimeAsked, inputs))
+            .to.equal('mandatory');
         });
 
         it('returns false when time is filled', () => {
@@ -232,7 +228,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.mandatoryOnlyTimeAsked, inputs, errors))
+            questions.mandatoryOnlyTimeAsked, inputs))
             .to.equal(false);
         });
       });
@@ -252,7 +248,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryDateAndTimeAsked, inputs, errors))
+            questions.notMandatoryDateAndTimeAsked, inputs))
             .to.equal(false);
         });
 
@@ -268,7 +264,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryDateAndTimeAsked, inputs, errors))
+            questions.notMandatoryDateAndTimeAsked, inputs))
             .to.equal(false);
         });
 
@@ -284,7 +280,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryDateAndTimeAsked, inputs, errors))
+            questions.notMandatoryDateAndTimeAsked, inputs))
             .to.equal(false);
         });
 
@@ -300,7 +296,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryDateAndTimeAsked, inputs, errors))
+            questions.notMandatoryDateAndTimeAsked, inputs))
             .to.equal(false);
         });
       });
@@ -318,7 +314,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryOnlyDateAsked, inputs, errors))
+            questions.notMandatoryOnlyDateAsked, inputs))
             .to.equal(false);
         });
 
@@ -334,7 +330,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryOnlyDateAsked, inputs, errors))
+            questions.notMandatoryOnlyDateAsked, inputs))
             .to.equal(false);
         });
 
@@ -350,7 +346,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryOnlyDateAsked, inputs, errors))
+            questions.notMandatoryOnlyDateAsked, inputs))
             .to.equal(false);
         });
 
@@ -366,7 +362,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryOnlyDateAsked, inputs, errors))
+            questions.notMandatoryOnlyDateAsked, inputs))
             .to.equal(false);
         });
       });
@@ -384,7 +380,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryOnlyTimeAsked, inputs, errors))
+            questions.notMandatoryOnlyTimeAsked, inputs))
             .to.equal(false);
         });
 
@@ -400,7 +396,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryOnlyTimeAsked, inputs, errors))
+            questions.notMandatoryOnlyTimeAsked, inputs))
             .to.equal(false);
         });
 
@@ -416,7 +412,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryOnlyTimeAsked, inputs, errors))
+            questions.notMandatoryOnlyTimeAsked, inputs))
             .to.equal(false);
         });
 
@@ -432,7 +428,7 @@ describe('<DateTime />', () => {
           };
 
           expect(DateTime.prototype.getError(
-            questions.notMandatoryOnlyTimeAsked, inputs, errors))
+            questions.notMandatoryOnlyTimeAsked, inputs))
             .to.equal(false);
         });
       });

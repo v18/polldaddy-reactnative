@@ -11,10 +11,6 @@ import Actions from '../../actions/current-question';
 import DateFormat from 'dateformat';
 import React from 'react';
 
-var errorMessages = {
-  mandatory: 'This is a mandatory question.'
-};
-
 module.exports = React.createClass({
   getInitialState: function () {
     return {
@@ -200,7 +196,7 @@ module.exports = React.createClass({
     return 'Select a time';
   },
   getError: function (question = this.props.question,
-    inputs=this.state.inputs, errors = errorMessages) {
+    inputs=this.state.inputs) {
 
     var error = false;
     var isMand = false;
@@ -216,14 +212,14 @@ module.exports = React.createClass({
       if(inputs.dd === ''
         || inputs.mm === ''
         || inputs.yyyy === '') {
-        error = errors.mandatory;
+        error = 'mandatory';
       }
     }
 
     if(timeIsMand && error === false) {
       if(inputs.h === ''
         || inputs.m === '') {
-        error = errors.mandatory;
+        error = 'mandatory';
       }
     }
 

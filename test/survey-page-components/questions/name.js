@@ -3,9 +3,6 @@ import questions from '../../../test-data/name-question-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
 import TextField from '../../../src/survey-page-components/elements/text-field';
-var errors = {
-  mandatory: 'This is a mandatory question.'
-};
 
 describe('<Name />', () => {
   var Name = require('../../../src/survey-page-components/questions/name');
@@ -64,9 +61,9 @@ describe('<Name />', () => {
           suffix: ''
         };
 
-        expect(Name.prototype.getError(questions.mandatoryFullName, input, errors)).to.equal(errors.mandatory);
-        expect(Name.prototype.getError(questions.mandatoryTitleFirstAndLast, input, errors)).to.equal(errors.mandatory);
-        expect(Name.prototype.getError(questions.mandatoryFirstAndLast, input, errors)).to.equal(errors.mandatory);
+        expect(Name.prototype.getError(questions.mandatoryFullName, input)).to.equal('mandatory');
+        expect(Name.prototype.getError(questions.mandatoryTitleFirstAndLast, input)).to.equal('mandatory');
+        expect(Name.prototype.getError(questions.mandatoryFirstAndLast, input)).to.equal('mandatory');
       });
 
       it('returns error when at least one of the is fields empty', () => {
@@ -77,9 +74,9 @@ describe('<Name />', () => {
           suffix: ''
         };
 
-        expect(Name.prototype.getError(questions.mandatoryFullName, input, errors)).to.equal(errors.mandatory);
-        expect(Name.prototype.getError(questions.mandatoryTitleFirstAndLast, input, errors)).to.equal(errors.mandatory);
-        expect(Name.prototype.getError(questions.mandatoryFirstAndLast, input, errors)).to.equal(errors.mandatory);
+        expect(Name.prototype.getError(questions.mandatoryFullName, input)).to.equal('mandatory');
+        expect(Name.prototype.getError(questions.mandatoryTitleFirstAndLast, input)).to.equal('mandatory');
+        expect(Name.prototype.getError(questions.mandatoryFirstAndLast, input)).to.equal('mandatory');
       });
     });
 
@@ -102,7 +99,7 @@ describe('<Name />', () => {
 
         notMandQuestions.map(function (question) {
           inputs.map(function (input) {
-            var result = Name.prototype.getError(question, input, errors);
+            var result = Name.prototype.getError(question, input);
             expect(result).to.equal(false);
           });
         });

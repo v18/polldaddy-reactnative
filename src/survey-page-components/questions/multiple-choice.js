@@ -9,14 +9,12 @@ import {
 import _ from 'lodash';
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
+import { phrases } from '../../utils/current-phrases';
 import React from 'react';
 import ResponsiveImage from 'react-native-fit-image';
 import TextField from '../elements/text-field';
 
 var errorMessages = {
-  mandatory: 'This is a mandatory question.',
-  toofew: 'You need to select more choices',
-  toomany: 'You have selected too many choices',
   otheroption: 'Please provide the other option description'
 };
 
@@ -73,10 +71,17 @@ module.exports = React.createClass({
     };
   },
   render: function () {
+    // hack to make enzyme tests work since
+    // Shallow doesn't have access to phrases
+    var otherPhrase = 'Other';
+    if(phrases) {
+      otherPhrase = phrases.other;
+    }
+
     return (
       <View>
         {this.renderAnswers()}
-        {this.renderOtherAnswerSection()}
+        {this.renderOtherAnswerSection(otherPhrase)}
         {this.renderUserCommentSection()}
       </View>
     );
@@ -126,13 +131,13 @@ module.exports = React.createClass({
       );
     }
   },
-  renderOtherAnswerSection: function () {
+  renderOtherAnswerSection: function (otherPhrase) {
     if(this.props.other
       && this.state.inputs.selectedAnswers
       && this.state.inputs.selectedAnswers.indexOf(-1) > -1) {
       return (
         <View style={[styles.textQuestionContainer, styles.otherContainer]}>
-          <Text style={styles.textFieldQuestion}>Enter other option:</Text>
+          <Text style={styles.textFieldQuestion}>{otherPhrase}</Text>
           <TextField name='otherText' />
         </View>
       );
@@ -215,11 +220,11 @@ module.exports = React.createClass({
     if(inputs.selectedAnswers
       && inputs.selectedAnswers.length < props.min) {
       // make sure we have more than the min number of choices
-      error = errors.toofew;
+      error = 'tooFew';
     } else if(inputs.selectedAnswers
       && inputs.selectedAnswers.length > props.max) {
       // make sure we have less than the max number of choices
-      error = errors.toomany;
+      error = 'tooMany';
     } else if(inputs.selectedAnswers
       && inputs.selectedAnswers.indexOf(-1) > -1
       && (inputs.otherText === '' || !inputs.otherText)) {
@@ -232,7 +237,7 @@ module.exports = React.createClass({
           && (inputs.otherText === '' || !inputs.otherText)) {
         // show mandatory error if we don't have any answers
         // or user comment
-        error = errors.mandatory;
+        error = 'mandatory';
       }
     }
     return error;

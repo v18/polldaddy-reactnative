@@ -3,10 +3,6 @@ import questions from '../../../test-data/address-questions-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
 import TextField from '../../../src/survey-page-components/elements/text-field';
-var errors = {
-  mandatory: 'This is a mandatory question.'
-};
-
 
 describe('<Address />', () => {
   var Address = require('../../../src/survey-page-components/questions/address');
@@ -95,10 +91,10 @@ describe('<Address />', () => {
             country: ''
           };
 
-          expect(Address.prototype.getError(questions.mandatoryAll, input1, errors)).to.equal(errors.mandatory);
-          expect(Address.prototype.getError(questions.mandatoryAll, input2, errors)).to.equal(errors.mandatory);
-          expect(Address.prototype.getError(questions.mandatoryAll, input3, errors)).to.equal(errors.mandatory);
-          expect(Address.prototype.getError(questions.mandatoryAll, input4, errors)).to.equal(errors.mandatory);
+          expect(Address.prototype.getError(questions.mandatoryAll, input1)).to.equal('mandatory');
+          expect(Address.prototype.getError(questions.mandatoryAll, input2)).to.equal('mandatory');
+          expect(Address.prototype.getError(questions.mandatoryAll, input3)).to.equal('mandatory');
+          expect(Address.prototype.getError(questions.mandatoryAll, input4)).to.equal('mandatory');
         });
 
         it('returns false when user added all fields', () => {
@@ -110,7 +106,7 @@ describe('<Address />', () => {
             zip: 'zip',
             country: 'country'
           };
-          expect(Address.prototype.getError(questions.mandatoryAll, input1, errors)).to.equal(false);
+          expect(Address.prototype.getError(questions.mandatoryAll, input1)).to.equal(false);
         });
       });
 
@@ -126,16 +122,16 @@ describe('<Address />', () => {
             country: ''
           };
 
-          expect(Address.prototype.getError(questions.mandatoryTwoNonPlace, input1, errors)).to.equal(errors.mandatory);
-          expect(Address.prototype.getError(questions.mandatoryTwoNonPlace, input2, errors)).to.equal(errors.mandatory);
-          expect(Address.prototype.getError(questions.mandatoryTwoNonPlace, input3, errors)).to.equal(errors.mandatory);
+          expect(Address.prototype.getError(questions.mandatoryTwoNonPlace, input1)).to.equal('mandatory');
+          expect(Address.prototype.getError(questions.mandatoryTwoNonPlace, input2)).to.equal('mandatory');
+          expect(Address.prototype.getError(questions.mandatoryTwoNonPlace, input3)).to.equal('mandatory');
         });
         it('returns false when user added all fields', () => {
           var input1 = {
             city: 'city',
             country: 'country'
           };
-          expect(Address.prototype.getError(questions.mandatoryTwoNonPlace, input1, errors)).to.equal(false);
+          expect(Address.prototype.getError(questions.mandatoryTwoNonPlace, input1)).to.equal(false);
         });
       });
 
@@ -151,16 +147,16 @@ describe('<Address />', () => {
             add2: ''
           };
 
-          expect(Address.prototype.getError(questions.mandatoryPlace, input1, errors)).to.equal(errors.mandatory);
-          expect(Address.prototype.getError(questions.mandatoryPlace, input2, errors)).to.equal(errors.mandatory);
-          expect(Address.prototype.getError(questions.mandatoryPlace, input3, errors)).to.equal(errors.mandatory);
+          expect(Address.prototype.getError(questions.mandatoryPlace, input1)).to.equal('mandatory');
+          expect(Address.prototype.getError(questions.mandatoryPlace, input2)).to.equal('mandatory');
+          expect(Address.prototype.getError(questions.mandatoryPlace, input3)).to.equal('mandatory');
         });
         it('returns false when user added all fields', () => {
           var input1 = {
             add1: 'add1',
             add2: 'add2'
           };
-          expect(Address.prototype.getError(questions.mandatoryPlace, input1, errors)).to.equal(false);
+          expect(Address.prototype.getError(questions.mandatoryPlace, input1)).to.equal(false);
         });
       });
 
@@ -171,14 +167,14 @@ describe('<Address />', () => {
           };
           var input2 = {};
 
-          expect(Address.prototype.getError(questions.mandatoryState, input1, errors)).to.equal(errors.mandatory);
-          expect(Address.prototype.getError(questions.mandatoryState, input2, errors)).to.equal(errors.mandatory);
+          expect(Address.prototype.getError(questions.mandatoryState, input1)).to.equal('mandatory');
+          expect(Address.prototype.getError(questions.mandatoryState, input2)).to.equal('mandatory');
         });
         it('returns false when user added all fields', () => {
           var input1 = {
             state: 'state'
           };
-          expect(Address.prototype.getError(questions.mandatoryState, input1, errors)).to.equal(false);
+          expect(Address.prototype.getError(questions.mandatoryState, input1)).to.equal(false);
         });
       });
     });
@@ -219,11 +215,11 @@ describe('<Address />', () => {
             country: 'country'
           };
 
-          expect(Address.prototype.getError(questions.notMandatoryAll, input1, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryAll, input2, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryAll, input3, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryAll, input4, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryAll, input5, errors)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryAll, input1)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryAll, input2)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryAll, input3)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryAll, input4)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryAll, input5)).to.equal(false);
         });
       });
 
@@ -243,10 +239,10 @@ describe('<Address />', () => {
             country: 'country'
           };
 
-          expect(Address.prototype.getError(questions.notMandatoryTwoNonPlace, input1, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryTwoNonPlace, input2, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryTwoNonPlace, input3, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryTwoNonPlace, input4, errors)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryTwoNonPlace, input1)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryTwoNonPlace, input2)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryTwoNonPlace, input3)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryTwoNonPlace, input4)).to.equal(false);
         });
       });
 
@@ -266,10 +262,10 @@ describe('<Address />', () => {
             add2: 'add2'
           };
 
-          expect(Address.prototype.getError(questions.notMandatoryPlace, input1, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryPlace, input2, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryPlace, input3, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryPlace, input4, errors)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryPlace, input1)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryPlace, input2)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryPlace, input3)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryPlace, input4)).to.equal(false);
         });
       });
 
@@ -283,9 +279,9 @@ describe('<Address />', () => {
             state: 'state'
           };
 
-          expect(Address.prototype.getError(questions.notMandatoryState, input1, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryState, input2, errors)).to.equal(false);
-          expect(Address.prototype.getError(questions.notMandatoryState, input3, errors)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryState, input1)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryState, input2)).to.equal(false);
+          expect(Address.prototype.getError(questions.notMandatoryState, input3)).to.equal(false);
         });
       });
     });

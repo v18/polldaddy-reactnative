@@ -40,9 +40,6 @@ describe('<MultipleChoice />', () => {
 
   describe('getError()', () => {
     var errors = {
-      mandatory: 'This is a mandatory question.',
-      toofew: 'You need to select more choices',
-      toomany: 'You have selected too many choices',
       otheroption: 'Please provide the other option description'
     };
 
@@ -56,7 +53,7 @@ describe('<MultipleChoice />', () => {
           selectedAnswers: [1]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
-        expect(result).to.equal(errors.toofew);
+        expect(result).to.equal('tooFew');
       });
 
       it('for non-mandatory question', () => {
@@ -68,7 +65,7 @@ describe('<MultipleChoice />', () => {
           selectedAnswers: [1]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
-        expect(result).to.equal(errors.toofew);
+        expect(result).to.equal('tooFew');
       });
     });
 
@@ -82,7 +79,7 @@ describe('<MultipleChoice />', () => {
           selectedAnswers: [1,2,3,4,5]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
-        expect(result).to.equal(errors.toomany);
+        expect(result).to.equal('tooMany');
       });
 
       it('for non-mandatory question', () => {
@@ -97,7 +94,7 @@ describe('<MultipleChoice />', () => {
           selectedAnswers: [1,2,3,4,5]
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
-        expect(result).to.equal(errors.toomany);
+        expect(result).to.equal('tooMany');
       });
     });
 
@@ -140,7 +137,7 @@ describe('<MultipleChoice />', () => {
           selectedAnswers: []
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
-        expect(result).to.equal(errors.mandatory);
+        expect(result).to.equal('mandatory');
       });
 
       it('shown for mandatory question, shown when no choices selected and no comments entered', () => {
@@ -153,7 +150,7 @@ describe('<MultipleChoice />', () => {
           selectedAnswers: []
         };
         var result = MultipleChoice.prototype.getError(qProps, inputs, errors);
-        expect(result).to.equal(errors.mandatory);
+        expect(result).to.equal('mandatory');
       });
 
       it('not shown for non-mandatory question with comments', () => {

@@ -4,10 +4,6 @@ import React from 'react';
 import TextField from '../elements/text-field';
 import { View } from 'react-native';
 
-var errorMessages = {
-  mandatory: 'This is a mandatory question.'
-};
-
 module.exports = React.createClass({
   componentDidMount: function () {
     this.unsubscribeFromInputs = InputsStore.listen(this.onInputsChange);
@@ -90,7 +86,7 @@ module.exports = React.createClass({
     });
   },
   getError: function (question = this.props.question,
-    inputs = this.state.inputs, errors = errorMessages) {
+    inputs = this.state.inputs) {
 
     var error;
     var isValid = true;
@@ -120,7 +116,7 @@ module.exports = React.createClass({
     if(isValid) {
       error = false;
     } else {
-      error = errors.mandatory;
+      error = 'mandatory';
     }
     return error;
   }

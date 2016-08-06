@@ -6,12 +6,6 @@ import { shallow } from 'enzyme';
 import { Text } from 'react-native';
 import TextField from '../../../src/survey-page-components/elements/text-field';
 
-var errors = {
-  mandatory: 'This is a mandatory question.',
-  invalidNumber: 'Please enter a valid number',
-  withinRange: 'Please enter a number within range'
-};
-
 describe('<NumberQuestion />', () => {
   var NumberQuestion = require('../../../src/survey-page-components/questions/number');
 
@@ -62,14 +56,14 @@ describe('<NumberQuestion />', () => {
       it('returns false if mandatory', () => {
         var result = NumberQuestion.prototype.getError(
           getErrorProps.sliderPropsMandatory,
-          number, errors);
+          number);
         expect(result).to.equal(false);
       });
 
       it('returns false if not mandatory', () => {
         var result = NumberQuestion.prototype.getError(
           getErrorProps.sliderPropsNotMandatory,
-          number, errors);
+          number);
         expect(result).to.equal(false);
       });
     });
@@ -80,55 +74,55 @@ describe('<NumberQuestion />', () => {
           var number = '';
           var result = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsMandatory,
-            number, errors);
-          expect(result).to.equal(errors.mandatory);
+            number);
+          expect(result).to.equal('mandatory');
         });
 
         it('returns a valid number error if input is not a number', () => {
           var number = 'notanumber';
           var result = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsMandatory,
-            number, errors);
-          expect(result).to.equal(errors.invalidNumber);
+            number);
+          expect(result).to.equal('validNumber');
         });
 
         it('returns a within range error if number is not within range', () => {
           var result1 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithRangeMandatory,
-            '11', errors);
+            '11');
 
           var result2 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithRangeMandatory,
-            '0', errors);
+            '0');
 
           var result3 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithRangeMandatory,
-            '-1', errors);
+            '-1');
 
-          expect(result1).to.equal(errors.withinRange);
-          expect(result2).to.equal(errors.withinRange);
-          expect(result3).to.equal(errors.withinRange);
+          expect(result1).to.equal('withinRange');
+          expect(result2).to.equal('withinRange');
+          expect(result3).to.equal('withinRange');
         });
 
         it('returns false if number is valid, and no min max is set', () => {
           var result = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsNoRangeMandatory,
-            '2', errors);
+            '2');
           expect(result).to.equal(false);
         });
 
         it('returns false if number is within range if min and max are set', () => {
           var result1 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithRangeMandatory,
-            '2', errors);
+            '2');
 
           var result2 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithMinMandatory,
-            '2', errors);
+            '2');
 
           var result3 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithMaxMandatory,
-            '2', errors);
+            '2');
 
           expect(result1).to.equal(false);
           expect(result2).to.equal(false);
@@ -141,7 +135,7 @@ describe('<NumberQuestion />', () => {
           var number = '';
           var result = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsNotMandatory,
-            number, errors);
+            number);
           expect(result).to.equal(false);
         });
 
@@ -149,47 +143,47 @@ describe('<NumberQuestion />', () => {
           var number = 'notanumber';
           var result = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsNotMandatory,
-            number, errors);
-          expect(result).to.equal(errors.invalidNumber);
+            number);
+          expect(result).to.equal('validNumber');
         });
 
         it('returns a within range error if number is not within range', () => {
           var result1 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithRangeNotMandatory,
-            '11', errors);
+            '11');
 
           var result2 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithRangeNotMandatory,
-            '0', errors);
+            '0');
 
           var result3 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithRangeNotMandatory,
-            '-1', errors);
+            '-1');
 
-          expect(result1).to.equal(errors.withinRange);
-          expect(result2).to.equal(errors.withinRange);
-          expect(result3).to.equal(errors.withinRange);
+          expect(result1).to.equal('withinRange');
+          expect(result2).to.equal('withinRange');
+          expect(result3).to.equal('withinRange');
         });
 
         it('returns false if number is valid, and no min max is set', () => {
           var result = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsNoRangeNotMandatory,
-            '2', errors);
+            '2');
           expect(result).to.equal(false);
         });
 
         it('returns false if number is within range if min and max are set', () => {
           var result1 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithRangeNotMandatory,
-            '2', errors);
+            '2');
 
           var result2 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithMinNotMandatory,
-            '2', errors);
+            '2');
 
           var result3 = NumberQuestion.prototype.getError(
             getErrorProps.notSliderPropsWithMaxNotMandatory,
-            '2', errors);
+            '2');
 
           expect(result1).to.equal(false);
           expect(result2).to.equal(false);

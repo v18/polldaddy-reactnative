@@ -290,7 +290,7 @@ describe('Api', () => {
         multiple_responses:'yes',
         name:'survey name',
         owner:1598123,
-        pack_id:0,
+        pack_id:87654,
         quota_amount:1000,
         responses:5,
         start_page:'yes',
@@ -306,7 +306,8 @@ describe('Api', () => {
         title: 'survey title',
         name: 'survey name',
         id: 123,
-        surveyXml: expectedXml
+        surveyXml: expectedXml,
+        packId: 87654
       };
 
       var res = new fetch.Response(
@@ -363,7 +364,8 @@ describe('Api', () => {
         title: 'survey title',
         name: 'survey name',
         id: 123,
-        surveyXml: expectedXml
+        surveyXml: expectedXml,
+        packId: 0
       };
 
       var res = new fetch.Response(
@@ -457,9 +459,6 @@ describe('Api', () => {
   });
 
   describe('getLanguagePack()', () => {
-    // it('exists', () => {
-    //   expect(Api.getLanguagePack).not.to.be.undefined;
-    // });
     it('returns a promise for JSON stringified phrase data when called with pack ID and userCode', () => {
       var packId = 12345;
       var phrase = [
@@ -467,12 +466,6 @@ describe('Api', () => {
         {content: 'Start Survey', phraseId: '2'},
         {content: 'Finish survey', phraseId: '17'}
       ];
-
-      var expected = JSON.stringify({
-        1: 'Continue',
-        2: 'Start Survey',
-        17: 'Finish survey'
-      });
 
       var res = new fetch.Response(
         JSON.stringify({pdResponse: {
@@ -498,7 +491,7 @@ describe('Api', () => {
 
       return Api.getLanguagePack(packId, 'userCode', fakeFetcher)
         .then(function(result) {
-          expect(result).to.equal(expected);
+          expect(result).to.eql(phrase);
         });
     });
 
@@ -522,11 +515,9 @@ describe('Api', () => {
         return Promise.resolve(res);
       };
 
-      var expected = new Error('No language pack with that ID');
-
       return Api.getLanguagePack(packId, 'userCode', fakeFetcher)
-        .catch(function(result) {
-          expect(result.message).to.equal(expected.message);
+        .then(function(result) {
+          expect(result).to.eql([]);
         });
     });
 
@@ -546,11 +537,10 @@ describe('Api', () => {
       var fakeFetcher = function(url, obj) { // eslint-disable-line no-unused-vars
         return Promise.resolve(res);
       };
-      var expected = new Error(expectedErrorMessage);
 
       return Api.getLanguagePack(packId, 'badUserCode', fakeFetcher)
-        .catch(function(result) {
-          expect(result.message).to.equal(expected.message);
+        .then(function(result) {
+          expect(result).to.eql([]);
         });
     });
 
@@ -561,11 +551,10 @@ describe('Api', () => {
       var fakeFetcher = function(url, obj) { // eslint-disable-line no-unused-vars
         return Promise.resolve(res);
       };
-      var expected = new Error('HTTP Request Failed');
 
       return Api.getLanguagePack(packId, 'userCode', fakeFetcher)
-        .catch(function(result) {
-          expect(result.message).to.equal(expected.message);
+        .then(function(result) {
+          expect(result).to.eql([]);
         });
     });
 
@@ -578,8 +567,8 @@ describe('Api', () => {
       };
 
       return Api.getLanguagePack(packId, 'userCode', fakeFetcher)
-        .catch(function(result) {
-          expect(result.message).to.equal(expected.message);
+        .then(function(result) {
+          expect(result).to.eql([]);
         });
     });
   });

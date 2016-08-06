@@ -159,7 +159,19 @@ module.exports = React.createClass({
   saveItemsToDatabase: function(itemsToSave) {
     // save to database
     itemsToSave.map((itemId) => {
+      // get item from Polldaddy.com
       Api.getItem(itemId, this.state.userCode)
+        .then((item) => {
+          // get language pack
+          return Promise.all([
+            item,
+            Api.getLanguagePack(item.packId, this.state.userCode)
+          ]);
+        })
+        .then(function ([item, languagePack]) {
+          item.languagePack = JSON.stringify(languagePack);
+          return Promise.resolve(item);
+        })
         .then((item) => {
           return Database.insertItem({
             surveyId: item.id,
@@ -168,7 +180,8 @@ module.exports = React.createClass({
             formXML: item.surveyXml,
             lastSyncd: _.now(),
             created: _.now(),
-            userId: this.state.userId
+            userId: this.state.userId,
+            languagePack: item.languagePack
           });
         })
         .then((itemId) => {

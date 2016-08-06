@@ -8,10 +8,6 @@ import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 import TextField from '../elements/text-field';
 
-var errorMessages = {
-  mandatory: 'This is a mandatory question.'
-};
-
 module.exports = React.createClass({
   componentDidMount: function () {
     this.unsubscribeFromInputs = InputsStore.listen(this.onInputsChange);
@@ -101,7 +97,7 @@ module.exports = React.createClass({
     });
   },
   getError: function (question = this.props.question,
-    phoneNumber=this.state.inputs.raw, errors = errorMessages) {
+    phoneNumber=this.state.inputs.raw) {
 
     var error = false;
     var isMand = question.childNamed('mand');
@@ -109,7 +105,7 @@ module.exports = React.createClass({
     if(isMand && isMand.val === 'true') {
       // make sure input is not empty
       if(! phoneNumber || phoneNumber === '') {
-        error = errors.mandatory;
+        error = 'mandatory';
       }
     }
 

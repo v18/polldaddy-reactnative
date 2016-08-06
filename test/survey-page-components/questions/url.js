@@ -5,10 +5,6 @@ import { shallow } from 'enzyme';
 import TextField from '../../../src/survey-page-components/elements/text-field';
 import Url from '../../../src/survey-page-components/questions/url';
 
-var errors = {
-  mandatory: 'This is a mandatory question.'
-};
-
 describe('<Url />', () => {
 
   describe('correctly display', () => {
@@ -31,27 +27,27 @@ describe('<Url />', () => {
     describe('when mandatory', () => {
       it('returns false if there is input', () => {
         var result = Url.prototype.getError(questions.mandatoryNoPlaceholder,
-          'www.example.com', errors);
+          'www.example.com');
         expect(result).to.equal(false);
       });
 
       it('returns a mandatory error if there is no input', () => {
         var result = Url.prototype.getError(questions.mandatoryWithPlaceholder,
-          '', errors);
-        expect(result).to.equal(errors.mandatory);
+          '');
+        expect(result).to.equal('mandatory');
       });
     });
 
     describe('when not mandatory', () => {
       it('returns false if there is input', () => {
         var result = Url.prototype.getError(
-          questions.notMandatoryNoPlaceholder, 'input', errors);
+          questions.notMandatoryNoPlaceholder, 'input');
         expect(result).to.equal(false);
       });
 
       it('returns false if there is no input', () => {
         var result = Url.prototype.getError(
-          questions.notMandatoryWithPlaceholder, '', errors);
+          questions.notMandatoryWithPlaceholder, '');
         expect(result).to.equal(false);
       });
     });

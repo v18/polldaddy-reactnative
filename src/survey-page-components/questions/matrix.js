@@ -10,10 +10,6 @@ import _ from 'lodash';
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
-
-var errorMessages = {
-  mandatory: 'This is a mandatory question.'
-};
 var window = Dimensions.get('window');
 
 module.exports = React.createClass({
@@ -55,7 +51,7 @@ module.exports = React.createClass({
         return total + rowAnswered;
       }), 0);
       if(numberOfRowsAnswered < expectedNumberOfAnswers) {
-        error = errorMessages.mandatory;
+        error = 'matrixIncomplete';
       }
     }
     return error;

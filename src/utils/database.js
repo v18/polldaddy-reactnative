@@ -21,7 +21,8 @@ SQLite.openDatabase({name: db_name, version: db_version})
         responses INTEGER NOT NULL,
         lastSyncd DATETIME NOT NULL,
         created DATETIME NOT NULL,
-        userId INTEGER NOT NULL DEFAULT 0);`)
+        userId INTEGER NOT NULL DEFAULT 0,
+        languagePack TEXT NOT NULL);`)
         .catch(function(error) {
           throw error;
         })
@@ -50,7 +51,7 @@ SQLite.openDatabase({name: db_name, version: db_version})
 
 module.exports = {
   insertItem: function(values) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       imagesApi.downloadAllImagesForSurvey(values.surveyId, values.formXML)
         .then(function (images) {
           images.map(function(image) {
@@ -66,18 +67,22 @@ module.exports = {
         })
         .then(function (responses) {
           var numResponses = responses.length;
-          return new Promise(function(resolve) {
+          return new Promise(function(resolve, reject) {
             db.transaction(function(txn) {
               txn.executeSql(`INSERT INTO Surveys
                 (surveyId, name, title, formXML,
-                responses, lastSyncd, created, userId)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?);`, [values.surveyId,
+                responses, lastSyncd, created,
+                userId, languagePack)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`, [values.surveyId,
                   values.name, values.title, values.formXML,
-                  numResponses, values.lastSyncd,
-                  values.created, values.userId]);
+                  numResponses, values.lastSyncd, values.created,
+                  values.userId, values.languagePack]);
             })
             .then(function () {
               resolve(numResponses);
+            })
+            .catch(function (error) {
+              reject(error);
             });
           });
         })
@@ -86,7 +91,7 @@ module.exports = {
           resolve(values.surveyId);
         })
         .catch(function (error) {
-          throw error;
+          reject(error);
         })
         .done();
     });

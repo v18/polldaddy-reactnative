@@ -3,11 +3,6 @@ import questions from '../../../test-data/email-question-xml';
 import React from 'react';
 import { shallow } from 'enzyme';
 import TextField from '../../../src/survey-page-components/elements/text-field';
-var errors = {
-  mandatory: 'This is a mandatory question.',
-  invalid: 'You must enter a valid email address here.'
-};
-
 
 describe('<Email />', () => {
   var Email = require('../../../src/survey-page-components/questions/email');
@@ -53,8 +48,8 @@ describe('<Email />', () => {
         var question = questions.mandatoryExample;
         tests.map(function (test) {
           it(test.inputs.value, () => {
-            var result = Email.prototype.getError(question, test.inputs, errors);
-            expect(result).to.equal(errors.invalid);
+            var result = Email.prototype.getError(question, test.inputs);
+            expect(result).to.equal('validEmail');
           });
         });
       });
@@ -63,8 +58,8 @@ describe('<Email />', () => {
         var question = questions.notMandatoryExample;
         tests.map(function (test) {
           it(test.inputs.value, () => {
-            var result = Email.prototype.getError(question, test.inputs, errors);
-            expect(result).to.equal(errors.invalid);
+            var result = Email.prototype.getError(question, test.inputs);
+            expect(result).to.equal('validEmail');
           });
         });
       });
@@ -81,8 +76,8 @@ describe('<Email />', () => {
 
         tests.map(function (test) {
           it(`value: "${test.inputs.value}"`, () => {
-            var result = Email.prototype.getError(question, test.inputs, errors);
-            expect(result).to.equal(errors.mandatory);
+            var result = Email.prototype.getError(question, test.inputs);
+            expect(result).to.equal('mandatory');
           });
         });
       });
@@ -97,7 +92,7 @@ describe('<Email />', () => {
 
         tests.map(function (test) {
           it(`value: "${test.inputs.value}"`, () => {
-            var result = Email.prototype.getError(question, test.inputs, errors);
+            var result = Email.prototype.getError(question, test.inputs);
             expect(result).to.equal(false);
           });
         });
@@ -114,7 +109,7 @@ describe('<Email />', () => {
 
         tests.map(function (test) {
           it(test.inputs.value, () => {
-            var result = Email.prototype.getError(question, test.inputs, errors);
+            var result = Email.prototype.getError(question, test.inputs);
             expect(result).to.equal(false);
           });
         });
@@ -129,7 +124,7 @@ describe('<Email />', () => {
 
         tests.map(function (test) {
           it(test.inputs.value, () => {
-            var result = Email.prototype.getError(question, test.inputs, errors);
+            var result = Email.prototype.getError(question, test.inputs);
             expect(result).to.equal(false);
           });
         });

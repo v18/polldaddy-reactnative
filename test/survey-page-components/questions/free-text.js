@@ -4,10 +4,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import TextField from '../../../src/survey-page-components/elements/text-field';
 
-var errors = {
-  mandatory: 'This is a mandatory question.'
-};
-
 describe('<FreeText />', () => {
   var FreeText = require('../../../src/survey-page-components/questions/free-text');
 
@@ -90,13 +86,13 @@ describe('<FreeText />', () => {
     describe('for mandatory question', () => {
       it('returns false when input is not empty', () => {
         var result = FreeText.prototype.getError(questions.notMandatorySingleLineSmall,
-          'Some text', errors);
+          'Some text');
         expect(result).to.equal(false);
       });
 
       it('returns a mandatry error when input empty', () => {
         var result = FreeText.prototype.getError(questions.notMandatorySingleLineSmall,
-          '', errors);
+          '');
         expect(result).to.equal(false);
       });
     });
@@ -104,14 +100,14 @@ describe('<FreeText />', () => {
     describe('for mandatory question', () => {
       it('returns false when input is not empty', () => {
         var result = FreeText.prototype.getError(questions.mandatoryMultiLineSmall,
-          'Some text', errors);
+          'Some text');
         expect(result).to.equal(false);
       });
 
-      it('returns false when input empty', () => {
+      it('returns "mandatory" when input empty', () => {
         var result = FreeText.prototype.getError(questions.mandatoryMultiLineSmall,
-          '', errors);
-        expect(result).to.equal(errors.mandatory);
+          '');
+        expect(result).to.equal('mandatory');
       });
     });
   });

@@ -39,7 +39,7 @@ module.exports = React.createClass({
     var isMandatory = this.getIsMandatory();
     if(isMandatory) {
       // make sure that initial state for error is true
-      Actions.saveError('This is a mandatory question.');
+      Actions.saveError('mandatory');
       return <Text>*</Text>;
     } else {
       Actions.saveAnswers(questionId, questionType, {});

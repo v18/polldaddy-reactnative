@@ -149,26 +149,34 @@ module.exports = {
             var error = data.pdResponse.errors.error[0].content;
             throw new Error(error);
           } else {
-            var response = data.pdResponse.demands.demand[0].survey;
-            if(!response) {
+            var survey = data.pdResponse.demands.demand[0].survey;
+            if(!survey) {
               throw new Error('No item data received');
+            } else {
+              return Promise.resolve(survey);
             }
-            var surveyXml = response.survey_xml;
-            var formXml = response.rule_xml;
-            if(formXml) {
-              surveyXml = _.replaceLastOccurence(
-                surveyXml,
-                '</formData>',
-                `${formXml}</formData>`);
-            }
-            var item = {
-              title: response.title,
-              name: response.name,
-              id: response.id,
-              surveyXml: surveyXml
-            };
-            resolve(item);
           }
+        })
+        .then(function (survey) {
+          var surveyXml = survey.survey_xml;
+          var formXml = survey.rule_xml;
+          if(formXml) {
+            surveyXml = _.replaceLastOccurence(
+              surveyXml,
+              '</formData>',
+              `${formXml}</formData>`);
+          }
+          var item = {
+            title: survey.title,
+            name: survey.name,
+            id: survey.id,
+            surveyXml: surveyXml,
+            packId: Number(survey.pack_id)
+          };
+          return Promise.resolve(item);
+        })
+        .then(function (item) {
+          resolve(item);
         })
         .catch(function(error) {
           reject(error);
@@ -199,7 +207,7 @@ module.exports = {
       })
     };
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       fetchApi(keys.apiUrl, obj)
         .then(function(response) {
           if(response.ok) {
@@ -212,22 +220,17 @@ module.exports = {
           if(data.pdResponse.errors) {
             var error = data.pdResponse.errors.error[0].content;
             throw new Error(error);
+          } else if(!data.pdResponse.demands.demand[0].languagepack || !data.pdResponse.demands.demand[0].languagepack.pack) {
+            throw new Error('No language pack with that ID');
           } else {
-            if(!data.pdResponse.demands.demand[0].languagepack || !data.pdResponse.demands.demand[0].languagepack.pack) {
-              throw new Error('No language pack with that ID');
-            }
-
             var phrases = data.pdResponse.demands.demand[0].languagepack.pack.phrase;
-
-            var result = {};
-            phrases.map(function(item) {
-              result[Number(item.phraseId)] = String(item.content);
-            });
-            resolve(JSON.stringify(result));
+            resolve(phrases);
           }
         })
-        .catch(function(error) {
-          reject(error);
+        .catch(function() {
+          // if we can't get language pack
+          // resolve with empty language pack
+          resolve([]);
         });
     });
   },

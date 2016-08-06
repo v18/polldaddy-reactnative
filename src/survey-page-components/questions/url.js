@@ -3,10 +3,6 @@ import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 import TextField from '../elements/text-field';
 
-var errorMessages = {
-  mandatory: 'This is a mandatory question.'
-};
-
 module.exports = React.createClass({
   componentDidMount: function () {
     this.unsubscribeFromInputs = InputsStore.listen(this.onInputsChange);
@@ -64,7 +60,7 @@ module.exports = React.createClass({
       />);
   },
   getError: function (question = this.props.question,
-    url=this.state.inputs.value, errors = errorMessages) {
+    url=this.state.inputs.value) {
 
     var error = false;
     var isMand = question.childNamed('mand');
@@ -72,7 +68,7 @@ module.exports = React.createClass({
     if(isMand && isMand.val === 'true') {
       // make sure input is not empty
       if(! url || url === '') {
-        error = errors.mandatory;
+        error = 'mandatory';
       }
     }
 

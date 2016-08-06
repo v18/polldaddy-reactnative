@@ -6,10 +6,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import TextField from '../../../src/survey-page-components/elements/text-field';
 
-var errors = {
-  mandatory: 'This is a mandatory question.'
-};
-
 describe('<PhoneNumber />', () => {
 
   describe('correctly display', () => {
@@ -46,27 +42,27 @@ describe('<PhoneNumber />', () => {
     describe('when mandatory', () => {
       it('returns false if there is input', () => {
         var result = PhoneNumber.prototype.getError(questions.mandatory,
-          'input', errors);
+          'input');
         expect(result).to.equal(false);
       });
 
       it('returns a mandatory error if there is no input', () => {
         var result = PhoneNumber.prototype.getError(questions.mandatory,
-          '', errors);
-        expect(result).to.equal(errors.mandatory);
+          '');
+        expect(result).to.equal('mandatory');
       });
     });
 
     describe('when not mandatory', () => {
       it('returns false if there is input', () => {
         var result = PhoneNumber.prototype.getError(questions.notMandatory,
-          'input', errors);
+          'input');
         expect(result).to.equal(false);
       });
 
       it('returns false if there is no input', () => {
         var result = PhoneNumber.prototype.getError(questions.notMandatory,
-          '', errors);
+          '');
         expect(result).to.equal(false);
       });
     });

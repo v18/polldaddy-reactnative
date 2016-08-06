@@ -4,10 +4,6 @@ import React from 'react';
 import TextField from '../elements/text-field';
 import { View } from 'react-native';
 
-var errorMessages = {
-  mandatory: 'This is a mandatory question.'
-};
-
 module.exports = React.createClass({
   render: function () {
     return (
@@ -94,7 +90,7 @@ module.exports = React.createClass({
     }
   },
   getError: function (question = this.props.question,
-    text=this.state.inputs.value, errors = errorMessages) {
+    text=this.state.inputs.value) {
 
     var error = false;
     var isMand = question.childNamed('mand');
@@ -102,7 +98,7 @@ module.exports = React.createClass({
     if(isMand && isMand.val === 'true') {
       // make sure input is not empty
       if(! text || text === '') {
-        error = errors.mandatory;
+        error = 'mandatory';
       }
     }
 

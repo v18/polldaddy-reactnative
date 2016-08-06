@@ -1,5 +1,7 @@
 import answerParser from './answer-parser';
+import CurrentPhrases from './current-phrases';
 import Database from './database';
+import language from './language';
 import xmlParser from 'xmldoc';
 
 var currentQuestionIndex = -1, // have not begun survey yet
@@ -30,6 +32,7 @@ module.exports = {
     startDate = null;
     endDate = null;
     numberOfAnswered = 0;
+    CurrentPhrases.resetPhrases();
 
     return database.getItem(surveyId, userId)
       .then((survey) => {
@@ -61,6 +64,12 @@ module.exports = {
         var finishQ = new xmlParser.XmlDocument(finishXml);
         finishQ.pageType = 'finish';
         questions.push(finishQ);
+
+        // set the phrases for this survey
+        var languagePack = JSON.parse(survey.languagePack);
+        var customPhrases = language.getCustomPhrasesFromLanguagePack(languagePack);
+        CurrentPhrases.setPhrases(language.getFullPhrases(customPhrases));
+
         return Promise.resolve(true);
       })
       .catch(function (error) {

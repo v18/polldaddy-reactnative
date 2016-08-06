@@ -9,12 +9,6 @@ import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 import TextField from '../elements/text-field';
 
-var errorsMessages = {
-  mandatory: 'This is a mandatory question.',
-  invalidNumber: 'Please enter a valid number',
-  withinRange: 'Please enter a number within range'
-};
-
 module.exports = React.createClass({
   getInitialState: function () {
     return {
@@ -173,8 +167,7 @@ module.exports = React.createClass({
       );
     }
   },
-  getError: function (props = this.props, number = this.state.inputs.number,
-    errors = errorsMessages) {
+  getError: function (props = this.props, number = this.state.inputs.number) {
 
     var isMandatory = props.isMandatory;
     var isComplete = true;
@@ -226,11 +219,11 @@ module.exports = React.createClass({
     }
 
     if(!isComplete) {
-      error = errors.mandatory;
+      error = 'mandatory';
     } else if(!isValidNumber) {
-      error = errors.invalidNumber;
+      error = 'validNumber';
     } else if(!isWithinRange) {
-      error = errors.withinRange;
+      error = 'withinRange';
     }
 
     return error;
