@@ -43,9 +43,9 @@ module.exports = {
         var startMessage = xmlDocument.childNamed('startMessage');
         var startHtml = '';
         if(startMessage) {
-          startHtml = startMessage.val;
+            startHtml = startMessage.val;
         }
-        var startXml = createHTMLQuestionXml(survey.title, startHtml);
+        var startXml = getXml(survey.title, startHtml, 'start');
         var startQ = new xmlParser.XmlDocument(startXml);
         startQ.pageType = 'start';
         questions.push(startQ);
@@ -55,12 +55,12 @@ module.exports = {
 
         // create and add start question to the beginning
         // API response is sent with default
-        var endMessage = xmlDocument.childNamed('endMessage');
-        var endHtml = '';
-        if(endMessage) {
-          endHtml = endMessage.val;
+        var finishMessage = xmlDocument.childNamed('endMessage');
+        var finishHtml = '';
+        if(finishMessage) {
+          finishHtml = finishMessage.val;
         }
-        var finishXml = createHTMLQuestionXml(survey.title, endHtml);
+        var finishXml = getXml(survey.title, finishHtml, 'finish');
         var finishQ = new xmlParser.XmlDocument(finishXml);
         finishQ.pageType = 'finish';
         questions.push(finishQ);
@@ -143,6 +143,21 @@ var createQuestionsArrayFromXml = function(xmlDocument) {
 
 // used to add the start and finish pages
 // as HTML snippet questions
-var createHTMLQuestionXml = function (title, htmlContent) {
-  return `<question qType="2000" qID="-1" trueQ="0"><qText>${title}</qText><nText></nText><note>false</note><chunk>${htmlContent}</chunk></question>`;
+var getXml = function (title, htmlContent, type) {
+  // add qType
+  var qType = 2000;
+  switch(type) {
+    case 'start':
+      qType = 2001;
+      break;
+    case 'finish':
+      qType = 2002;
+      break;
+  }
+
+  // prepare for xml parsing
+  htmlContent = htmlContent.replace('<', '&lt;');
+  htmlContent = htmlContent.replace('>', '&gt;');
+
+  return `<question qType="${qType}" qID="-1" trueQ="0"><qText>${title}</qText><nText></nText><note>false</note><chunk>${htmlContent}</chunk></question>`;
 };

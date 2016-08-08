@@ -46,10 +46,10 @@ module.exports = React.createClass({
     }
   },
   renderTitle: function () {
-    // if it's not the start or finish page (i.e. pageType exists)
+    // if it's not the start or finish page (i.e. qType 2001, 2002)
     // do not render qText for HTML snippet
     var qType = Number(this.props.question.attr.qType);
-    if(qType === 2000 && !this.props.question.pageType) {
+    if(qType === 2001 || qType === 2002) {
       return;
     } else {
       return (
@@ -69,6 +69,7 @@ module.exports = React.createClass({
   renderQuestion: function(question) {
     var questionType = Number(question.attr.qType);
     var props = {
+      pageType: 'question',
       question: this.props.question,
       navigator: this.props.navigator
     };
@@ -86,6 +87,12 @@ module.exports = React.createClass({
       case 100:
         return <FreeText {...props} />;
       case 2000: // html snippet
+        return <HtmlSnippet {...props} />;
+      case 2001: // start message
+        props.pageType = 'start';
+        return <HtmlSnippet {...props} />;
+      case 2002: // finish message
+        props.pageType = 'finish';
         return <HtmlSnippet {...props} />;
       case 1200: // matrix / likert
         var matrixProps = this.getMatrixProps(this.props.question);
