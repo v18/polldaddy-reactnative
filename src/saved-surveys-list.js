@@ -264,7 +264,11 @@ module.exports = React.createClass({
 });
 
 var toolbarActions = [
-  {title: 'Select Polldaddy Surveys', icon: require('./img/cloud-icon/cloud-toolbar.png'), show: 'always'},
+  {
+    title: 'Select Polldaddy Surveys',
+    icon: require('./img/cloud/ic_cloud_download_white.png'),
+    show: 'always'
+  },
   {title: 'Sign out', show: 'never'}
 ];
 
