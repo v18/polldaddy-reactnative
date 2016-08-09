@@ -246,7 +246,9 @@ var styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    height: 48,
+    minHeight: 48,
+    paddingTop: 12,
+    paddingBottom: 12,
     alignItems: 'center',
     marginRight: 16
   },
@@ -258,5 +260,8 @@ var styles = StyleSheet.create({
   },
   spinner: {
     marginTop: 48
+  },
+  textContainer: {
+    flex: 1
   }
 });

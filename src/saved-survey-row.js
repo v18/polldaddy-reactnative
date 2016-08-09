@@ -57,7 +57,9 @@ var styles = StyleSheet.create({
   rowContainer: {
     borderBottomColor: '#e0e0e0',
     borderBottomWidth: 1,
-    height: 72,
+    minHeight: 72,
+    paddingTop: 16,
+    paddingBottom: 16,
     paddingLeft: 16,
     paddingRight: 16,
     justifyContent: 'center'
