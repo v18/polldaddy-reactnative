@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   AsyncStorage,
   Image,
@@ -20,6 +21,8 @@ module.exports = React.createClass({
       sectionHeaderHasChanged: (s1, s2) => s1 !== s2
     });
     return {
+      loadingData: true,
+      loadingContent: true,
       dataSource: ds,
       selectedItems: [],
       sectionNames: ['Select Surveys to Use Offline',
@@ -50,6 +53,7 @@ module.exports = React.createClass({
       .then((values) => {
         var data = this.formatSurveyAndQuizData(values, this.state.selectedItems);
         this.setState({
+          loadingData: false,
           data: data,
           dataSource: this.state.dataSource.cloneWithRowsAndSections(data)
         });
@@ -85,6 +89,15 @@ module.exports = React.createClass({
         }
       }.bind(this));
   },
+  componentDidMount: function () {
+    // figure out when navigation is complete
+    this.didFocusListener = this.props.navigator.navigationContext.addListener('didfocus', () => {
+      this.didFocusListener.remove();
+      this.setState({ // eslint-disable-line react/no-did-mount-set-state
+        loadingContent: false
+      });
+    });
+  },
   render: function() {
     return (<View style={styles.container}>
       <ToolbarAndroid
@@ -96,12 +109,26 @@ module.exports = React.createClass({
           title='Select Surveys and Quizzes'
           titleColor='#FFF'
       />
-    <ListView
-        dataSource={this.state.dataSource}
-        renderRow={this.renderRow}
-        renderSectionHeader={this.renderSectionHeader}
-    />
+      {this.renderContent()}
     </View>);
+  },
+  renderContent: function () {
+    if(this.state.loadingData || this.state.loadingContent) {
+      return (
+        <ActivityIndicator
+            color='#B72422'
+            size='large'
+            style={styles.spinner}
+        />
+      );
+    }
+    return (
+      <ListView
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow}
+          renderSectionHeader={this.renderSectionHeader}
+      />
+    );
   },
   renderRow: function(rowData, sectionId, rowId) {
     var imgSrc = rowData.selected ? require('./img/check/ic_done_red.png') : require('./img/check/empty_checkmark.png');
@@ -167,15 +194,21 @@ module.exports = React.createClass({
   },
   onActionSelected: function(index) {
     if(index === 0) { // save button
-      // hack: use immediatelyResetRouteStack to send props on route
-      var selectedItemsToSend = this.state.selectedItems.map(function(item) {
-        delete item.selected;
-        return item;
-      });
-      this.props.navigator.immediatelyResetRouteStack([{
-        name: 'savedSurveysList',
-        selectedItems: selectedItemsToSend
-      }]);
+      if(this.state.loadingData || this.state.loadingContent) {
+        // only save selections after page has loaded
+        // otherwise, just go back to previous page
+        this.props.navigator.pop();
+      } else {
+        // hack: use immediatelyResetRouteStack to send props on route
+        var selectedItemsToSend = this.state.selectedItems.map(function(item) {
+          delete item.selected;
+          return item;
+        });
+        this.props.navigator.immediatelyResetRouteStack([{
+          name: 'savedSurveysList',
+          selectedItems: selectedItemsToSend
+        }]);
+      }
     }
   }
 });
@@ -214,5 +247,8 @@ var styles = StyleSheet.create({
     paddingBottom: 4,
     backgroundColor: '#e0e0e0',
     paddingLeft: 16
+  },
+  spinner: {
+    marginTop: 48
   }
 });
