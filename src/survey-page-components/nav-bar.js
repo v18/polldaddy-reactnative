@@ -38,12 +38,14 @@ module.exports = React.createClass({
       <TouchableHighlight
           onPress={() => {this.buttonFn(leftButton)(nav);}} // eslint-disable-line react/jsx-no-bind
           style={[styles.button, styles.leftButton]}
+          underlayColor='#A2201E'
       >
         <Text style={styles.buttonText}>{this.buttonText(leftButton)}</Text>
       </TouchableHighlight>
       <TouchableHighlight
           onPress={() => {this.buttonFn(rightButton)(nav);}} // eslint-disable-line react/jsx-no-bind
-          style={styles.button, styles.rightButton}
+          style={[styles.button, styles.rightButton]}
+          underlayColor='#A2201E'
       >
         <Text style={styles.buttonText}>{this.buttonText(rightButton)}</Text>
       </TouchableHighlight>
@@ -299,12 +301,17 @@ var styles = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8
   },
+  button: {
+    padding: 8
+  },
   leftButton: {
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    marginLeft: 4
   },
   rightButton: {
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    marginRight: 4
   }
 });

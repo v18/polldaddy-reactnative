@@ -51,7 +51,11 @@ module.exports = React.createClass({
           />
         </View>
         <View style={styles.signinContainer}>
-          <TouchableHighlight onPress={this.handlePressSignin}>
+          <TouchableHighlight
+              onPress={this.handlePressSignin}
+              underlayColor='#A2201E'
+              style={styles.signinButton}
+          >
             <Text style={styles.signinText}>Sign in</Text>
           </TouchableHighlight>
         </View>
@@ -124,12 +128,19 @@ var styles = StyleSheet.create({
   },
   signinContainer: {
     alignItems: 'flex-end',
-    marginRight: 20,
-    marginTop: 10
+    marginTop: 4,
+    marginRight: 4
+  },
+  signinButton: {
+    minHeight: 36,
+    borderRadius: 2
   },
   signinText: {
     color: '#FFF',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    padding: 12,
+    textAlignVertical: 'center',
+    textAlign: 'center'
   },
   logo: {
     maxWidth: window.width - 20
