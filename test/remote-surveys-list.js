@@ -16,7 +16,7 @@ describe('Remote surveys page', () => {
   });
 
   describe('formatSurveyAndQuizData()', () => {
-    it('returns an object with survey and quiz data when given an array with survey and quiz data, and an empty selected items array', () => {
+    it('returns an object with survey data when given an array with survey and quiz data, and an empty selected items array', () => {
       var selectedItems = [];
       var surveys = [
         {
@@ -61,18 +61,13 @@ describe('Remote surveys page', () => {
             title: 'Survey 2 Title',
             selected: false
           }
-        ],
-        [{
-          id: 3,
-          title: 'Quiz 1 Title',
-          selected: false
-        }]
+        ]
       ];
       var result = RemoteSurveysList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
       expect(result).to.eql(expected);
     });
 
-    it('returns an object with survey data and an empty quizzes data array when given an array with only survey data and an empty selected items array', () => {
+    it('returns an object with survey data when given an array with only survey data and an empty selected items array', () => {
       var selectedItems = [];
       var surveys = [
         {
@@ -107,14 +102,13 @@ describe('Remote surveys page', () => {
             id: 2,
             title: 'Survey 2 Title',
             selected: false
-          }],
-        []
+          }]
       ];
       var result = RemoteSurveysList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
       expect(result).to.eql(expected);
     });
 
-    it('returns an object with quiz data and an survey data array when given an array with only survey data, and an empty selected items array', () => {
+    it('throws error when given an array with only quiz data, and an empty selected items array', () => {
       var selectedItems = [];
       var surveys = [];
       var quizzes = [{
@@ -127,19 +121,11 @@ describe('Remote surveys page', () => {
         responses:0,
         title:'Quiz 1 Title'
       }];
-      var expected = [
-        [],
-        [{
-          id: 3,
-          title: 'Quiz 1 Title',
-          selected: false
-        }]
-      ];
-      var result = RemoteSurveysList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);
-      expect(result).to.eql(expected);
+
+      expect(RemoteSurveysList.prototype.formatSurveyAndQuizData.bind(RemoteSurveysList, [surveys, quizzes], selectedItems)).to.throw(Error, 'No surveys found');
     });
 
-    it('returns an object with quiz data and an survey data array with the correct selected status when given a non-empty selected surveys array',  () => {
+    it('returns an object with survey data array with the correct selected status when given a non-empty selected surveys array',  () => {
       var selectedItems = [
         {id: 1, title:'Survey 1 Title', offline:0},
         {id: 3, title:'Quiz 1 Title', offline:2},
@@ -187,11 +173,6 @@ describe('Remote surveys page', () => {
             id: 2,
             title: 'Survey 2 Title',
             selected: false
-          }],
-          [{
-            id: 3,
-            title: 'Quiz 1 Title',
-            selected: true
           }]
       ];
       var result = RemoteSurveysList.prototype.formatSurveyAndQuizData([surveys, quizzes], selectedItems);

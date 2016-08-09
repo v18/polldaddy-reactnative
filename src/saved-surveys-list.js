@@ -52,10 +52,11 @@ module.exports = React.createClass({
         items = _.combineItemLists(databaseItems, this.props.route.selectedItems);
       }
       return new Promise((resolve) => {
+        var sortedItems = this._sortItems(items.toDisplay);
         this.setState({
           loadingData: false,
-          items: items.toDisplay,
-          dataSource: this.state.dataSource.cloneWithRows(items.toDisplay)
+          items: sortedItems,
+          dataSource: this.state.dataSource.cloneWithRows(sortedItems)
         }, function () {
           resolve([items.toDelete, items.toSave]);
         });
@@ -67,8 +68,7 @@ module.exports = React.createClass({
         this.saveItemsToDatabase(itemsToSave)
       ]);
     })
-    .catch(function (error) {
-      throw error;
+    .catch(function () {
     })
     .done();
   },
@@ -99,9 +99,10 @@ module.exports = React.createClass({
         var surveyIndex = _.indexOfItem(newItems, id);
 
         newItems[surveyIndex].responses = responseNumbers[id];
+        var sortedItems = this._sortItems(newItems);
         this.setState({
-          items: newItems,
-          dataSource: this.state.dataSource.cloneWithRows(newItems)
+          items: sortedItems,
+          dataSource: this.state.dataSource.cloneWithRows(sortedItems)
         });
       }
     });
@@ -209,9 +210,10 @@ module.exports = React.createClass({
           var newItems = _.cloneDeep(this.state.items);
           var itemIndex = _.indexOfItem(newItems, itemId);
           newItems[itemIndex].saved = true;
+          var sortedItems = this._sortItems(newItems);
           this.setState({
-            items: newItems,
-            dataSource: this.state.dataSource.cloneWithRows(newItems)
+            items: sortedItems,
+            dataSource: this.state.dataSource.cloneWithRows(sortedItems)
           });
         })
         .catch(() => {
@@ -221,13 +223,20 @@ module.exports = React.createClass({
           newItems = _.remove(newItems, function (item) {
             return item.id !== itemId;
           });
+          var sortedItems = this._sortItems(newItems);
           this.setState({
-            items: newItems,
-            dataSource: this.state.dataSource.cloneWithRows(newItems)
+            items: sortedItems,
+            dataSource: this.state.dataSource.cloneWithRows(sortedItems)
           });
         })
         .done();
     });
+  },
+  _sortItems: function (items) {
+    var sorted = _.sortBy(items, function (item) {
+      return item.title.toLocaleLowerCase();
+    });
+    return sorted;
   }
 });
 

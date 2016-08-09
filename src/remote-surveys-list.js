@@ -192,7 +192,13 @@ module.exports = React.createClass({
     if(formattedDataArray[0].length === 0) {
       throw new Error('No surveys found');
     }
-    return [formattedDataArray[0]]; // no support for quizzes
+
+    // no support for quizzes, use only formattedDataArray[0]
+    var sortedList = _.sortBy(formattedDataArray[0], function (survey) {
+      return survey.title.toLocaleLowerCase();
+    });
+
+    return [sortedList];
   },
   onActionSelected: function(index) {
     if(index === 0) { // save button
