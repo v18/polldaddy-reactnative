@@ -35,22 +35,29 @@ module.exports = React.createClass({
     }
   },
   onInputsChange: function (inputs) {
+    if(inputs.selectedAnswers === undefined
+      && this.state.inputs.selectedAnswers !== undefined) {
+      inputs.selectedAnswers = this.state.inputs.selectedAnswers;
+    }
+
+    if(inputs.commentText === undefined
+      && this.state.inputs.commentText !== undefined) {
+      inputs.commentText = this.state.inputs.commentText;
+    }
+
+    if(inputs.otherText === undefined
+      && this.state.inputs.otherText !== undefined) {
+      inputs.otherText = this.state.inputs.otherText;
+    }
+
     this.setState({
-      inputs: inputs
+      inputs
     });
 
     var error = this.getError();
     if(!error) {
-      // if validated with no errors, save to answer
-      this.setState({
-        answers: this.state.inputs
-      });
-      Actions.saveAnswers(this.props.questionId, this.props.questionType, this.state.answers);
+      Actions.saveAnswers(this.props.questionId, this.props.questionType, this.state.inputs);
     } else {
-      // if not validated, remove answer & save error instead
-      this.setState({
-        answers: ''
-      });
       Actions.saveError(error);
     }
   },
@@ -65,9 +72,7 @@ module.exports = React.createClass({
         commentText: '',
         otherText: '',
         selectedAnswers: []
-      },
-      answers: {},
-      errorMessage: ''
+      }
     };
   },
   render: function () {
@@ -135,10 +140,14 @@ module.exports = React.createClass({
     if(this.props.other
       && this.state.inputs.selectedAnswers
       && this.state.inputs.selectedAnswers.indexOf(-1) > -1) {
+      var defaultValue = this.state.inputs.otherText || '';
       return (
         <View style={[styles.textQuestionContainer, styles.otherContainer]}>
           <Text style={styles.textFieldQuestion}>{otherPhrase}</Text>
-          <TextField name='otherText' />
+          <TextField
+              default={defaultValue}
+              name='otherText'
+          />
         </View>
       );
     }
