@@ -1,7 +1,6 @@
 import {
   getCustomPhrasesFromLanguagePack,
-  getFullPhrases,
-  getScorePhraseFromTemplate
+  getFullPhrases
 } from '../../src/utils/language';
 import _ from 'lodash';
 import { expect } from 'chai';
@@ -180,46 +179,6 @@ describe('getFullPhrases()', function () {
         var result = getCustomPhrasesFromLanguagePack(languagePack);
         expect(result).to.eql(expected[index]);
       });
-    });
-  });
-
-  describe('getScorePhraseFromTemplate()', function () {
-    var phrase = 'You scored [score]%!';
-    var score = 100;
-
-    it('returns the phrase replaced with the score', function () {
-      var result = getScorePhraseFromTemplate(phrase, score);
-      expect(result).to.equal('You scored 100%!');
-    });
-
-    it('returns empty string if score not given', function () {
-      var possibleScores = [
-        undefined,
-        null
-      ];
-
-      possibleScores.map(function (score) {
-        var result = getScorePhraseFromTemplate(phrase, score);
-        expect(result).to.equal('');
-      });
-    });
-
-    it('returns empty string if phrase not given', function () {
-      var possibleTemplates = [
-        undefined,
-        null
-      ];
-
-      possibleTemplates.map(function (template) {
-        var result = getScorePhraseFromTemplate(template, score);
-        expect(result).to.equal('');
-      });
-    });
-
-    it('returns empty string if phrase does not contain [score]', function () {
-      var phrase = 'You scored X%!';
-      var result = getScorePhraseFromTemplate(phrase, score);
-      expect(result).to.equal('');
     });
   });
 

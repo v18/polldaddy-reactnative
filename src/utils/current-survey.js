@@ -1,8 +1,10 @@
+import _ from 'lodash';
 import answerParser from './answer-parser';
 import CurrentPhrases from './current-phrases';
 import Database from './database';
 import language from './language';
 import xmlParser from 'xmldoc';
+import QuizInfo from './current-quiz-info';
 
 var currentQuestionIndex = -1, // have not begun survey yet
   questions = [],
@@ -10,7 +12,8 @@ var currentQuestionIndex = -1, // have not begun survey yet
   answersXml = '',
   startDate,
   endDate,
-  numberOfAnswered;
+  numberOfAnswered,
+  isQuiz = false;
 
 module.exports = {
   resetAnswers: function () {
@@ -18,6 +21,7 @@ module.exports = {
     startDate = null;
     endDate = null;
     numberOfAnswered = 0;
+    QuizInfo.resetAnswers();
   },
   set: function (id, userId, database) {
     if(!database) {
@@ -32,11 +36,23 @@ module.exports = {
     startDate = null;
     endDate = null;
     numberOfAnswered = 0;
+    isQuiz = false;
     CurrentPhrases.resetPhrases();
 
     return database.getItem(surveyId, userId)
       .then((survey) => {
         var xmlDocument = new xmlParser.XmlDocument(survey.formXML.trim());
+        var surveyXml = createQuestionsArrayFromXml(xmlDocument);
+
+        // quiz settings
+        isQuiz = (Number(xmlDocument.attr.fType) === 4);
+        if(isQuiz) {
+          QuizInfo.setQuestions(surveyXml);
+          QuizInfo.setQuizSettings({
+            resultsView: xmlDocument.childNamed('quizData').attr.resultsView,
+            passThreshold: xmlDocument.childNamed('quizData').attr.passThreshold
+          });
+        }
 
         // create and add start question to the beginning
         // provide '' as default in case API doesn't send default
@@ -45,13 +61,13 @@ module.exports = {
         if(startMessage) {
             startHtml = startMessage.val;
         }
-        var startXml = getXml(survey.title, startHtml, 'start');
+        var startXml = getXml(survey.title, startHtml);
         var startQ = new xmlParser.XmlDocument(startXml);
         startQ.pageType = 'start';
         questions.push(startQ);
 
         // save the questions as an array and add to questions array
-        questions = questions.concat(createQuestionsArrayFromXml(xmlDocument));
+        questions = questions.concat(surveyXml);
 
         // create and add start question to the beginning
         // API response is sent with default
@@ -60,15 +76,18 @@ module.exports = {
         if(finishMessage) {
           finishHtml = finishMessage.val;
         }
-        var finishXml = getXml(survey.title, finishHtml, 'finish');
+        var finishXml = getXml(survey.title, finishHtml, isQuiz);
         var finishQ = new xmlParser.XmlDocument(finishXml);
         finishQ.pageType = 'finish';
         questions.push(finishQ);
 
+
+
         // set the phrases for this survey
         var languagePack = JSON.parse(survey.languagePack);
         var customPhrases = language.getCustomPhrasesFromLanguagePack(languagePack);
-        CurrentPhrases.setPhrases(language.getFullPhrases(customPhrases));
+        var type = (isQuiz ? 'quiz' : 'survey');
+        CurrentPhrases.setPhrases(language.getFullPhrases(customPhrases, type));
 
         return Promise.resolve(true);
       })
@@ -99,16 +118,29 @@ module.exports = {
     endDate = now.toUTCString();
   },
   saveAnswer: function (questionId, questionType, answers) {
+    // save as xml
     var newXml = answerParser.getAnswerXml(questionId, questionType, answers);
     if(newXml && newXml !== '') {
       numberOfAnswered++;
     }
     answersXml = answersXml + newXml;
+
+    // save in QuizInfo
+    if(isQuiz
+      && Number(questionType) === 400
+      && _.has(answers, 'selectedAnswers')) {
+      var answer = {
+        questionId,
+        answer: answers.selectedAnswers
+      }
+      QuizInfo.saveAnswer(answer);
+    }
   },
   saveAnswersToDatabase: function ({userId, isComplete}) {
     var responseXml = `<answers pCompleted='${numberOfAnswered}'>
         ${answersXml}</answers>`;
     var completedStatus = (isComplete === 'complete' ? 2 : 1);
+    // save questions to db
     return Database.saveResponse({
       surveyId: surveyId,
       responseXML: responseXml,
@@ -143,16 +175,11 @@ var createQuestionsArrayFromXml = function(xmlDocument) {
 
 // used to add the start and finish pages
 // as HTML snippet questions
-var getXml = function (title, htmlContent, type) {
+var getXml = function (title, htmlContent, isQuiz) {
   // add qType
   var qType = 2000;
-  switch(type) {
-    case 'start':
-      qType = 2001;
-      break;
-    case 'finish':
-      qType = 2002;
-      break;
+  if(isQuiz) {
+    qType = 2001;
   }
 
   // prepare for xml parsing

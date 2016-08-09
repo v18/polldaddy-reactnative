@@ -17,6 +17,7 @@ import MultipleChoice from './questions/multiple-choice';
 import Name from './questions/name';
 import NumberQuestion from './questions/number';
 import PhoneNumber from './questions/phone-number';
+import QuizFinishMessage from './questions/quiz-finish-message';
 import Rank from './questions/rank';
 import React from 'react';
 import Url from './questions/url';
@@ -46,10 +47,11 @@ module.exports = React.createClass({
     }
   },
   renderTitle: function () {
-    // if it's not the start or finish page (i.e. qType 2001, 2002)
+    // if it's not the start or finish page (i.e. qType 2000, 2001)
     // do not render qText for HTML snippet
     var qType = Number(this.props.question.attr.qType);
-    if(qType === 2001 || qType === 2002) {
+    if((qType === 2000 || qType === 2001)
+      && !this.props.question.pageType) {
       return;
     } else {
       return (
@@ -86,14 +88,10 @@ module.exports = React.createClass({
         return <FreeText {...props} />;
       case 100:
         return <FreeText {...props} />;
-      case 2000: // html snippet
+      case 2000: // html snippet, start & finish pages
         return <HtmlSnippet {...props} />;
-      case 2001: // start message
-        props.pageType = 'start';
-        return <HtmlSnippet {...props} />;
-      case 2002: // finish message
-        props.pageType = 'finish';
-        return <HtmlSnippet {...props} />;
+      case 2001: // quiz finish message
+        return <QuizFinishMessage {...props} />
       case 1200: // matrix / likert
         var matrixProps = this.getMatrixProps(this.props.question);
         matrixProps.navigator = props.navigator;

@@ -34,16 +34,6 @@ module.exports = {
     }
 
     return customPhrases;
-  },
-  getScorePhraseFromTemplate: function (templatePhrase, score) {
-    var scoreString = '[score]';
-    var phraseWithScore = '';
-    if(templatePhrase
-      && templatePhrase.indexOf(scoreString) > -1
-      && score) {
-      phraseWithScore =  _.replace(templatePhrase, scoreString, score);
-    }
-    return phraseWithScore;
   }
 };
 
