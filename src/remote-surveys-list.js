@@ -24,9 +24,7 @@ module.exports = React.createClass({
       loadingData: true,
       loadingNavigation: true,
       dataSource: ds,
-      selectedItems: [],
-      sectionNames: ['Select Surveys to Use Offline',
-        'Select Quizzes to Use Offline']
+      selectedItems: []
     };
   },
   componentWillMount: function() {
@@ -60,10 +58,14 @@ module.exports = React.createClass({
       })
       .catch(function(error) {
         switch (error.message) {
-          case 'No surveys or quizzes found':
+          case 'No surveys found':
             Alert.alert(
               'Whoops',
-              'Your account does not have any surveys or quizzes yet. Try adding some at Polldaddy.com first.');
+              'Your account does not have any surveys yet. Try adding some at Polldaddy.com first.',
+              [{
+                text: 'Ok',
+                onPress: () => {this.props.navigator.pop();}
+              }]);
             break;
           case 'User Not Found, 4366':
             Alert.alert('Whoops',
@@ -106,7 +108,7 @@ module.exports = React.createClass({
           onActionSelected={this.onActionSelected}
           onIconClicked={() => {this.props.navigator.pop();}} // eslint-disable-line react/jsx-no-bind
           style={styles.toolbar}
-          title='Select Surveys and Quizzes'
+          title='Select Surveys'
           titleColor='#FFF'
       />
       {this.renderContent()}
@@ -126,7 +128,6 @@ module.exports = React.createClass({
       <ListView
           dataSource={this.state.dataSource}
           renderRow={this.renderRow}
-          renderSectionHeader={this.renderSectionHeader}
       />
     );
   },
@@ -187,10 +188,11 @@ module.exports = React.createClass({
         };
       });
     });
-    if(!formattedDataArray[0] && !formattedDataArray[0]) {
-      throw new Error('No surveys or quizzes found');
+
+    if(formattedDataArray[0].length === 0) {
+      throw new Error('No surveys found');
     }
-    return formattedDataArray;
+    return [formattedDataArray[0]]; // no support for quizzes
   },
   onActionSelected: function(index) {
     if(index === 0) { // save button
