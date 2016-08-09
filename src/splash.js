@@ -29,7 +29,7 @@ module.exports = React.createClass({
         <View style={styles.logoContainer}>
           <Image
               resizeMode='contain'
-              source={require('./img/polldaddy-logo.png')}
+              source={require('./img/logo/polldaddy-logo.png')}
               style={styles.logo}
           />
         </View>

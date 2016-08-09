@@ -1,6 +1,7 @@
 import {
   Alert,
   AsyncStorage,
+  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -23,7 +24,7 @@ module.exports = React.createClass({
       <View style={styles.logoContainer}>
         <Image
             resizeMode='contain'
-            source={require('./img/polldaddy-logo.png')}
+            source={require('./img/logo/polldaddy-logo.png')}
             style={styles.logo}
         />
       </View>
@@ -91,6 +92,7 @@ module.exports = React.createClass({
   }
 });
 
+var window = Dimensions.get('window');
 var styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -100,7 +102,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
     marginTop: 30,
-    flexDirection: 'row'
+    flexDirection: 'column'
   },
   formElement: {
     flexDirection: 'row',
@@ -130,8 +132,6 @@ var styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   logo: {
-    flex: 1,
-    marginLeft: 20,
-    marginRight: 20
+    maxWidth: window.width - 20
   }
 });
