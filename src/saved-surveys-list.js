@@ -68,7 +68,18 @@ module.exports = React.createClass({
         this.saveItemsToDatabase(itemsToSave)
       ]);
     })
-    .catch(function () {
+    .catch((error) => {
+      if(error.message === 'no user saved') {
+        Promise.all(
+          // remove userCode and userId
+          AsyncStorage.removeItem('userId'),
+          AsyncStorage.removeItem('userCode')
+        )
+        .done(() => {
+          // go to sign in page
+          this.props.navigator.immediatelyResetRouteStack([{name: 'signin'}]);
+        });
+      }
     })
     .done();
   },
@@ -159,10 +170,22 @@ module.exports = React.createClass({
       />);
   },
   onActionSelected: function(position) {
-    if(position === 0) {
+    if(position === 0) { // go to remote surveys
       this.props.navigator.push({
         name: 'remoteSurveysList',
         selectedItems: this.state.items
+      });
+    }
+
+    if(position === 1) { // log out
+      Promise.all(
+        // remove userCode and userId
+        AsyncStorage.removeItem('userId'),
+        AsyncStorage.removeItem('userCode')
+      )
+      .then(() => {
+        // go to sign in page
+        this.props.navigator.immediatelyResetRouteStack([{name: 'signin'}]);
       });
     }
   },
