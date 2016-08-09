@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   AsyncStorage,
   ListView,
   StyleSheet,
@@ -19,6 +20,8 @@ module.exports = React.createClass({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
     return {
+      loadingData: true,
+      loadingNavigation: true,
       items: [],
       dataSource: ds,
       userCode: '',
@@ -50,6 +53,7 @@ module.exports = React.createClass({
       }
       return new Promise((resolve) => {
         this.setState({
+          loadingData: false,
           items: items.toDisplay,
           dataSource: this.state.dataSource.cloneWithRows(items.toDisplay)
         }, function () {
@@ -69,6 +73,14 @@ module.exports = React.createClass({
     .done();
   },
   componentDidMount: function () {
+    // figure out when navigation to this page is done
+    this.didFocusListener = this.props.navigator.navigationContext.addListener('didfocus', () => {
+      this.didFocusListener.remove();
+      this.setState({ // eslint-disable-line react/no-did-mount-set-state
+        loadingNavigation: false
+      });
+    });
+
     this.unsubscribeFromResponses = ResponsesStore.listen(this.onResponsesChange);
   },
   componentWillUnmount: function () {
@@ -109,6 +121,15 @@ module.exports = React.createClass({
     );
   },
   renderContent: function() {
+    if(this.state.loadingData || this.state.loadingNavigation) {
+      return (
+        <ActivityIndicator
+            color='#B72422'
+            size='large'
+            style={styles.spinner}
+        />
+      );
+    }
     if(this.state.items.length !== 0) {
       return (
         <ListView
@@ -233,5 +254,8 @@ var styles = StyleSheet.create({
   },
   link: {
     color: '#B72422'
+  },
+  spinner: {
+    marginTop: 48
   }
 });

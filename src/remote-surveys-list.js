@@ -22,7 +22,7 @@ module.exports = React.createClass({
     });
     return {
       loadingData: true,
-      loadingContent: true,
+      loadingNavigation: true,
       dataSource: ds,
       selectedItems: [],
       sectionNames: ['Select Surveys to Use Offline',
@@ -94,7 +94,7 @@ module.exports = React.createClass({
     this.didFocusListener = this.props.navigator.navigationContext.addListener('didfocus', () => {
       this.didFocusListener.remove();
       this.setState({ // eslint-disable-line react/no-did-mount-set-state
-        loadingContent: false
+        loadingNavigation: false
       });
     });
   },
@@ -113,7 +113,7 @@ module.exports = React.createClass({
     </View>);
   },
   renderContent: function () {
-    if(this.state.loadingData || this.state.loadingContent) {
+    if(this.state.loadingData || this.state.loadingNavigation) {
       return (
         <ActivityIndicator
             color='#B72422'
@@ -194,7 +194,7 @@ module.exports = React.createClass({
   },
   onActionSelected: function(index) {
     if(index === 0) { // save button
-      if(this.state.loadingData || this.state.loadingContent) {
+      if(this.state.loadingData || this.state.loadingNavigation) {
         // only save selections after page has loaded
         // otherwise, just go back to previous page
         this.props.navigator.pop();
