@@ -81,6 +81,13 @@ module.exports = {
   },
   getNextQuestion: function () {
     currentQuestionIndex++;
+
+    // skip file upload questions
+    var qType = Number(questions[currentQuestionIndex].attr.qType);
+    if(qType === 1600) {
+      this.getNextQuestion();
+    }
+
     return Promise.resolve(questions[currentQuestionIndex]);
   },
   isLastQuestion: function () {
