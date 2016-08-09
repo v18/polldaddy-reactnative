@@ -61,7 +61,7 @@ module.exports = React.createClass({
     }
   },
   renderNote: function() {
-    if(this.props.question.childNamed('note').val) {
+    if(this.props.question.childNamed('note').val === 'true') {
       var htmlString = this.props.question.childNamed('nText').val;
       return <Html htmlString={htmlString} />;
     }
@@ -121,7 +121,7 @@ module.exports = React.createClass({
     var max =  Number(question.childNamed('max_value').val);
     var decimalPlaces = Number(
       question.childNamed('decimal_places').val);
-    var isSlider = question.childNamed('slider').val === 'true' ? true : false;
+    var isSlider = (question.childNamed('slider').val === 'true');
     var labelValue = question.childNamed('label').val;
 
     var defaultValue = Number(question.childNamed('default_value').val);
@@ -167,12 +167,12 @@ module.exports = React.createClass({
   },
   getIsMandatory: function (question = this.props.question) {
     var mandatoryField = question.childNamed('mand');
-    return mandatoryField && mandatoryField.val === 'true';
+    return mandatoryField && (mandatoryField.val === 'true');
   },
   getMultipleChoiceProps: function (question = this.props.question) {
     var questionId = Number(question.attr.qID);
     var questionType = Number(question.attr.qType);
-    var other = question.childNamed('other').val === 'true';
+    var other = (question.childNamed('other').val === 'true');
     var max = 1;
     var min = 0;
     var type = Number(question.childNamed('elmType').val);
