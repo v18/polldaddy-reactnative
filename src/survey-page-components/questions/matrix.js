@@ -58,7 +58,7 @@ module.exports = React.createClass({
   },
   render: function () {
     return (
-      <View>
+      <View style={styles.container}>
         {this.renderMatrixHeader()}
         {this.renderRows()}
       </View>
@@ -120,16 +120,15 @@ module.exports = React.createClass({
     });
   },
   renderCheckbox: function (rowId, columnId) {
-    var checkedImg = require('../../img/radio-button/checked.png');
-    var uncheckedImg = require('../../img/radio-button/unchecked.png');
-
     var isChecked = this.state[rowId]
       && this.state[rowId].indexOf(columnId) > -1;
 
+    var checkImg = isChecked ? require('../../img/radio-button/checked.png') : require('../../img/radio-button/unchecked.png');
+
     return (
       <Image
-          scale={1}
-          source={(isChecked ? checkedImg : uncheckedImg)}
+          source={checkImg}
+          style={styles.checkImg}
       />
     );
   },
@@ -167,6 +166,9 @@ module.exports = React.createClass({
 });
 
 var styles = StyleSheet.create({
+  container: {
+    marginLeft: 16
+  },
   row: {
     alignItems: 'center',
     flexDirection: 'row',

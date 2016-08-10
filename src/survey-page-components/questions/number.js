@@ -101,22 +101,24 @@ module.exports = React.createClass({
   },
   renderSlider: function () {
     var step = Math.pow(10, this.props.decimalPlaces * -1);
-    return (<View>
-      <Slider
-          maximumValue={this.props.max}
-          minimumValue={this.props.min}
-          onValueChange={this.handleOnSlidingComplete}
-          step={step}
-          value={Number(this.state.inputs.number)}
-      />
-      <View style={styles.sliderText}>
-        {this.renderLabelBefore(this.props.labelPosition, this.props.labelValue)}
-        <Text style={styles.sliderNumber}>
-          {String(this.state.inputs.number)}
-        </Text>
-        {this.renderLabelAfter(this.props.labelPosition, this.props.labelValue)}
-      </View>
-    </View>);
+    return (
+      <View style={styles.container}>
+        <Slider
+            maximumValue={this.props.max}
+            minimumValue={this.props.min}
+            onValueChange={this.handleOnSlidingComplete}
+            step={step}
+            value={Number(this.state.inputs.number)}
+        />
+        <View style={[styles.sliderText]}>
+          {this.renderLabelBefore(this.props.labelPosition, this.props.labelValue)}
+          <Text style={styles.sliderNumber}>
+            {String(this.state.inputs.number)}
+          </Text>
+          {this.renderLabelAfter(this.props.labelPosition, this.props.labelValue)}
+        </View>
+    </View>
+    );
   },
   handleOnSlidingComplete: function(value,
     decimalPlaces = this.props.decimalPlaces) {
@@ -133,17 +135,17 @@ module.exports = React.createClass({
   renderInput: function () {
     return (
       <View style={styles.textInputContainer}>
-      {this.renderLabelBefore(this.props.labelPosition, this.props.labelValue)}
-      <View style={styles.default}>
-        <TextField
-            autoFocus={true}
-            default={this.state.inputs.number.toString()}
-            keyboardType='numeric'
-            name='number'
-            sanitizeText={this.truncateNumber}
-        />
-      </View>
-      {this.renderLabelAfter(this.props.labelPosition, this.props.labelValue)}
+        {this.renderLabelBefore(this.props.labelPosition, this.props.labelValue)}
+        <View style={styles.default}>
+          <TextField
+              autoFocus={true}
+              default={this.state.inputs.number.toString()}
+              keyboardType='numeric'
+              name='number'
+              sanitizeText={this.truncateNumber}
+          />
+        </View>
+        {this.renderLabelAfter(this.props.labelPosition, this.props.labelValue)}
       </View>);
   },
   renderLabel: function (label) {
@@ -231,6 +233,15 @@ module.exports = React.createClass({
 });
 
 var styles = StyleSheet.create({
+  container: {
+    marginTop: 16
+  },
+  sliderContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    marginLeft: 16,
+    marginRight: 16
+  },
   valueIndicator: {
     marginTop: 5,
     marginLeft: 20
@@ -241,19 +252,20 @@ var styles = StyleSheet.create({
   sliderLabel: {
   },
   sliderText: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: 8,
+    marginLeft: 16,
+    marginRight: 16
   },
   textInputContainer: {
     flexDirection: 'row',
     flex: 1,
-    marginLeft: 8,
-    marginRight: 8
+    marginLeft: 16,
+    marginRight: 16
   },
   labelContainer: {
-    width: 20,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    paddingRight: 8,
     marginBottom: 8
   },
   label: {

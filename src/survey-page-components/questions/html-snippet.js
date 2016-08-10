@@ -1,6 +1,6 @@
+import { StyleSheet, View } from 'react-native';
 import Html from '../elements/html';
 import React from 'react';
-import { View } from 'react-native';
 
 module.exports = React.createClass({
   render: function () {
@@ -9,8 +9,17 @@ module.exports = React.createClass({
     if(chunk.val) {
       htmlString = chunk.val;
     }
-    return (<View>
-      <Html htmlString={htmlString} />
-    </View>);
+    return (
+      <View style={styles.container}>
+        <Html htmlString={htmlString} />
+      </View>
+    );
+  }
+});
+
+var styles = StyleSheet.create({
+  container: {
+    marginLeft: 16,
+    marginRight: 16
   }
 });

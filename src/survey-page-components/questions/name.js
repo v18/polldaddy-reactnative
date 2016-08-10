@@ -1,8 +1,8 @@
+import { StyleSheet, View } from 'react-native';
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 import TextField from '../elements/text-field';
-import { View } from 'react-native';
 
 module.exports = React.createClass({
   componentDidMount: function () {
@@ -82,6 +82,7 @@ module.exports = React.createClass({
             key={field}
             name={field}
             placeholder={question.childNamed(field).val}
+            style={styles.container}
         />);
     });
   },
@@ -119,5 +120,11 @@ module.exports = React.createClass({
       error = 'mandatory';
     }
     return error;
+  }
+});
+
+var styles = StyleSheet.create({
+  container: {
+    marginBottom: 16
   }
 });

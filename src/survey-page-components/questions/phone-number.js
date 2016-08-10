@@ -1,5 +1,7 @@
 import {
   Picker,
+  StyleSheet,
+  Text,
   View
 } from 'react-native';
 import Actions from '../../actions/current-question';
@@ -72,12 +74,20 @@ module.exports = React.createClass({
   renderCountryPicker: function () {
     if(this.props.question.childNamed('change_country').val === 'true') {
       return (
-        <Picker
-            onValueChange={this.handleOnValueChange}
-            selectedValue={this.state.inputs.country}
-        >
-          {this.renderCountryItems()}
-        </Picker>);
+        <View style={styles.countryChoiceContainer}>
+          <Text style={styles.countryLabel}>Country: </Text>
+          <View style={styles.picker}>
+            <Picker
+                mode='dropdown'
+                onValueChange={this.handleOnValueChange}
+                selectedValue={this.state.inputs.country}
+                style={styles.countryPicker}
+            >
+              {this.renderCountryItems()}
+            </Picker>
+          </View>
+        </View>
+      );
     }
   },
   renderCountryItems: function () {
@@ -110,5 +120,27 @@ module.exports = React.createClass({
     }
 
     return error;
+  }
+});
+
+var styles = StyleSheet.create({
+  countryChoiceContainer: {
+    margin: 16,
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    minWidth: 48,
+    justifyContent: 'flex-start'
+  },
+  countryLabel: {
+    textAlignVertical: 'center',
+    textAlign: 'right',
+    color: '#000',
+    fontSize: 16,
+    marginBottom: 2
+  },
+  picker: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#e0e0e0'
   }
 });

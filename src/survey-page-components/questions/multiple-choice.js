@@ -155,7 +155,12 @@ module.exports = React.createClass({
   renderUserCommentSection: function () {
     if(this.props.comments !== '' && this.props.comments) {
       return (
-        <View style={styles.textQuestionContainer}>
+        <View
+            style={[
+              styles.textQuestionContainer,
+              styles.userCommentContainer
+            ]}
+        >
           <Text style={styles.textFieldQuestion}>{this.props.comments}</Text>
           <View style={styles.textFieldContainer}>
             <TextField
@@ -308,5 +313,9 @@ var styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     marginBottom: 8
+  },
+  userCommentContainer: {
+    marginTop: 16,
+    marginBottom: 16
   }
 });

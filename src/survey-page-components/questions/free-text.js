@@ -1,13 +1,13 @@
+import { StyleSheet, View } from 'react-native';
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 import TextField from '../elements/text-field';
-import { View } from 'react-native';
 
 module.exports = React.createClass({
   render: function () {
     return (
-      <View>
+      <View style={styles.container}>
         {this.renderCorrectSize()}
       </View>);
   },
@@ -103,5 +103,11 @@ module.exports = React.createClass({
     }
 
     return error;
+  }
+});
+
+var styles = StyleSheet.create({
+  container: {
+    marginBottom: 16
   }
 });

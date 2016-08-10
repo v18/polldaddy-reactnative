@@ -238,6 +238,7 @@ module.exports = React.createClass({
 var styles = StyleSheet.create({
   container: {
     marginTop: 16,
+    marginBottom: 16,
     borderTopColor: '#e0e0e0',
     borderTopWidth: 1
   },
@@ -252,11 +253,11 @@ var styles = StyleSheet.create({
   },
   label: {
     flex: 1,
-    marginLeft: 10,
-    marginRight: 10
+    marginLeft: 16,
+    marginRight: 16
   },
   value: {
     right: 0,
-    marginRight: 10
+    marginRight: 16
   }
 });

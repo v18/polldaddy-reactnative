@@ -60,13 +60,7 @@ module.exports = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginLeft: 10,
-    marginRight: 10
-  },
-  image: {
-    paddingLeft: 10,
-    paddingRight: 10
+    flex: 1
   }
 });
 

@@ -10,6 +10,7 @@ import _ from 'lodash';
 import Actions from '../actions/current-question';
 import AnswersStore from '../stores/answers-store';
 import CurrentSurvey from '../utils/current-survey';
+import dismissKeyboard from 'dismissKeyboard';
 import { phrases } from '../utils/current-phrases';
 import React from 'react';
 
@@ -91,6 +92,7 @@ module.exports = React.createClass({
         fn = (nav) => {
           // make sure there are no errors on the page we're on
           if(!this.state.hasError) {
+            dismissKeyboard();
             CurrentSurvey.saveAnswer(this.state.questionId, this.state.questionType, this.state.answers);
             this.goToNextPage(nav);
           } else {
@@ -107,6 +109,7 @@ module.exports = React.createClass({
         break;
       case 'startSurvey':
         fn = (nav) => {
+          dismissKeyboard();
           CurrentSurvey.saveStartDate();
           this.goToNextPage(nav);
         };
@@ -118,7 +121,9 @@ module.exports = React.createClass({
             [
               {
                 text: 'Exit without saving',
-                onPress: () => {this.goBackToStartPage(nav);}
+                onPress: () => {
+                  this.goBackToStartPage(nav);
+                }
               },
               {text: 'Cancel'}
             ]);
@@ -193,6 +198,7 @@ module.exports = React.createClass({
   },
   goBackToStartPage: function(nav) {
     // reset the survey to the start page
+    dismissKeyboard();
     Actions.reset();
     CurrentSurvey.resetAnswers();
     CurrentSurvey.setCurrentQuestionIndex(0);
@@ -205,6 +211,7 @@ module.exports = React.createClass({
   },
   goBackToSurveyLauncherPage: function(nav) {
     // reset the survey to before the starting point
+    dismissKeyboard();
     Actions.reset();
     CurrentSurvey.resetAnswers();
     CurrentSurvey.setCurrentQuestionIndex(-1);

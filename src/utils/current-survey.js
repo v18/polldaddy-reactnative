@@ -151,5 +151,9 @@ var createQuestionsArrayFromXml = function(xmlDocument) {
 // used to add the start and finish pages
 // as HTML snippet questions
 var createHTMLQuestionXml = function (title, htmlContent) {
+  // prepare for xml parsing
+  htmlContent = htmlContent.replace('<', '&lt;');
+  htmlContent = htmlContent.replace('>', '&gt;');
+
   return `<question qType="2000" qID="-1" trueQ="0"><qText>${title}</qText><nText></nText><note>false</note><chunk>${htmlContent}</chunk></question>`;
 };

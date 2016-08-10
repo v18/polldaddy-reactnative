@@ -22,17 +22,7 @@ import React from 'react';
 import Url from './questions/url';
 
 module.exports = React.createClass({
-  render: function () {
-    return (
-      <View>
-        {this.renderMandatoryIndicator()}
-        {this.renderTitle()}
-        {this.renderNote()}
-        {this.renderQuestion(this.props.question)}
-      </View>
-    );
-  },
-  renderMandatoryIndicator: function () {
+  componentWillMount: function () {
     var questionId = Number(this.props.question.attr.qID);
     var questionType = Number(this.props.question.attr.qType);
 
@@ -40,9 +30,30 @@ module.exports = React.createClass({
     if(isMandatory) {
       // make sure that initial state for error is true
       Actions.saveError('mandatory');
-      return <Text>*</Text>;
     } else {
       Actions.saveAnswers(questionId, questionType, {});
+    }
+  },
+  render: function () {
+    return (
+      <View style={styles.pageContainer}>
+        <View style={styles.fullTitleContainer}>
+          {this.renderMandatoryIndicator()}
+          {this.renderTitle()}
+        </View>
+        {this.renderNote()}
+        {this.renderQuestion(this.props.question)}
+      </View>
+    );
+  },
+  renderMandatoryIndicator: function () {
+    var isMandatory = this.getIsMandatory();
+    if(isMandatory) {
+      return (
+        <Text style={styles.mandatoryIndicator}>
+          *
+        </Text>
+      );
     }
   },
   renderTitle: function () {
@@ -53,17 +64,22 @@ module.exports = React.createClass({
       return;
     } else {
       return (
-        <Text
-            style={styles.title}
-        >
-          {this.props.question.childNamed('qText').val}
-        </Text>);
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>
+            {this.props.question.childNamed('qText').val}
+          </Text>
+        </View>
+        );
     }
   },
   renderNote: function() {
     if(this.props.question.childNamed('note').val === 'true') {
       var htmlString = this.props.question.childNamed('nText').val;
-      return <Html htmlString={htmlString} />;
+      return (
+        <View style={styles.noteContainer}>
+          <Html htmlString={htmlString} />
+        </View>
+      );
     }
   },
   renderQuestion: function(question) {
@@ -383,6 +399,31 @@ module.exports = React.createClass({
 });
 
 var styles = StyleSheet.create({
+  pageContainer: {
+    marginTop: 16,
+    marginBottom: 16
+  },
+  noteContainer: {
+    marginRight: 16,
+    marginLeft: 16,
+    marginTop: 16
+  },
+  fullTitleContainer: {
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    marginRight: 16,
+    marginLeft: 16
+  },
+  mandatoryIndicator: {
+    marginRight: 6,
+    color: '#B72422',
+    fontWeight: '900',
+    fontSize: 18
+  },
+  titleContainer: {
+    flex: 1
+  },
   title: {
     fontSize: 18,
     fontWeight: '900',

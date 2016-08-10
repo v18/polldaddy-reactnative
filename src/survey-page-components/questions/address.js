@@ -1,8 +1,8 @@
+import { StyleSheet, View } from 'react-native';
 import Actions from '../../actions/current-question';
 import InputsStore from '../../stores/inputs-store';
 import React from 'react';
 import TextField from '../elements/text-field';
-import { View } from 'react-native';
 
 module.exports = React.createClass({
   componentDidMount: function () {
@@ -58,9 +58,11 @@ module.exports = React.createClass({
     }
   },
   render: function () {
-    return (<View>
-      {this.renderFields(this.props.question)}
-    </View>);
+    return (
+      <View style={styles.container}>
+        {this.renderFields(this.props.question)}
+      </View>
+    );
   },
   renderFields: function (question) {
     var possibleFields = [
@@ -120,5 +122,11 @@ module.exports = React.createClass({
       error = 'mandatory';
     }
     return error;
+  }
+});
+
+var styles = StyleSheet.create({
+  container: {
+    marginBottom: 16
   }
 });

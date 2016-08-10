@@ -16,7 +16,7 @@ module.exports = React.createClass({
     return (
       <View
           style={[styles.container,
-            this.props.multiline ? styles.multiline : styles.singleline]}
+            this.props.multiline ? styles.multilineContainter : styles.singleLineContainer]}
       >
         <TextInput
             autoFocus={this.props.autoFocus}
@@ -27,11 +27,13 @@ module.exports = React.createClass({
             placeholder={this.props.placeholder}
             placeholderTextColor='#C7C7CD'
             secureTextEntry={this.props.secureTextEntry}
-            style={this.props.multiline ? styles.multilineText : ''}
+            style={[styles.textField,
+              this.props.multiline ? styles.multilineText : '']}
             underlineColorAndroid='#FFF'
             value={this.state.value}
         />
-    </View>);
+      </View>
+    );
   },
   handleOnChangeText: function (text) {
     // sanitize the text
@@ -52,14 +54,18 @@ var styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
     borderBottomWidth: 1
   },
-  singleline: {
+  singleLineContainer: {
     height: 48
   },
-  multiline: {
+  multilineContainter: {
     borderTopColor: '#e0e0e0',
     borderTopWidth: 1
   },
   multilineText: {
     height: 130
+  },
+  textField: {
+    paddingLeft: 16,
+    paddingRight: 16
   }
 });

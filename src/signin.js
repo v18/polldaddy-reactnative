@@ -53,8 +53,8 @@ module.exports = React.createClass({
         <View style={styles.signinContainer}>
           <TouchableHighlight
               onPress={this.handlePressSignin}
-              underlayColor='#A2201E'
               style={styles.signinButton}
+              underlayColor='#A2201E'
           >
             <Text style={styles.signinText}>Sign in</Text>
           </TouchableHighlight>
