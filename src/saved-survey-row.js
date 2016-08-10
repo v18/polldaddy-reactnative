@@ -37,17 +37,19 @@ module.exports = React.createClass({
     );
   },
   renderOfflineResponses: function (responses = this.props.rowData.responses) {
-    var offlineResponsesText = responses;
+    var offlineResponsesText;
 
-    if(!this.props.rowData.saved) {
-      offlineResponsesText = 'Checking for';
+    if(typeof responses === 'number') {
+      offlineResponsesText =  `${responses} offline responses`;
+    } else {
+      offlineResponsesText = 'Downloading';
     }
 
     return (
       <Text style={[styles.responses,
         (this.props.rowData.saved ? '' : styles.notSaved)]}
       >
-        {offlineResponsesText} offline responses
+        {offlineResponsesText}
       </Text>
     );
   }
