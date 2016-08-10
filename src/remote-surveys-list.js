@@ -83,8 +83,7 @@ module.exports = React.createClass({
               text: 'Ok',
               onPress: () => {
                 this.props.navigator.immediatelyResetRouteStack([{
-                  name: 'savedSurveysList',
-                  selectedItems: []
+                  name: 'savedSurveysList'
                 }]);
               }
             }]);
