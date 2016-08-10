@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   ToolbarAndroid,
+  TouchableHighlight,
   View
 } from 'react-native';
 import _ from './utils/lodash';
@@ -151,13 +152,16 @@ module.exports = React.createClass({
       );
     } else {
       return (
-        <View style={styles.info}>
-          <Text style={styles.text}>
-            You don't have any local surveys.
-          </Text>
-          <Text style={[styles.text, styles.link]}>
-            Select Cloud Surveys
-          </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableHighlight
+              onPress={this.goToRemoteSurveys}
+              style={styles.button}
+              underlayColor='#e0e0e0'
+          >
+            <Text style={styles.buttonText}>
+              {'Select surveys to use'.toUpperCase()}
+            </Text>
+          </TouchableHighlight>
         </View>
       );
     }
@@ -171,10 +175,7 @@ module.exports = React.createClass({
   },
   onActionSelected: function(position) {
     if(position === 0) { // go to remote surveys
-      this.props.navigator.push({
-        name: 'remoteSurveysList',
-        selectedItems: this.state.items
-      });
+      this.goToRemoteSurveys();
     }
 
     if(position === 1) { // log out
@@ -188,6 +189,12 @@ module.exports = React.createClass({
         this.props.navigator.immediatelyResetRouteStack([{name: 'signin'}]);
       });
     }
+  },
+  goToRemoteSurveys: function () {
+    this.props.navigator.push({
+      name: 'remoteSurveysList',
+      selectedItems: this.state.items
+    });
   },
   handleRowClick: function (rowData) {
     if(rowData.saved) {
@@ -293,5 +300,21 @@ var styles = StyleSheet.create({
   },
   spinner: {
     marginTop: 48
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  button: {
+    marginTop: 48,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    minHeight: 48,
+    borderRadius: 2
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#000'
   }
 });
