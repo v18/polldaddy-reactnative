@@ -32,6 +32,7 @@ module.exports = React.createClass({
         <View style={styles.formElement}>
           <Text style={styles.label}>Email</Text>
           <TextInput
+              keyboardType='email-address'
               onChangeText={this.handleEmailChange}
               placeholder='email'
               style={styles.textInput}

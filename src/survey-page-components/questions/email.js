@@ -54,6 +54,7 @@ module.exports = React.createClass({
   render: function () {
     return (
       <TextField
+          keyboardType='email-address'
           name='value'
           placeholder={this.props.question.childNamed('example').val}
       />);
